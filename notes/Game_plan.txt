@@ -1,0 +1,50 @@
+Part 1
+1. get first_hash and second_hash
+2. save content to table lines
+3. get main_lines and extension_lines tables
+
+
+result: main_lines - part 1 of bom file
+	extension_lines - part 2 of bom file
+
+Part2 	--  iterate through main_lines and correct too long names
+
+1. def part2(main_lines):	-- iterate through and get wrong lines
+	
+2. def correct_too_long_names(curr_parts, next_parts): 			e.g.	E2I_10_16_028_0-PROWADNIK-H     , 0.3m E2i.10.16.028.0 +            Prowadnik kablowy 15 ogniw             ,  1   , -H 
+                                  										E2.100.16.12PZ.A1,
+	new_line = ccorrect too long names
+
+	return new_line	
+
+						
+
+
+Pytania????
+
+Zadania:
+
+1. od h2 do h20 wrzyuca
+
+2. sparwdza po koleij czy jest producent - H I text
+
+3. usunąć myślink z col E
+
+4. 3842992453_813 odnośnie profili czy jest to nazwa w B
+
+5. sprawdza czy w folderze są pliki z trzma rozszerzeniami .stp, .dwg, .pdf 
+
+
+
+usunąc space po bokach wszedzie
+
+
+3842536564-PLYTA_45X90-H - klucz podsawowy
+	- B, C, E, I
+
+
+
+
+
+
+
