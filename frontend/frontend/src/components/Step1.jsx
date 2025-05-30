@@ -8,30 +8,40 @@ function Step1({ bomPath, setBomPath, status }) {
   };
 
   return (
-    <div>
-      <h2 style={{ color: 'red' }}>
-        Etap 1: <span style={{ color: 'blue' }}>BOM → Excel</span>
-        <span style={{
-          display: 'inline-block',
-          width: '12px',
-          height: '12px',
-          marginLeft: '10px',
-          borderRadius: '50%',
-          backgroundColor: status === 'done' ? 'green' : status === 'running' ? 'orange' : 'red',
-          border: '1px solid #333'
-        }} />
-      </h2> {/* ✅ FIX: close the h2 tag here */}
+    <div className="step1-container">
+      <div class = "step1-header_container">
+        <h2 style={{ color: 'red' }} id ="step1-header">
+          Etap 1: <span style={{ color: 'blue' }}>BOM → Excel</span>
+          <span
+            style={{
+              display: 'inline-block',
+              width: '12px',
+              height: '12px',
+              marginLeft: '10px',
+              borderRadius: '50%',
+              backgroundColor:
+                status === 'done' ? 'green' : status === 'running' ? 'orange' : 'red',
+              border: '1px solid #333',
+            }}
+          />
+        </h2>
+      </div>
 
-<input
-  value={bomPath}
-  
-  style={{ width: '300px' }}
-  readOnly
-/>
-
-      <button onClick={handleChooseFile}>📁</button>
+      <div className="input_line_phase">
+        <label class="label_main">BOM:</label>
+        <div class = "input_icon_div">
+          <input
+            value={bomPath}
+            style={{ width: '300px' }}
+           
+            id = "custom-input"
+          />
+          <button id = "button_folder" onClick={handleChooseFile}>📁</button>
+        </div>
+      </div>
     </div>
   );
+
 }
 
 export default Step1;

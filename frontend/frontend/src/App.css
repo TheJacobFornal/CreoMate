@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #0051f3;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -36,3 +36,215 @@
     transform: rotate(360deg);
   }
 }
+
+body, html {
+  height: 100%;
+  margin: 0;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.page_1{
+  display: flex;
+  justify-content: center; /* horizontal */
+  align-items: center;     /* vertical */
+  height: 300px;           /* or 100% / whatever height you want */
+  background-color: #eee;
+  position: relative;
+}
+
+
+
+#header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header_container{
+ 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-box {
+  display: flex;
+  flex-direction: column;       /* stack vertically */
+  justify-content: top;      /* center vertically */
+  align-items: left;          /* center horizontally */
+  height: 360px;
+  border: 2px solid #757575;
+  padding-left: 40px;
+  background-color: rgba(224, 224, 224, 0.068);
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  gap: 20px;
+
+}
+
+.info_container {
+  margin-top: -2px;
+  display: flex;
+  align-items: center;       /* vertical centering */
+  justify-content: center;   /* horizontal centering (optional) */
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  height: 30px;
+  text-align: center;
+  font-size: 15px;
+  border: 2px solid #797979;
+  background-color: rgba(156, 156, 156, 0.068);
+}
+
+.phase_div {  
+  display: flex;
+  flex-direction: column;
+  align-items: Left;
+}
+
+.step1-container {
+  display: flex;
+  flex-direction: column; /* stack children vertically */
+  gap: 0px;               /* 10px space between h2 and input section */
+  margin-top: 20px; /* space above the container */
+}
+
+.input_line_phase {
+  display: flex;
+  align-items: center;
+  gap: 10px;               
+}
+
+ /* Phase 1 */
+.step1-header_container {
+  display: flex;              /* Enable flexbox */
+  align-items: center;        /* Vertically center the text */
+  height: 30px;               /* Let it grow with content */
+  padding-bottom: 10px;
+}
+
+
+#button_folder {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  outline: none;
+  cursor: pointer; /* optional for pointer effect */
+  font-size: 20px
+}
+
+#custom-input {
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: #ffffff;
+  width: 100%;
+}
+
+#custom-input:focus {
+  border-color: #666666;
+  box-shadow: 0 0 1 50px rgba(167, 167, 167, 0.2);
+  background-color: white;
+}
+
+.label_main {
+  font-size: 17px;
+  font-weight: bold;
+  color: #000000;
+}
+
+
+
+.buttons_container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+}
+
+.button_div_3 {
+  text-align: right;
+  padding: 10px;
+}
+
+.button_div_2 {
+  text-align: center;
+  padding: 10px;
+}
+
+.button_div_3 button {
+  padding: 12px 22px;
+  font-size: 16px;
+  background-color: #0051f3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.button_div_3 button:hover {
+  background-color: #003dbf;
+  transform: translateY(-2px);
+}
+
+.button_div_3 button:active {
+  background-color: #002f99;
+  transform: translateY(0);
+}
+
+
+.button_div_2 button {
+  padding: 12px 22px;
+  font-size: 16px;
+  background-color: #23cf00;
+  color: rgb(0, 0, 0);
+  border: none;
+  font-style: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.button_div_2 button:hover {
+  background-color: #4aeb00;
+  transform: translateY(-2px);
+}
+
+.button_div_2 button:active {
+  background-color: #ff0000;
+  transform: translateY(0);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

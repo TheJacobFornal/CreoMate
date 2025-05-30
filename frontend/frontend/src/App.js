@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
+import './App.css';
 
 function App() {
   const [bomPath, setBomPath] = useState('');
@@ -69,45 +70,67 @@ function App() {
 
  
   return (
-    <div style={{ padding: '1rem' }}>
-      <h1>CreoMate</h1>
+    <div class = "Page_1">
+      <div class = "header_container">
+        <h1 id = "Header">CreoMate</h1>
+      </div>
 
-      <Step1 bomPath={bomPath} setBomPath={setBomPath} status={statuses.phase1} />
+      <div class = "box">
+        <div class = "main-box" id ="child">
+          <div class = "phase_div">
+            <Step1 bomPath={bomPath} setBomPath={setBomPath} status={statuses.phase1} />
+          </div>
 
-      <Step2
-        removeHItems={removeHItems}
-        setRemoveHItems={setRemoveHItems}
-        removeMirror={removeMirror}
-        setRemoveMirror={setRemoveMirror}
-        ready={ready2}
-        setReady={setReady2}
-        status={statuses.phase2}
-        setStatuses={setStatuses}
-        setCurrentPhase={setCurrentPhase}
-      />
+          <div class = "phase_div">
+            <Step2
+              removeHItems={removeHItems}
+              setRemoveHItems={setRemoveHItems}
+              removeMirror={removeMirror}
+              setRemoveMirror={setRemoveMirror}
+              ready={ready2}
+              setReady={setReady2}
+              status={statuses.phase2}
+              setStatuses={setStatuses}
+              setCurrentPhase={setCurrentPhase}
+            />
+          </div>
 
-  
-      <Step3
-        drawingPath={drawingPath}
-        setDrawingPath={setDrawingPath}
-        ready={ready3}
-        setReady={setReady3}
-        status={statuses.phase3}
-        setStatuses={setStatuses}
-        setCurrentPhase={setCurrentPhase}
-      />
+          <div class = "phase_div">        
+            <Step3
+              drawingPath={drawingPath}
+              setDrawingPath={setDrawingPath}
+              ready={ready3}
+              setReady={setReady3}
+              status={statuses.phase3}
+              setStatuses={setStatuses}
+              setCurrentPhase={setCurrentPhase}
+            />
+          </div>
+        </div>
+        <div class = "info_container">
+          <h3>info_container</h3>
+        </div>
+      </div>
 
-      <button
-        onClick={handleStart}
-        disabled={currentPhase > 3}
-        style={{ marginTop: '30px', padding: '10px 20px' }}
-      >
-        {currentPhase <= 3 ? `Start Phase ${currentPhase}` : 'All Phases Complete'}
-      </button>
-      <button onClick={openExcel}
-        style={{ marginTop: '30px', padding: '10px 20px' }}
-      >Otwórz Excel</button>
+      <div class="buttons_container">
+          <div class = "button_div_1">
+          </div>
+
+          <div class = "button_div_2">
+            <button
+              onClick={handleStart}
+              disabled={currentPhase > 3}
+            >
+              {currentPhase <= 3 ? `Start Phase ${currentPhase}` : 'All Phases Complete'}
+            </button>
+          </div>
+          <div class = "button_div_3">
+            <button onClick={openExcel}            
+            >Otwórz Excel</button></div>
+          </div>
     </div>
+
+    
   );
 }
 
