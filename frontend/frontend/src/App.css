@@ -40,44 +40,38 @@
 body, html {
   height: 100%;
   margin: 0;
-  margin-left: 40px;
-  margin-right: 40px;
   font-family: "Roboto", sans-serif;
-
-}
-
-
-.page_1{
-  display: flex;
-  justify-content: center; /* horizontal */
-  align-items: center;     /* vertical */
-  height: 300px;           /* or 100% / whatever height you want */
-  background-color: #eee;
-  position: relative;
 }
 
 
 
-#header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+.Page_1{ 
+  padding-left: 60px;
+  padding-right: 60px;
+  height: 100vh;
+  background-color: #f5f7fa
 }
+
+
+
+
 
 .header_container{
- 
   display: flex;
   justify-content: center;
   align-items: center;
   height: 60px;
   padding-bottom: 10px;
   padding-top: 10px;
+  color: #2c3e50;
 }
 
 .box {
   display: flex;
   flex-direction: column;
+  border-radius: 15px;
+  box-shadow: 0 0px 15px rgba(0, 0, 0, 0.199);
+  margin-bottom: 5px;
 }
 
 .main-box {
@@ -85,15 +79,15 @@ body, html {
   flex-direction: column;       /* stack vertically */
   justify-content: top;      /* center vertically */
   align-items: left;          /* center horizontally */
-  height: 360px;
-  border: 2px solid #757575;
+  height: 350px;
+  border: 2px solid #3131317c;
   padding-left: 30px;
-  background-color: rgba(224, 224, 224, 0.068);
+  background-color:	#ffffff;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
   gap: 20px;
-
 }
+
 
 .info_container {
   margin-top: -2px;
@@ -106,7 +100,7 @@ body, html {
   text-align: center;
   font-size: 15px;
   border: 2px solid #797979;
-  background-color: rgba(156, 156, 156, 0.068);
+  background-color: #f7f7f7;;
 }
 
 .phase_div {  
@@ -172,7 +166,6 @@ body, html {
 }
 
 
-
 .buttons_container {
   display: grid;
   grid-template-columns: repeat(3, 1fr); 
@@ -192,7 +185,7 @@ body, html {
 .button_div_3 button {
   padding: 12px 22px;
   font-size: 18px;
-  background-color: #949494;
+  background-color: #6c757d;
   color: white;
   border: none;
   border-radius: 8px;
@@ -216,8 +209,8 @@ body, html {
 .button_div_2 button {
   padding: 12px 22px;
   font-size: 18px;
-  background-color: #23cf00;
-  color: rgb(0, 0, 0);
+  background-color:#00ff3c;
+  color: rgb(54, 53, 53);
   border: none;
   font-weight: bold; 
   border-radius: 8px;
@@ -228,12 +221,12 @@ body, html {
 
 
 .button_div_2 button:hover {
-  background-color: #4aeb00;
+  background-color: #90ff5d;
   transform: translateY(-2px);
 }
 
 .button_div_2 button:active {
-  background-color: #ff0000;
+  background-color: #007514;
   transform: translateY(0);
 }
 
