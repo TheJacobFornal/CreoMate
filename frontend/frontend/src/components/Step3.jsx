@@ -1,4 +1,4 @@
-function Step3({ drawingPath, setDrawingPath, ready, setReady, status, setStatuses, setCurrentPhase }) {
+function Step3({ drawingPath, setDrawingPath, ready, setReady, status, setStatuses, setCurrentPhase, score3 }) {
   const handleChooseFolder = async () => {
     const res = await fetch('http://127.0.0.1:8000/chooseFolder');
     const data = await res.json();
@@ -19,9 +19,10 @@ function Step3({ drawingPath, setDrawingPath, ready, setReady, status, setStatus
               backgroundColor: status === 'done' ? 'green' : status === 'running' ? 'orange' : 'red',
               border: '1px solid #333'
             }} />
-          </h2> {/* ✅ Close the <h2> tag here */}
+          </h2> 
+          <h3 id="scpre_header">{score3}</h3>
       </div>
-      <label class="label_main">Rysunki:         </label>
+      <label class="label_main">Rysunki:</label>
         <input
             id = "custom-input"
             value={drawingPath}
@@ -31,25 +32,30 @@ function Step3({ drawingPath, setDrawingPath, ready, setReady, status, setStatus
         />
       <button id = "button_folder" onClick={handleChooseFolder}>📁</button>
       <br />
-      <label class="label_main">
+        <div className="switch-container">
+          <label className="switch">
             <input
-            type="checkbox"
-            checked={ready}
-            onChange={(e) => {
-            const checked = e.target.checked;
-            setReady(checked);
-        
-            if (checked) {
-                // ✅ Mark phase2 as done
-                setStatuses(s => ({ ...s, phase3: 'done' }));
-                // ⏭️ Go to phase 3
-                setCurrentPhase(4);
-            }
-        }}
-          
-        />
-        Ready
-      </label>
+              type="checkbox"
+              checked={ready}
+              onChange={(e) => {
+                const checked = e.target.checked;
+                setReady(checked);
+
+                if (checked) {
+                  setStatuses((s) => ({ ...s, phase3: 'done' }));
+                  setCurrentPhase(4);
+                }
+                else{
+                  setStatuses((s) => ({ ...s, phase3: 'idle' }));
+                  setCurrentPhase(3); 
+                }
+              }}
+            />
+            <span className="slider"></span>
+          </label>
+          <span className="switch-label">Gotowe</span>
+        </div>
+
     </div>
   );
 }

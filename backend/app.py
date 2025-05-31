@@ -67,16 +67,52 @@ def create_app():
 
     @app.get("/run-phase2")
     def run2():
-        Main1.phase2()
-        return {"ready": False}
+        text = Main1.phase2()
+        return {
+            "ready": False,
+            "message": text
+        }
+
 
     @app.get("/run-phase3")
     def run_phase3():
         global Drowings_dir
-        Main1.phase3(Drowings_dir)
-        return {"ready": False}
+        score = Main1.phase3(Drowings_dir)
+        return {
+            "ready": False,
+            "message": score
+        }
     
 
+    @app.get("/run-phase4")
+    def run_phase4():
+        print("Excel ready is generated", flush=True)
+        return {
+            "ready": True,
+        }
+    
+    @app.get("/run-phase5")
+    def run_phase5():
+        print("Excel ready is Opening", flush=True)
+        return {
+            "ready": True,
+        }   
+
+    @app.get("/run-phase6")
+    def run_phase6():
+        print("dir is opening", flush=True)
+        return {
+            "ready": True,
+        } 
+    
+
+    @app.get("/isExcelOpen")
+    def check():
+        print("Excel check main", flush=True)
+        if Main1.check_Excel_open():
+            return {"open": True}
+        else:
+            return {"open": False}
 
 
     @app.get("/openExcel")

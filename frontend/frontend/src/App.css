@@ -46,8 +46,8 @@ body, html {
 
 
 .Page_1{ 
-  padding-left: 60px;
-  padding-right: 60px;
+  padding-left: 70px;
+  padding-right: 70px;
   height: 100vh;
   background-color: #f5f7fa
 }
@@ -79,7 +79,7 @@ body, html {
   flex-direction: column;       /* stack vertically */
   justify-content: top;      /* center vertically */
   align-items: left;          /* center horizontally */
-  height: 350px;
+  height: 360px;
   border: 2px solid #3131317c;
   padding-left: 30px;
   background-color:	#ffffff;
@@ -228,6 +228,68 @@ body, html {
 .button_div_2 button:active {
   background-color: #007514;
   transform: translateY(0);
+}
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: background-color 0.4s;
+  border-radius: 20px;
+
+}
+
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: transform 0.4s;
+  border-radius: 50%;
+}
+
+.switch input:checked + .slider {
+  background-color: #28a745;
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(16px);
+}
+
+.switch-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #000000;
+  padding-left: 10px;
+}
+.switch-container{
+  margin-top: 6px
+}
+
+
+#scpre_header{
+  padding: 10px;
 }
 
 

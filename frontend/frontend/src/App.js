@@ -21,34 +21,121 @@ function App() {
     phase2: 'idle',
     phase3: 'idle',
   });
+  const [score2, setScore2] = useState(" ");
+  const [score3, setScore3] = useState(" ");
+  const [comment, setComment] = useState("Witaj w CreoMate! Wybierz plik BOM i rozpocznij proces.");
+  const [excelButtonColor, setExcelButtonColor] = useState("#949494");
 
 
 
   const runPhase = async (phaseKey, url) => {
     setStatuses(s => ({ ...s, [phaseKey]: 'running' }));
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      if (data.ready) {
-        setStatuses(s => ({ ...s, [phaseKey]: 'done' }));
-        setCurrentPhase(prev => prev + 1);
-      } else {
-        setStatuses(s => ({ ...s, [phaseKey]: 'running' }));
-        alert(`Phase ${phaseKey} not ready or failed`);
+
+    let dotCount = 0;
+  setComment("Loading");
+
+  const loadingInterval = setInterval(() => {
+    dotCount = (dotCount + 1) % 4;
+    setComment("Loading" + ".".repeat(dotCount));
+  }, 600);
+
+  // Wait 5 seconds before starting the API call
+    setTimeout(async () => {
+      clearInterval(loadingInterval); // stop loading animation
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (phaseKey === "phase1" && data.ready) {
+          setComment("BOM został poprawnie przetworzony i zapisany w Excelu.");
+          setExcelButtonColor("#0066ff"); 
+        }
+
+        if (phaseKey === "phase2" && data.message) {
+          setScore2(data.message);  
+
+          if (data.ready) {
+            setComment("Etap 2 zakończony pomyślnie. Możesz przejść do etapu 3.");
+            
+          }
+          else {
+            setComment("Popraw Excel, aby kontynuować.");
+          }
+        }
+        if (phaseKey === "phase3" && data.message) {
+          setScore3(data.message);  
+          if (data.ready) {
+            setComment("Etap 3 zakończony pomyślnie. Wygeneruj Excel do działu zakupów.");
+          } else {
+            setComment("Sprawdź rysunki, aby kontynuować.");
+          }
+        }
+
+        if (phaseKey === "phase4" && data.ready) {
+          setComment("Excel do Zamówień został wygenerowany..", currentPhase);
+        }
+
+        if (phaseKey === "phase5" && data.ready) {
+          setComment("Excel do Zamówień został wygenerowany.2", currentPhase);
+        }
+
+        if (phaseKey === "phase6" && data.ready) {
+          setComment("Excel do Zamówień został wygenerowany.1", currentPhase);
+        }
+
+        
+
+        if (phaseKey === "phase5" && data.ready) {
+          setComment(" ", currentPhase);
+        }
+
+        if (data.ready) {
+          setStatuses(s => ({ ...s, [phaseKey]: 'done' }));
+          setCurrentPhase(prev => prev + 1);
+        } else {
+          setStatuses(s => ({ ...s, [phaseKey]: 'running' }));
+        }
+      } catch (err) {
+        setStatuses(s => ({ ...s, [phaseKey]: 'idle' }));
+        alert(`Error running ${phaseKey}: ${err.message}`);
       }
-    } catch (err) {
-      setStatuses(s => ({ ...s, [phaseKey]: 'idle' }));
-      alert(`Error running ${phaseKey}: ${err.message}`);
-    }
+    }, 2000);
   };
 
+  const isExcelOpen = async () => {
+  try {
+    const res = await fetch("http://127.0.0.1:8000/isExcelOpen");
+    const data = await res.json();
+    return data.open;
+  } catch (err) {
+    console.error("Failed to check Excel status:", err);
+    return false;
+  }
+};
+
   const handleStart = async () => {
+    const excelOpen = await isExcelOpen();
+
+    if (excelOpen && currentPhase != 1) {
+      setComment("Excel jest już otwarty. Zamknij go!");
+      setExcelButtonColor("#ff0000"); // Red color to indicate error
+      return;
+    }
+
+
     if (currentPhase === 1) {
       await runPhase("phase1", "http://127.0.0.1:8000/run-phase1");
     } else if (currentPhase === 2) {
       await runPhase("phase2", "http://127.0.0.1:8000/run-phase2");
     } else if (currentPhase === 3) {
       await runPhase("phase3", "http://127.0.0.1:8000/run-phase3");
+    } else if (currentPhase === 4) {
+      await runPhase("phase4", "http://127.0.0.1:8000/run-phase4");
+    } else if (currentPhase === 5) {
+      await runPhase("phase5", "http://127.0.0.1:8000/run-phase5");
+    } else if (currentPhase === 6) {
+      await runPhase("phase5", "http://127.0.0.1:8000/run-phase6");
     } else {
       alert("All phases complete!");
     }
@@ -94,6 +181,7 @@ function App() {
               status={statuses.phase2}
               setStatuses={setStatuses}
               setCurrentPhase={setCurrentPhase}
+              score2={score2}
             />
           </div>
 
@@ -106,11 +194,12 @@ function App() {
               status={statuses.phase3}
               setStatuses={setStatuses}
               setCurrentPhase={setCurrentPhase}
+              score3={score3}
             />
           </div>
         </div>
         <div class = "info_container">
-          <h3>info_container</h3>
+          <h3>{comment}</h3>
         </div>
       </div>
 
@@ -119,15 +208,25 @@ function App() {
           </div>
 
           <div class = "button_div_2">
-            <button
-              onClick={handleStart}
-              disabled={currentPhase > 3}
-            >
-              {currentPhase <= 3 ? `Start Phase ${currentPhase}` : 'All Phases Complete'}
-            </button>
+          <button
+          onClick={handleStart}
+          disabled={currentPhase > 6}
+        >
+          {currentPhase <= 3
+            ? `Start Phase ${currentPhase}`
+            : currentPhase === 4
+            ? "Wygeneruj nowy Excel"
+            : currentPhase === 5
+            ? "Otwórz Excel"
+            : currentPhase === 6
+            ? "Otwórz Folder"
+            : "Zakończono"}
+        </button>
+
           </div>
           <div class = "button_div_3">
-            <button onClick={openExcel}            
+            <button onClick={openExcel}
+            style={{ backgroundColor: excelButtonColor }}            
             >Otwórz Excel</button></div>
           </div>
     </div>

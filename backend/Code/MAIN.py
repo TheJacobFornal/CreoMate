@@ -28,13 +28,25 @@ def phase2():
     Excel_Part_1.main(Excel_path)
     Excel_Part_2.main(Excel_path)
     Excel_Part_3.main(Excel_path)
+    text = "5 / 50 (90%)"
+    return text
 
 def phase3(drowings_folder):
     global Excel_path
     Excel_addition.main(Excel_path)
     Finder_main.main(Excel_path, drowings_folder)
+    text = "5 / 5 (100%)"
+    return text
 
 
-
+def check_Excel_open():
+    global Excel_path
+    if Excel_path.exists():
+        try:
+            with open(Excel_path, 'r+'):
+                return True
+        except IOError:
+            return False
+   
 
 

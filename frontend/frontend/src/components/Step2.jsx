@@ -1,4 +1,4 @@
-function Step2({ removeHItems, setRemoveHItems, removeMirror, setRemoveMirror, ready, setReady, status, setStatuses, setCurrentPhase}) 
+function Step2({ removeHItems, setRemoveHItems, removeMirror, setRemoveMirror, ready, setReady, status, setStatuses, setCurrentPhase, score2}) 
  {
   return (
     <div>
@@ -15,6 +15,7 @@ function Step2({ removeHItems, setRemoveHItems, removeMirror, setRemoveMirror, r
             border: '1px solid #333'
         }} />
         </h2>
+        <h3 id="scpre_header">{score2}</h3>
       </div>
       <label class="label_main">
         <input type="checkbox" checked={removeHItems} onChange={() => setRemoveHItems(!removeHItems)} />
@@ -26,24 +27,29 @@ function Step2({ removeHItems, setRemoveHItems, removeMirror, setRemoveMirror, r
         Usuwaj elementy Lustrzane Lewe
       </label>
       <br />
-      <label class="label_main">
-        <input
-            type="checkbox"
-            checked={ready}
-            onChange={(e) => {
-            const checked = e.target.checked;
-            setReady(checked);
+  <div className="switch-container">
+    <label className="switch">
+      <input
+        type="checkbox"
+        checked={ready}
+        onChange={(e) => {
+          const checked = e.target.checked;
+          setReady(checked);
+          if (checked) {
+            setStatuses((s) => ({ ...s, phase2: 'done' }));
+            setCurrentPhase(3);
+          }
+          else{
+            setStatuses((s) => ({ ...s, phase2: 'idle' }));
+            setCurrentPhase(2); // Optional: move back to phase 2
+          }
+        }}s
+      />
+      <span className="slider"></span>
+    </label>
+    <span className="switch-label">Gotowe</span>
+  </div>
 
-            if (checked) {
-                // ✅ Mark phase2 as done
-                setStatuses(s => ({ ...s, phase2: 'done' }));
-                // ⏭️ Go to phase 3
-                setCurrentPhase(3);
-            }
-        }}
-        />
-        Ready
-      </label>
     </div>
   );
 }
