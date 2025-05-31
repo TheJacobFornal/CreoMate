@@ -23,7 +23,7 @@ def phase1(BOM_path):
     MOD_main.main(BOM_path, Excel_path, readyBOM_path)
     return Excel_path
 
-def phase2():
+def phase2(removeHItems, removeMirror):
     global Excel_path
     Excel_Part_1.main(Excel_path)
     Excel_Part_2.main(Excel_path)
@@ -43,10 +43,12 @@ def check_Excel_open():
     global Excel_path
     if Excel_path.exists():
         try:
-            with open(Excel_path, 'r+'):
+            with open(Excel_path, 'a'):
                 return True
         except IOError:
             return False
+    else:
+        return False
    
 
 

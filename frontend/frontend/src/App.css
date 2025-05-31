@@ -119,7 +119,7 @@ body, html {
 .input_line_phase {
   display: flex;
   align-items: center;
-  gap: 10px;               
+  gap: 10px;             
 }
 
  /* Phase 1 */
@@ -242,7 +242,9 @@ body, html {
   opacity: 0;
   width: 0;
   height: 0;
+  color: #0066ff;
 }
+
 
 .slider {
   position: absolute;
@@ -284,7 +286,7 @@ body, html {
   padding-left: 10px;
 }
 .switch-container{
-  margin-top: 6px
+  margin-top: 6px;
 }
 
 

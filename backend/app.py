@@ -6,7 +6,7 @@ base_path = Path(getattr(sys, '_MEIPASS', Path(__file__).parent))
 code_path = base_path / "Code"
 sys.path.insert(0, str(code_path))
 
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, Query, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
@@ -65,13 +65,21 @@ def create_app():
         Excel_path = Main1.phase1(BOM_path)
         return {"ready": True}
 
-    @app.get("/run-phase2")
-    def run2():
-        text = Main1.phase2()
-        return {
-            "ready": False,
-            "message": text
-        }
+
+
+    @app.post("/run-phase2")
+    async def run_phase2(request: Request):
+        body = await request.json()
+        remove_h_items = body.get("removeHItems", False)
+        remove_mirror = body.get("removeMirror", False)
+
+        print("Remove H Items:", remove_h_items, flush=True)
+        print("Remove Mirror:", remove_mirror, flush=True)
+     
+
+        message = Main1.phase2(remove_h_items, remove_mirror)
+        return {"ready": False, "message": message}
+
 
 
     @app.get("/run-phase3")
@@ -101,6 +109,7 @@ def create_app():
     @app.get("/run-phase6")
     def run_phase6():
         print("dir is opening", flush=True)
+        os.startfile(Drowings_dir)
         return {
             "ready": True,
         } 
@@ -110,9 +119,9 @@ def create_app():
     def check():
         print("Excel check main", flush=True)
         if Main1.check_Excel_open():
-            return {"open": True}
-        else:
             return {"open": False}
+        else:
+            return {"open": True}
 
 
     @app.get("/openExcel")

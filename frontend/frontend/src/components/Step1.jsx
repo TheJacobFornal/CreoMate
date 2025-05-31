@@ -9,8 +9,8 @@ function Step1({ bomPath, setBomPath, status }) {
 
   return (
     <div className="step1-container">
-      <div class = "step1-header_container">
-        <h2 style={{ color: 'red' }} id ="step1-header">
+      <div class="step1-header_container">
+        <h2 style={{ color: 'red' }} id="step1-header">
           Etap 1: <span style={{ color: 'blue' }}>BOM → Excel</span>
           <span
             style={{
@@ -29,14 +29,14 @@ function Step1({ bomPath, setBomPath, status }) {
 
       <div className="input_line_phase">
         <label class="label_main">BOM:</label>
-        <div class = "input_icon_div">
+        <div class="input_icon_div">
           <input
             value={bomPath}
-            style={{ width: '320px' }}
-           
-            id = "custom-input"
+            style={{ width: '360px' }}
+
+            id="custom-input"
           />
-          <button id = "button_folder" onClick={handleChooseFile}>📁</button>
+          <button id="button_folder" onClick={handleChooseFile}>📁</button>
         </div>
       </div>
     </div>

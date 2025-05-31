@@ -37,15 +37,29 @@ function App() {
   const loadingInterval = setInterval(() => {
     dotCount = (dotCount + 1) % 4;
     setComment("Loading" + ".".repeat(dotCount));
-  }, 600);
+  }, 500);
 
   // Wait 5 seconds before starting the API call
     setTimeout(async () => {
       clearInterval(loadingInterval); // stop loading animation
 
       try {
-        const res = await fetch(url);
-        const data = await res.json();
+      let res, data;
+
+      if (phaseKey === "phase2") {
+        res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            removeHItems,
+            removeMirror,
+          }),
+        });
+      } else {
+        res = await fetch(url);
+      }
+
+      data = await res.json();
 
         if (phaseKey === "phase1" && data.ready) {
           setComment("BOM został poprawnie przetworzony i zapisany w Excelu.");
@@ -63,6 +77,7 @@ function App() {
             setComment("Popraw Excel, aby kontynuować.");
           }
         }
+
         if (phaseKey === "phase3" && data.message) {
           setScore3(data.message);  
           if (data.ready) {
@@ -83,16 +98,12 @@ function App() {
         if (phaseKey === "phase6" && data.ready) {
           setComment("Excel do Zamówień został wygenerowany.1", currentPhase);
         }
-
-        
-
-        if (phaseKey === "phase5" && data.ready) {
-          setComment(" ", currentPhase);
-        }
+     
 
         if (data.ready) {
           setStatuses(s => ({ ...s, [phaseKey]: 'done' }));
-          setCurrentPhase(prev => prev + 1);
+          setCurrentPhase(prev => prev <= 5 ? prev + 1 : prev);
+          
         } else {
           setStatuses(s => ({ ...s, [phaseKey]: 'running' }));
         }
@@ -100,7 +111,7 @@ function App() {
         setStatuses(s => ({ ...s, [phaseKey]: 'idle' }));
         alert(`Error running ${phaseKey}: ${err.message}`);
       }
-    }, 2000);
+    }, 1700);
   };
 
   const isExcelOpen = async () => {
@@ -119,7 +130,16 @@ function App() {
 
     if (excelOpen && currentPhase != 1) {
       setComment("Excel jest już otwarty. Zamknij go!");
-      setExcelButtonColor("#ff0000"); // Red color to indicate error
+      return;
+    }
+
+    if (drawingPath == "" && currentPhase === 3) {
+      setComment("Wybierz folder z rysunkami!");
+      return;
+    }
+
+    if (bomPath == "" && currentPhase === 1) {
+      setComment("Wybierz plik BOM!");
       return;
     }
 
@@ -159,7 +179,7 @@ function App() {
 
  
   return (
-    <div class = "Page_1">
+    <div className = "Page_1">
       <div class = "header_container">
         <h1 id = "Header">CreoMate</h1>
       </div>
@@ -213,7 +233,7 @@ function App() {
           disabled={currentPhase > 6}
         >
           {currentPhase <= 3
-            ? `Start Phase ${currentPhase}`
+            ? `Start Etap ${currentPhase}`
             : currentPhase === 4
             ? "Wygeneruj nowy Excel"
             : currentPhase === 5

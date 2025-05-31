@@ -62,7 +62,7 @@ def check_production(ws, row):
     if not Material_cell.value or not Cieplna_cell.value or not Powierzchnia_cell.value:               # Produkiowane nie materiału i obróbek
         color_row(ws, row, True, "ABA200")
     else:
-        print(Cieplna_cell.value)
+        
         if Cieplna_cell.value.lower() == "brak":   # zmienia "Brak" na "Brak / None"
             ws.cell(row, Cieplna_index).value  = "Brak / None"
         elif Powierzchnia_cell.value.lower() == "brak":
