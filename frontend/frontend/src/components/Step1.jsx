@@ -32,7 +32,7 @@ function Step1({ bomPath, setBomPath, status }) {
         <div class = "input_icon_div">
           <input
             value={bomPath}
-            style={{ width: '300px' }}
+            style={{ width: '320px' }}
            
             id = "custom-input"
           />

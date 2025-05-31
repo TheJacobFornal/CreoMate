@@ -39,6 +39,7 @@ def main(Excel_path):
 
                 ws.cell(row, Uwagi_Index).value = temp
                 print(temp)
+    wb.save(Excel_path)
 
 
 

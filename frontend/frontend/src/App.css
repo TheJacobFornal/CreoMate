@@ -42,7 +42,10 @@ body, html {
   margin: 0;
   margin-left: 40px;
   margin-right: 40px;
+  font-family: "Roboto", sans-serif;
+
 }
+
 
 .page_1{
   display: flex;
@@ -84,7 +87,7 @@ body, html {
   align-items: left;          /* center horizontally */
   height: 360px;
   border: 2px solid #757575;
-  padding-left: 40px;
+  padding-left: 30px;
   background-color: rgba(224, 224, 224, 0.068);
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
@@ -163,7 +166,7 @@ body, html {
 }
 
 .label_main {
-  font-size: 17px;
+  font-size: 20px;
   font-weight: bold;
   color: #000000;
 }
@@ -173,6 +176,7 @@ body, html {
 .buttons_container {
   display: grid;
   grid-template-columns: repeat(3, 1fr); 
+  padding-top: 7px
 }
 
 .button_div_3 {
@@ -187,14 +191,15 @@ body, html {
 
 .button_div_3 button {
   padding: 12px 22px;
-  font-size: 16px;
-  background-color: #0051f3;
+  font-size: 18px;
+  background-color: #949494;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-weight: bold; 
 }
 
 .button_div_3 button:hover {
@@ -210,16 +215,17 @@ body, html {
 
 .button_div_2 button {
   padding: 12px 22px;
-  font-size: 16px;
+  font-size: 18px;
   background-color: #23cf00;
   color: rgb(0, 0, 0);
   border: none;
-  font-style: bold;
+  font-weight: bold; 
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
 
 .button_div_2 button:hover {
   background-color: #4aeb00;
