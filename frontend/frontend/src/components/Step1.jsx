@@ -32,8 +32,8 @@ function Step1({ bomPath, setBomPath, status }) {
         <div class="input_icon_div">
           <input
             value={bomPath}
-            style={{ width: '360px' }}
-
+            style={{ width: '560px' }}
+            readFOnly
             id="custom-input"
           />
           <button id="button_folder" onClick={handleChooseFile}>📁</button>

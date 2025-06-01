@@ -48,7 +48,7 @@ def check_elem(creo_name, row, ws, drowings_dir):                               
     pdf_name = creo_name + ".pdf"                               #pdf file
     file_path_pdf = drowings_dir / pdf_name
     if not file_path_pdf.exists():
-        color_row(ws, row, True, "5A5B5D")          #red
+        color_row(ws, row, True, "00B0F0")          #red
     else:
         color_row(ws, row, False)
 
@@ -56,14 +56,14 @@ def check_elem(creo_name, row, ws, drowings_dir):                               
     stp_name = creo_name + ".stp"                               #stp file
     file_path_stp = drowings_dir / stp_name
     if not file_path_stp.exists():
-        color_row(ws, row, True, "5A5B5D")          # blue
+        color_row(ws, row, True, "00B0F0")          # blue
     else:
         color_row(ws, row, False)
 
     dwg_name = creo_name + ".dwg"                               #dwg file
     file_path_dwg = drowings_dir / dwg_name
     if not file_path_dwg.exists():
-        color_row(ws, row, True,  "5A5B5D")         # grey
+        color_row(ws, row, True,  "00B0F0")         # grey
     else:
         color_row(ws, row, False)
 
@@ -74,6 +74,3 @@ def main(Excel_path, folder):
     get_creo_name(ws, drowings_dir)
 
     wb.save(Excel_path)
-
-
-

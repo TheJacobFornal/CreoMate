@@ -29,7 +29,7 @@ function Step3({ drawingPath, setDrawingPath, ready, setReady, status, setStatus
           <input
             id="custom-input"
             value={drawingPath}
-            style={{ width: '350px' }}
+            style={{ width: '535px' }}
             readOnly
 
           />
