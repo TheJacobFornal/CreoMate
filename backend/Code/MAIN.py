@@ -23,19 +23,38 @@ def phase1(BOM_path):
     MOD_main.main(BOM_path, Excel_path, readyBOM_path)
     return Excel_path
 
-def phase2(removeHItems, removeMirror):
+def phase2(removeHItems = False, removeMirror= False):
     global Excel_path
-    Excel_Part_1.main(Excel_path)
-    Excel_Part_2.main(Excel_path)
-    Excel_Part_3.main(Excel_path)
-    text = "5 / 50 (90%)"
+    counter_wrong = 0
+    counter_1 = 0
+    counter_2 = 0
+    counter_3 = 0
+
+    Excel_addition.main(Excel_path)
+    counter_1 = Excel_Part_1.main(Excel_path, removeHItems)
+    counter_2 = Excel_Part_2.main(Excel_path, removeMirror)
+    counter_3 = Excel_Part_3.main(Excel_path)
+
+    #print("Counter 1:", counter_1, "Counter 2:", counter_2, "Counter 3:", counter_3, flush=True)
+    counter_wrong = counter_1 + counter_2 + counter_3
+    number_of_rows = Excel_addition.number_of_rows(Excel_path)
+    
+    text = str(counter_wrong) + "/" + str(number_of_rows) + " (" + str(100 - round((counter_wrong / number_of_rows) * 100, 2)) + "%)"
+    
     return text
 
 def phase3(drowings_folder):
     global Excel_path
+    counter_wrong = 0
     Excel_addition.main(Excel_path)
-    Finder_main.main(Excel_path, drowings_folder)
-    text = "5 / 5 (100%)"
+    counter_wrong = Finder_main.main(Excel_path, drowings_folder)
+    number_of_rows = Excel_addition.number_of_rows_drawings(Excel_path)
+
+
+    if number_of_rows != 0:
+        text = str(counter_wrong) + "/" + str(number_of_rows) + " (" + str(100 - round((counter_wrong / number_of_rows) * 100, 2)) + "%)"
+    else:
+        text = "0/0 (100%)"
     return text
 
 

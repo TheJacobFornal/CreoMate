@@ -2,6 +2,7 @@ from pathlib import Path
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
 
+wrong_counter = 0
 
 def color_row(ws, row_num, type, color = "FFFF00"):
     if type:
@@ -22,9 +23,11 @@ def check_if_spawane_00(name):
         return False
 
 def check_dir(creo_name, row, ws, drowings_dir):
+    global wrong_counter    
     path = drowings_dir / creo_name
     if not path.is_dir():
         color_row(ws, row, True, "F8DF00")      # yellow
+        wrong_counter += 1
     else:
         color_row(ws, row, False)
 
@@ -32,6 +35,7 @@ def check_dir(creo_name, row, ws, drowings_dir):
 
 
 def get_creo_name(ws, drowings_dir):
+    global wrong_counter
     Typ_index = 5
     Creo_index = 1
     for row in range(1, ws.max_row + 1):
@@ -45,10 +49,16 @@ def get_creo_name(ws, drowings_dir):
 
 
 def check_elem(creo_name, row, ws, drowings_dir):                                 #check if file exist in dir (elem)
+    global wrong_counter
     pdf_name = creo_name + ".pdf"                               #pdf file
     file_path_pdf = drowings_dir / pdf_name
+
+    bool = False
+
     if not file_path_pdf.exists():
-        color_row(ws, row, True, "00B0F0")          #red
+        color_row(ws, row, True, "00B0F0")         
+        bool = True
+        wrong_counter += 1
     else:
         color_row(ws, row, False)
 
@@ -56,21 +66,29 @@ def check_elem(creo_name, row, ws, drowings_dir):                               
     stp_name = creo_name + ".stp"                               #stp file
     file_path_stp = drowings_dir / stp_name
     if not file_path_stp.exists():
-        color_row(ws, row, True, "00B0F0")          # blue
+        color_row(ws, row, True, "00B0F0")         
+        if not  bool:
+            wrong_counter += 1
+            bool = True
     else:
         color_row(ws, row, False)
 
     dwg_name = creo_name + ".dwg"                               #dwg file
     file_path_dwg = drowings_dir / dwg_name
     if not file_path_dwg.exists():
-        color_row(ws, row, True,  "00B0F0")         # grey
+        color_row(ws, row, True,  "00B0F0")         
+        if not bool:
+            wrong_counter += 1
     else:
         color_row(ws, row, False)
 
 def main(Excel_path, folder):
+    global wrong_counter
+    wrong_counter = 0
     wb = load_workbook(Excel_path)
     ws = wb.active
     drowings_dir = Path(folder)
     get_creo_name(ws, drowings_dir)
 
     wb.save(Excel_path)
+    return wrong_counter

@@ -198,7 +198,7 @@ function App() {
           <div className={`hint-panel ${isMenuOpen ? 'open' : ''}`}>
             <h4>Legenda Kolorów</h4>
             <div className="setion_legend">
-              <p>Brak Typu - <span style={{ backgroundColor: '#83CAEB', color: '#83CAEB' }}>........</span></p>
+              <p>Brak Typu - <span style={{ backgroundColor: '#1A4D96', color: '#1A4D96' }}>........</span></p>
             </div>
             <div className="setion_legend">
               <h5>Handlowe</h5>
@@ -209,7 +209,7 @@ function App() {
             <div className="setion_legend">
               <h5>Produkowane</h5>
               <p>Materiał / Obróbki - <span style={{ backgroundColor: '#ABA200', color: "#ABA200" }}>........</span></p>
-              <p>Numer Profil - <span style={{ backgroundColor: '#D3A6FF', color: "#D3A6FF" }}>........</span></p>
+              <p>"_" w numerze - <span style={{ backgroundColor: '#D3A6FF', color: "#D3A6FF" }}>........</span></p>
               <p>Dlugość Profilu - <span style={{ backgroundColor: 'grey', color: "grey" }}>........</span></p>
               <p>Lewy elem (P) - <span style={{ backgroundColor: '#FF3399', color: "#FF3399" }}>........</span></p>
               <p>Tylko Lewy elem - <span style={{ backgroundColor: '#42FF48', color: "#42FF48" }}>........</span></p>

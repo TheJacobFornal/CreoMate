@@ -3,6 +3,8 @@ from pathlib import Path
 from openpyxl.styles import PatternFill
 
 
+wrong_counter = 0
+
 def color_row(ws, row_num, type, color = "FFFF00"):
     if type:
         fill = PatternFill(start_color=color, end_color=color, fill_type='solid')
@@ -14,6 +16,8 @@ def color_row(ws, row_num, type, color = "FFFF00"):
 
 
 def main(Excel_path):
+    global wrong_counter
+    wrong_counter = 0
     Name_Index = 3
     Type_Index = 5
     Creo_Index = 1
@@ -40,6 +44,9 @@ def main(Excel_path):
                 ws.cell(row, Uwagi_Index).value = temp
                 print(temp)
     wb.save(Excel_path)
+
+
+    return wrong_counter 
 
 
 
