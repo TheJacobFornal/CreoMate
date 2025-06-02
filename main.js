@@ -19,11 +19,15 @@ function createWindow() {
 
   const isDev = !app.isPackaged;
 
-  if (isDev) {
-    win.loadURL("http://localhost:3000");
-  } else {
-    win.loadFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
-  }
+  win.loadFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
+
+  // Optional: Open DevTools for debugging
+  win.webContents.openDevTools();
+
+  win.webContents.on('did-fail-load', (e, code, desc) => {
+    console.error('❌ Failed to load React app:', code, desc);
+  });
+  
 
  
 
