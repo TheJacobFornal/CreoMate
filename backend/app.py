@@ -19,9 +19,17 @@ from Code import MAIN as Main1
 
 
 
-Excel_path = None
-BOM_path = None
-Drowings_dir = None
+desktop_path = Path.home() / "Desktop"
+
+output_folder = desktop_path / "CreoMate"
+output_folder.mkdir(parents=True, exist_ok=True)
+Excel_path = output_folder / "BOM CreoMate.xlsx"
+readyBOM_path = output_folder / "readyBOM.txt"
+Purchases_Excel_Template_path = output_folder / "Szablon Zamówienia.xlsx"
+Purchases_Excel_path = output_folder / "Zamówienia CreoMate.xlsx"
+
+
+counter = 0
 
 def create_app():
     app = FastAPI()
@@ -34,10 +42,6 @@ def create_app():
     )
 
 
-    @app.get("/init")
-    def ping():
-        print("Ping INIT:", flush=True)
-        Main1.delete_old_files()
        
     
     @app.get("/chooseFile")
@@ -61,10 +65,10 @@ def create_app():
     
     @app.get("/run-phase1")
     def run_phase1():
+        global readyBOM_path
         global BOM_path
-        global Excel_path
         print("app phase1:", BOM_path, flush=True)
-        Excel_path = Main1.phase1(BOM_path)
+        Main1.phase1(BOM_path, readyBOM_path, Excel_path)
         return {"ready": True}
 
 
@@ -79,7 +83,7 @@ def create_app():
         print("Remove Mirror:", remove_mirror, flush=True)
      
 
-        message = Main1.phase2(remove_h_items, remove_mirror)
+        message = Main1.phase2(Excel_path, remove_h_items, remove_mirror)
         return {"ready": False, "message": message}
 
 
@@ -87,7 +91,7 @@ def create_app():
     @app.get("/run-phase3")
     def run_phase3():
         global Drowings_dir
-        score = Main1.phase3(Drowings_dir)
+        score = Main1.phase3(Drowings_dir, Excel_path)
         return {
             "ready": False,
             "message": score
@@ -96,34 +100,20 @@ def create_app():
 
     @app.get("/run-phase4")
     def run_phase4():
-        Main1.copy_Excel_to_Purchases()
+        Main1.copy_Excel_to_Purchases(Excel_path, Purchases_Excel_path)
         return {
             "ready": True,
         }
     
-    @app.get("/run-phase5")
-    def run_phase5():
-        print("Excel ready is Opening", flush=True)
-        return {
-            "ready": True,
-        }   
-
-    @app.get("/run-phase6")
-    def run_phase6():
-        print("dir is opening", flush=True)
-        os.startfile(Drowings_dir)
-        return {
-            "ready": True,
-        } 
     
 
     @app.get("/isExcelOpen")
     def check():
         print("Excel check main", flush=True)
-        if Main1.check_Excel_open():
-            return {"open": False}
-        else:
+        if Main1.check_Excel_open(Excel_path):
             return {"open": True}
+        else:
+            return {"open": False}
 
 
     @app.get("/openExcel")
@@ -141,13 +131,11 @@ def create_app():
         
     @app.get("/openExcelPurchases")
     def open_excel_purchases():
-       Main1.open_Excel_purchases()
+       Main1.open_Excel_purchases(Purchases_Excel_path)
 
 
         
     return app
-
-
 
 def run_uvicorn():
     print("Running Uvicorn...")
@@ -157,6 +145,9 @@ def run():
     server = multiprocessing.Process(target=run_uvicorn)
     server.start()
 
+    Main1.copy_Template_Purchases(Purchases_Excel_Template_path, Purchases_Excel_path)
+
+
     try:
         while True:
             time.sleep(1)
@@ -165,6 +156,6 @@ def run():
         server.terminate()
         server.join()
 
-if __name__ == "__main__" or getattr(sys, 'frozen', False):
-    multiprocessing.freeze_support()  
+if __name__ == "__main__":
+    multiprocessing.freeze_support()  # Needed for PyInstaller on Windows
     run()

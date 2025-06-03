@@ -24,7 +24,7 @@ function Step3({ drawingPath, setDrawingPath, ready, setReady, status, setStatus
       </div>
 
       <div className="input_line_phase">
-        <label class="label_main">Rysunki:</label>
+        <label className="label_main">Rysunki:</label>
         <div className="input_icon_div">
           <input
             id="custom-input"

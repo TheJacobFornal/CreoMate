@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
+import bulb from './assets/bulb.png';
 import './App.css';
 
 
@@ -31,20 +32,6 @@ function App() {
   };
 
 
-  useEffect(() => {
-    // This runs once when the app first loads
-    const callInit = async () => {
-      try {
-        const res = await fetch("http://127.0.0.1:8000/init");
-        const data = await res.json();
-        console.log("Backend init response:", data);
-      } catch (err) {
-        console.error("Failed to call backend init function:", err);
-      }
-    };
-
-    callInit();
-  }, []);
 
   const resetApp = () => {
     setBomPath('');
@@ -129,18 +116,6 @@ function App() {
           }
         }
 
-        if (phaseKey === "phase4" && data.ready) {
-          setComment("Excel do Zamówień został wygenerowany..", currentPhase);
-        }
-
-        if (phaseKey === "phase5" && data.ready) {
-          setComment("Excel do Zamówień został wygenerowany.2", currentPhase);
-        }
-
-        if (phaseKey === "phase6" && data.ready) {
-          setComment("Excel do Zamówień został wygenerowany.1", currentPhase);
-        }
-
 
         if (data.ready) {
           setStatuses(s => ({ ...s, [phaseKey]: 'done' }));
@@ -156,21 +131,29 @@ function App() {
     }, 1700);
   };
 
-  const isExcelOpen = async () => {
-    try {
-      const res = await fetch("http://127.0.0.1:8000/isExcelOpen");
-      const data = await res.json();
-      return data.open;
-    } catch (err) {
-      console.error("Failed to check Excel status:", err);
-      return false;
-    }
-  };
+const isExcelOpen = async () => {
+  try {
+    const res = await fetch("http://127.0.0.1:8000/isExcelOpen");
+    const text = await res.text(); // force log full raw response
+    console.log("Excel check response (raw):", text);
+    const data = JSON.parse(text);
+    return data.open;
+  } catch (err) {
+    console.error("Failed to check Excel status:", err);
+    return false;
+  }
+};
+
 
   const handleStart = async () => {
-    const excelOpen = await isExcelOpen();
+  
+    let excelOpen = false
+    if (currentPhase > 1) {
+      excelOpen = await isExcelOpen();
+    }
 
     if (excelOpen) {
+      console.log("Excel is already open. - Kuba update");
       setComment("Excel jest już otwarty. Zamknij go!");
       return;
     }
@@ -196,7 +179,6 @@ function App() {
       await runPhase("phase4", "http://127.0.0.1:8000/run-phase4");
     } else if (currentPhase === 5) {
       resetApp();
-
     } else {
       alert("All phases complete!");
     }
@@ -208,7 +190,7 @@ function App() {
       const data = await response.json();
 
       if (data.ready) {
-        console.log("Excel opened successfully.");
+        console.log("Excel opened successfully. Kuba update");
       } else {
         console.warn("Excel was opened, but marked as not ready.");
       }
@@ -235,7 +217,7 @@ function App() {
 
   const getButtonLabel = () => {
     if (currentPhase <= 3) return `Start Etap ${currentPhase}`;
-    if (currentPhase === 4) return "Wygeneruj nowy Excel";
+    if (currentPhase === 4) return "Wygeneruj Gotowy Excel";
     if (currentPhase === 5) return "Nowy BOM";
     return "Proces zakończony";
   };
@@ -244,15 +226,15 @@ function App() {
 
   return (
     <div className="Page_1">
-      <div class="header_container">
+      <div className="header_container">
         <h1 id="Header">CreoMate</h1>
       </div>
 
-      <div class="box">
+      <div className="box">
         <div className="main-box" id="child">
           {/* Hint toggle and panel INSIDE main-box */}
           <div className="hint-toggle" onClick={toggleMenu}>
-            <img src="/bulb.png" alt="Hint Icon" />
+            <img src={bulb} alt="Hint Icon" />
           </div>
           <div className={`hint-panel ${isMenuOpen ? 'open' : ''}`}>
             <h4>Legenda Kolorów</h4>
@@ -312,20 +294,20 @@ function App() {
             />
           </div>
         </div>
-        <div class="info_container">
+        <div className="info_container">
           <h3>{comment}</h3>
         </div>
       </div>
 
-      <div class="buttons_container">
-        <div class="button_div_1">
+      <div className="buttons_container">
+        <div className="button_div_1">
         </div>
 
 
 
 
 
-        <div class="button_div_2">
+        <div className="button_div_2">
           <button
             onClick={handleStart}
             style={{

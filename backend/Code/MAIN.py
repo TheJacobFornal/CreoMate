@@ -10,46 +10,35 @@ from Code.Excel_Purchases import Excel_Purchases_main
 
 import os
 
-desktop_path = Path.home() / "Desktop"
-
-output_folder = desktop_path / "CreoMate"
-output_folder.mkdir(parents=True, exist_ok=True)
-Excel_path = output_folder / "BOM CreoMate.xlsx"
-readyBOM_path = output_folder / "readyBOM.txt"
-Purchases_Excel_Template_path = output_folder / "Zamówienia CreoMate Szablon.xlsx"
-Purchases_Excel_path = output_folder / "Zamówienia CreoMate.xlsx"
 
 
 
-
-
-def phase1(BOM_path):
+def phase1(BOM_path, readyBOM_path, Excel_path):
     print("start 1", flush=True)
     MOD_main.main(BOM_path, Excel_path, readyBOM_path)
     return Excel_path
 
-def phase2(removeHItems = False, removeMirror= False):
-    global Excel_path
+def phase2(Excel_path, removeHItems=False, removeMirror=False):
     counter_wrong = 0
-    counter_1 = 0
-    counter_2 = 0
-    counter_3 = 0
 
     Excel_addition.main(Excel_path)
     counter_1 = Excel_Part_1.main(Excel_path, removeHItems)
     counter_2 = Excel_Part_2.main(Excel_path, removeMirror)
     counter_3 = Excel_Part_3.main(Excel_path)
 
-    #print("Counter 1:", counter_1, "Counter 2:", counter_2, "Counter 3:", counter_3, flush=True)
     counter_wrong = counter_1 + counter_2 + counter_3
     number_of_rows = Excel_addition.number_of_rows(Excel_path)
-    
-    text = str(counter_wrong) + "/" + str(number_of_rows) + " (" + str(100 - round((counter_wrong / number_of_rows) * 100, 2)) + "%)"
-    
+
+    if number_of_rows == 0:
+        return "No rows to process."
+
+    percent_correct = 100 - round((counter_wrong / number_of_rows) * 100, 2)
+    text = f"{counter_wrong}/{number_of_rows} ({percent_correct}%)"
+
     return text
 
-def phase3(drowings_folder):
-    global Excel_path
+
+def phase3(drowings_folder, Excel_path):
     counter_wrong = 0
     Excel_addition.main(Excel_path)
     counter_wrong = Finder_main.main(Excel_path, drowings_folder)
@@ -63,37 +52,37 @@ def phase3(drowings_folder):
     return text
 
 
-def copy_Excel_to_Purchases():
-    global Excel_path
-    global Purchases_Excel_path
-
-   
+def copy_Excel_to_Purchases(Excel_path, Purchases_Excel_path):   
     Excel_Purchases_main.main(Excel_path, Purchases_Excel_path)
-
     os.startfile(Purchases_Excel_path)
 
 
-def check_Excel_open():
-    global Excel_path
+def copy_Template_Purchases(Purchases_Excel_Template_path, Purchases_Excel_path):
+    if Purchases_Excel_Template_path.exists():
+        shutil.copy(Purchases_Excel_Template_path, Purchases_Excel_path)
+    else:
+        print("Template file does not exist:", Purchases_Excel_Template_path, flush=True)
+        raise FileNotFoundError("Template file not found.", Purchases_Excel_Template_path)
+    
+
+
+def check_Excel_open(Excel_path):
+
     if Excel_path.exists():
         try:
             with open(Excel_path, 'a'):
-                return True
+                return False  # This means it's NOT locked
         except IOError:
-            return False
+            return True  # This means it's locked
     else:
         return False
     
 
-def open_Excel_purchases():
+def open_Excel_purchases(Purchases_Excel_path):
     os.startfile(Purchases_Excel_path)
 
 
-def delete_old_files():
-    global Excel_path
-    global Purchases_Excel_path
-    shutil.copy(Purchases_Excel_Template_path, Purchases_Excel_path)
-    print("Old files deleted", flush=True)
+
 
    
 

@@ -28,8 +28,8 @@ function Step1({ bomPath, setBomPath, status }) {
       </div>
 
       <div className="input_line_phase">
-        <label class="label_main">BOM:</label>
-        <div class="input_icon_div">
+        <label className="label_main">BOM:</label>
+        <div className="input_icon_div">
           <input
             value={bomPath}
             style={{ width: '560px' }}
