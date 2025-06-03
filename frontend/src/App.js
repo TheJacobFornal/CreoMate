@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
@@ -8,8 +9,6 @@ import './App.css';
 
 function App() {
   const [bomPath, setBomPath] = useState('');
-  const [name, setName] = useState('');
-  const [message, setMessage] = useState('');
   const [removeHItems, setRemoveHItems] = useState(false);
   const [removeMirror, setRemoveMirror] = useState(false);
   const [ready2, setReady2] = useState(false);
@@ -30,6 +29,44 @@ function App() {
   const toggleMenu = () => {
     setIsMenuOpen(prev => !prev);
   };
+
+
+  useEffect(() => {
+    // This runs once when the app first loads
+    const callInit = async () => {
+      try {
+        const res = await fetch("http://127.0.0.1:8000/init");
+        const data = await res.json();
+        console.log("Backend init response:", data);
+      } catch (err) {
+        console.error("Failed to call backend init function:", err);
+      }
+    };
+
+    callInit();
+  }, []);
+
+  const resetApp = () => {
+    setBomPath('');
+
+    setRemoveHItems(false);
+    setRemoveMirror(false);
+    setReady2(false);
+    setReady3(false);
+    setDrawingPath('');
+    setCurrentPhase(1);
+    setStatuses({
+      phase1: 'idle',
+      phase2: 'idle',
+      phase3: 'idle',
+    });
+    setScore2(" ");
+    setScore3(" ");
+    setComment("Witaj w CreoMate! Wybierz plik BOM i rozpocznij proces.");
+    setExcelButtonColor("#949494");
+    setIsMenuOpen(false);
+  };
+
 
 
 
@@ -133,17 +170,17 @@ function App() {
   const handleStart = async () => {
     const excelOpen = await isExcelOpen();
 
-    if (excelOpen && currentPhase != 1) {
+    if (excelOpen) {
       setComment("Excel jest już otwarty. Zamknij go!");
       return;
     }
 
-    if (drawingPath == "" && currentPhase === 3) {
+    if (drawingPath === "" && currentPhase === 3) {
       setComment("Wybierz folder z rysunkami!");
       return;
     }
 
-    if (bomPath == "" && currentPhase === 1) {
+    if (bomPath === "" && currentPhase === 1) {
       setComment("Wybierz plik BOM!");
       return;
     }
@@ -158,9 +195,8 @@ function App() {
     } else if (currentPhase === 4) {
       await runPhase("phase4", "http://127.0.0.1:8000/run-phase4");
     } else if (currentPhase === 5) {
-      await runPhase("phase5", "http://127.0.0.1:8000/run-phase5");
-    } else if (currentPhase === 6) {
-      await runPhase("phase5", "http://127.0.0.1:8000/run-phase6");
+      resetApp();
+
     } else {
       alert("All phases complete!");
     }
@@ -182,6 +218,29 @@ function App() {
   };
 
 
+  const openExcelPurchases = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/openExcelPurchases");
+      const data = await response.json();
+
+      if (data.ready) {
+        console.log("Excel opened successfully.");
+      } else {
+        console.warn("Excel was opened, but marked as not ready.");
+      }
+    } catch (error) {
+      console.error("Failed to open Excel:", error);
+    }
+  };
+
+  const getButtonLabel = () => {
+    if (currentPhase <= 3) return `Start Etap ${currentPhase}`;
+    if (currentPhase === 4) return "Wygeneruj nowy Excel";
+    if (currentPhase === 5) return "Nowy BOM";
+    return "Proces zakończony";
+  };
+
+
 
   return (
     <div className="Page_1">
@@ -198,7 +257,7 @@ function App() {
           <div className={`hint-panel ${isMenuOpen ? 'open' : ''}`}>
             <h4>Legenda Kolorów</h4>
             <div className="setion_legend">
-              <p>Brak Typu - <span style={{ backgroundColor: '#1A4D96', color: '#1A4D96' }}>........</span></p>
+              <p>Brak Typu - <span style={{ backgroundColor: '#00FFB7', color: '#00FFB7' }}>........</span></p>
             </div>
             <div className="setion_legend">
               <h5>Handlowe</h5>
@@ -262,29 +321,41 @@ function App() {
         <div class="button_div_1">
         </div>
 
+
+
+
+
         <div class="button_div_2">
           <button
             onClick={handleStart}
-            disabled={currentPhase > 6}
+            style={{
+              backgroundColor: currentPhase === 5 ? "#FF0A0A" : undefined,
+              color: currentPhase === 5 ? "white" : undefined,
+            }}
           >
-            {currentPhase <= 3
-              ? `Start Etap ${currentPhase}`
-              : currentPhase === 4
-                ? "Wygeneruj nowy Excel"
-                : currentPhase === 5
-                  ? "Otwórz Excel"
-                  : currentPhase === 6
-                    ? "Otwórz Folder"
-                    : "Zakończono"}
+            {getButtonLabel()}
           </button>
 
+
+
         </div>
-        <div class="button_div_3">
-          <button onClick={openExcel}
+        <div className="button_div_3">
+          <button
+            onClick={() => {
+              if (currentPhase > 4) {
+                openExcelPurchases(); // replace with your actual function
+              } else {
+                openExcel();
+              }
+            }}
             style={{ backgroundColor: excelButtonColor }}
-          >Otwórz Excel</button></div>
+          >
+            Otwórz Excel
+          </button>
+        </div>
+
       </div>
-    </div>
+    </div >
 
 
   );

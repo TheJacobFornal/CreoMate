@@ -30,7 +30,7 @@ def remove_dash_Type(ws, removeHItems):
                 if removeHItems:
                     ws.delete_rows(row)  
                 else:
-                    color_row(ws, row, True, "FFFF00")
+                    color_row(ws, row, True, "00FFB7")
                     counter_wrong += 1
                     #print("H in Type", flush=True)
                 

@@ -34,9 +34,11 @@ def create_app():
     )
 
 
-    @app.get("/ping")
-    def ping(name: str):
-        return {"message": f"Hello, {name}!"}
+    @app.get("/init")
+    def ping():
+        print("Ping INIT:", flush=True)
+        Main1.delete_old_files()
+       
     
     @app.get("/chooseFile")
     def choseFiel():
@@ -94,7 +96,7 @@ def create_app():
 
     @app.get("/run-phase4")
     def run_phase4():
-        print("Excel ready is generated", flush=True)
+        Main1.copy_Excel_to_Purchases()
         return {
             "ready": True,
         }
@@ -136,8 +138,10 @@ def create_app():
             return {"ready": True}
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
-
-
+        
+    @app.get("/openExcelPurchases")
+    def open_excel_purchases():
+       Main1.open_Excel_purchases()
 
 
         

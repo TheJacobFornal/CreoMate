@@ -1,11 +1,12 @@
 from pathlib import Path
-
+import shutil
 from Code.BOM_Mod import MOD_main
 from Code.Excel_Check.Excel_Part1 import Excel_Part_1
 from Code.Excel_Check.Excel_Part2 import Excel_Part_2
 from Code.Excel_Check.Excel_Part3 import Excel_Part_3
 from Code.Excel_Check.Excel_Addision import Excel_addition
 from Code.File_Finder import Finder_main
+from Code.Excel_Purchases import Excel_Purchases_main
 
 import os
 
@@ -15,6 +16,10 @@ output_folder = desktop_path / "CreoMate"
 output_folder.mkdir(parents=True, exist_ok=True)
 Excel_path = output_folder / "BOM CreoMate.xlsx"
 readyBOM_path = output_folder / "readyBOM.txt"
+Purchases_Excel_Template_path = output_folder / "Zamówienia CreoMate Szablon.xlsx"
+Purchases_Excel_path = output_folder / "Zamówienia CreoMate.xlsx"
+
+
 
 
 
@@ -58,6 +63,16 @@ def phase3(drowings_folder):
     return text
 
 
+def copy_Excel_to_Purchases():
+    global Excel_path
+    global Purchases_Excel_path
+
+   
+    Excel_Purchases_main.main(Excel_path, Purchases_Excel_path)
+
+    os.startfile(Purchases_Excel_path)
+
+
 def check_Excel_open():
     global Excel_path
     if Excel_path.exists():
@@ -68,6 +83,18 @@ def check_Excel_open():
             return False
     else:
         return False
+    
+
+def open_Excel_purchases():
+    os.startfile(Purchases_Excel_path)
+
+
+def delete_old_files():
+    global Excel_path
+    global Purchases_Excel_path
+    shutil.copy(Purchases_Excel_Template_path, Purchases_Excel_path)
+    print("Old files deleted", flush=True)
+
    
 
 
