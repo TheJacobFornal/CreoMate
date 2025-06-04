@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Page1 from './Page_1/Page1';
 import './App.css';
+import SideMenu from './SideMenu/SideMenu';
 
 function App() {
   const [bomPath, setBomPath] = useState('');
@@ -19,6 +20,7 @@ function App() {
   const [score3, setScore3] = useState(" ");
   const [comment, setComment] = useState("Witaj w CreoMate! Wybierz plik BOM i rozpocznij proces.");
   const [excelButtonColor, setExcelButtonColor] = useState("#949494");
+  const [activePage, setActivePage] = useState(1);
 
   const resetApp = () => {
     setBomPath('');
@@ -153,26 +155,59 @@ function App() {
     if (currentPhase === 5) return "Nowy BOM";
     return "Proces zakończony";
   };
+return (
+  <div style={{ display: 'flex', height: '100vh' }}>
+    <SideMenu setActivePage={setActivePage} />
 
-  return (
-  <Page1
-    bomPath={bomPath} setBomPath={setBomPath}
-    removeHItems={removeHItems} setRemoveHItems={setRemoveHItems}
-    removeMirror={removeMirror} setRemoveMirror={setRemoveMirror}
-    ready2={ready2} setReady2={setReady2}
-    ready3={ready3} setReady3={setReady3}
-    drawingPath={drawingPath} setDrawingPath={setDrawingPath}
-    currentPhase={currentPhase} setCurrentPhase={setCurrentPhase} 
-    statuses={statuses} setStatuses={setStatuses}
-    score2={score2} score3={score3}
-    comment={comment}
-    excelButtonColor={excelButtonColor}
-    handleStart={handleStart}
-    getButtonLabel={getButtonLabel}
-    openExcel={openExcel}
-    openExcelPurchases={openExcelPurchases}
-  />
-  );
+   
+    <div style={{ flexGrow: 1, overflowY: 'auto' }}>
+  {activePage === 1 && (
+    <Page1
+      bomPath={bomPath}
+      setBomPath={setBomPath}
+      removeHItems={removeHItems}
+      setRemoveHItems={setRemoveHItems}
+      removeMirror={removeMirror}
+      setRemoveMirror={setRemoveMirror}
+      ready2={ready2}
+      setReady2={setReady2}
+      ready3={ready3}
+      setReady3={setReady3}
+      drawingPath={drawingPath}
+      setDrawingPath={setDrawingPath}
+      currentPhase={currentPhase}
+      setCurrentPhase={setCurrentPhase}
+      statuses={statuses}
+      setStatuses={setStatuses}
+      score2={score2}
+      score3={score3}
+      comment={comment}
+      excelButtonColor={excelButtonColor}
+      handleStart={handleStart}
+      getButtonLabel={getButtonLabel}
+      openExcel={openExcel}
+      openExcelPurchases={openExcelPurchases}
+    />
+  )}
+
+  {activePage === 2 && (
+    <div style={{ padding: '20px' }}>
+      <h2>This is Page 2</h2>
+      {/* Your Page2 content here */}
+    </div>
+  )}
+
+  {activePage === 3 && (
+    <div style={{ padding: '20px' }}>
+      <h2>This is Page 3</h2>
+      {/* Your Page2 content here */}
+    </div>
+  )}
+</div>
+
+  </div>
+);
+
 }
 
 export default App;
