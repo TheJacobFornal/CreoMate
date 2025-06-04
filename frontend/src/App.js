@@ -217,7 +217,8 @@ function App() {
             getButtonLabel={getButtonLabel}
             purchases_Excel={Purchases_Excel}
             setPurchases_Excel={setPurchases_Excel}
-            setComment={setComment} // ✅ Add this
+            setComment={setComment}
+            setExcelButtonColor={setExcelButtonColor}
           />
         )}
 

@@ -39,9 +39,9 @@ const Page2 = ({
     const data = await res.json();
 
     if (data.ready) {
-      setComment("Proces Page2 zakończony pomyślnie.");
+      setComment("Excel zakupy gotowy.");
     } else {
-      setComment("Proces Page2 nie powiódł się.");
+      setComment("Popraw Excel");
     }
   } catch (err) {
     console.error("Błąd Page2:", err);
@@ -64,7 +64,7 @@ const isExcelOpen = async () => {
 
 const openExcelPurchases_Zakupy = async () => {
   try {
-    const res = await fetch("http://127.0.0.1:8000/openExcelPurchases_Zakupy");
+    const res = await fetch("http://127.0.0.1:8000/openExcelPurchases");
     const data = await res.json();
     if (data.ready) {
       setComment("Excel zakupy otwarty.");

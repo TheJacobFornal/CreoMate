@@ -6,7 +6,6 @@ import re
 counter_wrong = 0
 
 def contains_exactly_one_letter(s):
-    # Remove non-letter characters
     letters = re.findall(r'[A-Za-z]', s)
     return len(letters) == 1
 
@@ -26,7 +25,10 @@ def remove_dash_Type(ws, removeHItems):
     TypeIndex = 5
     for row in range(ws.max_row, 1, -1):                                                        
         Type_value = ws.cell(row, TypeIndex).value
-        if Type_value is not None and not Type_value.isdigit():        # jakiś poprawny TYP (z H1, H2)
+        if Type_value is not None:
+            Type_value = str(Type_value).strip()  
+                                                              
+        if Type_value is not None and not str(Type_value).isdigit():        # jakiś poprawny TYP (z H1, H2)
 
             removed_dash = Type_value.replace("-", "")
             ws.cell(row, TypeIndex).value = removed_dash
@@ -83,7 +85,7 @@ def check_Material_Obrobki_brak(ws, row):                            # Sprawdza 
     Cieplna_cell = ws.cell(row, Cieplna_index)
     Powierzchnia_cell = ws.cell(row, Powierzchnia_index)
 
-    if Cieplna_cell.value and Cieplna_cell.value.strip().lower() == "brak":                    # zmienia "Brak" na "Brak / None"
+    if Cieplna_cell.value and str(Cieplna_cell.value).strip().lower() == "brak":                    # zmienia "Brak" na "Brak / None"
         ws.cell(row, Cieplna_index).value  = "Brak / None"
     if Powierzchnia_cell.value and Powierzchnia_cell.value.strip().lower() == "brak":
         ws.cell(row, Powierzchnia_index).value = "Brak / None"
@@ -105,7 +107,7 @@ def check_production(ws, row):                                                  
         color_row(ws, row, True, "ABA200")                                          
         counter_wrong += 1
 
-def main(Excel_path, removeHItems=False):
+def main(Excel_path, removeHItems=False, Zakupy=False):
     global counter_wrong
     counter_wrong = 0
     TypeIndex = 5

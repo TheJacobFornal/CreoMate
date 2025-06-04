@@ -148,26 +148,18 @@ def create_app():
             Main1.purchase_main(Purchases_Excel_path)
         else:
             Main1.purchase_main(Purchases_Excel_path, Drowings_dir)
-        return {"ready": True}
-
-
-    @app.get("/openExcelPurchases_Zakupy")
-    def open_excel_purchases_zakupy():
-        global Purchases_Excel_path
-        print("Opening Purchases Excel...", flush=True)
-
-
-    
-   
+        return {"ready": True}   
 
     @app.get("/isExcelOpen_Purchases")
     def isExcelOpen_Purchases():
-        print("Checking if Purchases Excel is open...", flush=True)
+        print("Excel check main purchuses", flush=True)
+        if Main1.check_Excel_open(Purchases_Excel_path):
+            return {"open": True}
+        else:
+            return {"open": False}
 
 
-    @app.get("/openExcelPurchases_Zakupy")
-    def open_excel_purchases_zakupy():
-        print("Opening Purchases Excel...", flush=True)
+        
 
     @app.get("/chooseFile_Purchases")
     def choseFiel():
