@@ -1,34 +1,80 @@
 import React, { useState } from 'react';
-import Step1 from './P1_components/P1_Step1';
-import Step2 from './P1_components/P1_Step2';
-import Step3 from './P1_components/P1_Step3';
+import Step1 from './P2_components/P2_Step1';
+import Step3 from './P2_components/P2_Step3';
 import bulb from '../assets/bulb.png';
-import './Page1.css';
+import './Page2.css';
 
 
 
-const Page1 = ({
-  bomPath, setBomPath,
-  removeHItems, setRemoveHItems,
-  removeMirror, setRemoveMirror,
-  ready2, setReady2,
+
+
+const Page2 = ({
   ready3, setReady3,
   drawingPath, setDrawingPath,
   currentPhase,
   statuses, setStatuses,
   score2, score3,
-  comment,
+  comment, setComment, 
   excelButtonColor,
-  handleStart,
   getButtonLabel,
-  openExcel,
-  openExcelPurchases,
-  setCurrentPhase, // ✅ Only once
+  purchases_Excel, 
+  setPurchases_Excel,
+  setExcelButtonColor
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
-  
+
+
+
+  const runPage2Process = async () => {
+   if (purchases_Excel === "") {
+      setComment("Wybierz plik Excel!");
+      return;
+    }
+
+  try {
+    setComment("Uruchamianie procesu dla Page2...");
+    const res = await fetch("http://127.0.0.1:8000/page2_main"); // Adjust the endpoint
+    const data = await res.json();
+
+    if (data.ready) {
+      setComment("Proces Page2 zakończony pomyślnie.");
+    } else {
+      setComment("Proces Page2 nie powiódł się.");
+    }
+  } catch (err) {
+    console.error("Błąd Page2:", err);
+    setComment("Wystąpił błąd podczas procesu Page2.");
+  }
+};
+
+
+const isExcelOpen = async () => {
+  try {
+    const res = await fetch("http://127.0.0.1:8000/isExcelOpen_Purchases");
+    const text = await res.text();
+    const data = JSON.parse(text);
+    return data.open;
+  } catch (err) {
+    console.error("Failed to check Excel status:", err);
+    return false;
+  }
+};
+
+const openExcelPurchases_Zakupy = async () => {
+  try {
+    const res = await fetch("http://127.0.0.1:8000/openExcelPurchases_Zakupy");
+    const data = await res.json();
+    if (data.ready) {
+      setComment("Excel zakupy otwarty.");
+      setExcelButtonColor("#0066ff");
+    }
+  } catch (err) {
+    console.error("Błąd otwierania excela zakupowego:", err);
+    setComment("Nie udało się otworzyć excela zakupowego.");
+  }
+};
 
   return (
     <div className="Page_1">
@@ -68,33 +114,15 @@ const Page1 = ({
           </div>
 
           <div className="phase_div">
-            <Step1 bomPath={bomPath} setBomPath={setBomPath} status={statuses.phase1} />
+            <Step1 purchases_Excel={purchases_Excel} setPurchases_Excel={setPurchases_Excel} />
           </div>
 
-          <div className="phase_div">
-            <Step2
-              removeHItems={removeHItems}
-              setRemoveHItems={setRemoveHItems}
-              removeMirror={removeMirror}
-              setRemoveMirror={setRemoveMirror}
-              ready={ready2}
-              setReady={setReady2}
-              status={statuses.phase2}
-              setStatuses={setStatuses}
-              setCurrentPhase={setCurrentPhase}
-              score2={score2}
-            />
-          </div>
 
           <div className="phase_div">
             <Step3
               drawingPath={drawingPath}
               setDrawingPath={setDrawingPath}
-              ready={ready3}
-              setReady={setReady3}
-              status={statuses.phase3}
-              setStatuses={setStatuses}
-              setCurrentPhase={setCurrentPhase}
+
               score3={score3}
             />
           </div>
@@ -108,35 +136,31 @@ const Page1 = ({
       <div className="buttons_container">
 
         <div className="button_div_1">
-          </div>
+        </div>
         <div className="button_div_2">
-          <button
-            onClick={handleStart}
-            style={{
-              backgroundColor: currentPhase === 5 ? "#FF0A0A" : undefined,
-              color: currentPhase === 5 ? "white" : undefined,
-            }}
-          >
-            {getButtonLabel()}
+          <button onClick={runPage2Process}>
+            Start 
           </button>
         </div>
         <div className="button_div_3">
           <button
-            onClick={() => {
-              if (currentPhase > 4) {
-                openExcelPurchases();
+            onClick={async () => {
+              const open = await isExcelOpen();
+              if (!open) {
+                openExcelPurchases_Zakupy();
               } else {
-                openExcel();
+                setComment("Excel jest już otwarty.");
               }
             }}
             style={{ backgroundColor: excelButtonColor }}
           >
             Otwórz Excel
           </button>
+
         </div>
       </div>
     </div>
   );
 };
 
-export default Page1;
+export default Page2;

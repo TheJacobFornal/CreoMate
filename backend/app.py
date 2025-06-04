@@ -27,6 +27,7 @@ Excel_path = output_folder / "BOM CreoMate.xlsx"
 readyBOM_path = output_folder / "readyBOM.txt"
 Purchases_Excel_Template_path = output_folder / "Szablon Zamówienia.xlsx"
 Purchases_Excel_path = output_folder / "Zamówienia CreoMate.xlsx"
+Drowings_dir = None
 
 
 counter = 0
@@ -131,10 +132,53 @@ def create_app():
         
     @app.get("/openExcelPurchases")
     def open_excel_purchases():
+       global Purchases_Excel_path
        Main1.open_Excel_purchases(Purchases_Excel_path)
 
 
         
+        ## Page 2 - Purchases ##
+    @app.get("/page2_main")
+    def run_phase10():
+        global Purchases_Excel_path
+        global Drowings_dir
+
+        print(Drowings_dir, flush=True)
+        if Drowings_dir != None:
+            Main1.purchase_main(Purchases_Excel_path)
+        else:
+            Main1.purchase_main(Purchases_Excel_path, Drowings_dir)
+        return {"ready": True}
+
+
+    @app.get("/openExcelPurchases_Zakupy")
+    def open_excel_purchases_zakupy():
+        global Purchases_Excel_path
+        print("Opening Purchases Excel...", flush=True)
+
+
+    
+   
+
+    @app.get("/isExcelOpen_Purchases")
+    def isExcelOpen_Purchases():
+        print("Checking if Purchases Excel is open...", flush=True)
+
+
+    @app.get("/openExcelPurchases_Zakupy")
+    def open_excel_purchases_zakupy():
+        print("Opening Purchases Excel...", flush=True)
+
+    @app.get("/chooseFile_Purchases")
+    def choseFiel():
+        global Purchases_Excel_path
+        root = Tk()
+        root.withdraw()
+        Purchases_Excel_path = filedialog.askopenfilename()
+        root.destroy()
+        return {"path": Purchases_Excel_path}
+  
+
     return app
 
 def run_uvicorn():

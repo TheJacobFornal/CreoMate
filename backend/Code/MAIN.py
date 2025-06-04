@@ -66,6 +66,8 @@ def copy_Template_Purchases(Purchases_Excel_Template_path, Purchases_Excel_path)
     
 
 
+
+
 def check_Excel_open(Excel_path):
 
     if Excel_path.exists():
@@ -80,6 +82,21 @@ def check_Excel_open(Excel_path):
 
 def open_Excel_purchases(Purchases_Excel_path):
     os.startfile(Purchases_Excel_path)
+
+
+
+
+
+
+
+
+
+
+
+def purchase_main(Purchases_Excel_path, drowings_folder = None):
+    print("Starting purchase main function...", flush=True)
+    print("Purchases Excel Path:", Purchases_Excel_path, flush=True)
+    print("Drowings Folder:", drowings_folder, flush=True)
 
 
 

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import Page1 from './Page_1/Page1';
+import Page2 from './Page_2/Page2';
 import './App.css';
 import SideMenu from './SideMenu/SideMenu';
 
@@ -21,6 +23,9 @@ function App() {
   const [comment, setComment] = useState("Witaj w CreoMate! Wybierz plik BOM i rozpocznij proces.");
   const [excelButtonColor, setExcelButtonColor] = useState("#949494");
   const [activePage, setActivePage] = useState(1);
+  const [Purchases_Excel, setPurchases_Excel] = useState("");
+
+
 
   const resetApp = () => {
     setBomPath('');
@@ -52,10 +57,10 @@ function App() {
       try {
         let res = (phaseKey === "phase2")
           ? await fetch(url, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ removeHItems, removeMirror }),
-            })
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ removeHItems, removeMirror }),
+          })
           : await fetch(url);
 
         const data = await res.json();
@@ -118,6 +123,7 @@ function App() {
       2: "http://127.0.0.1:8000/run-phase2",
       3: "http://127.0.0.1:8000/run-phase3",
       4: "http://127.0.0.1:8000/run-phase4",
+      10: "http://127.0.0.1:8000/run-phase10",
     };
 
     if (currentPhase >= 1 && currentPhase <= 4) {
@@ -149,64 +155,82 @@ function App() {
     }
   };
 
+
+
   const getButtonLabel = () => {
     if (currentPhase <= 3) return `Start Etap ${currentPhase}`;
     if (currentPhase === 4) return "Wygeneruj Gotowy Excel";
     if (currentPhase === 5) return "Nowy BOM";
     return "Proces zakończony";
   };
-return (
-  <div style={{ display: 'flex', height: '100vh' }}>
-    <SideMenu setActivePage={setActivePage} />
 
-   
-    <div style={{ flexGrow: 1, overflowY: 'auto' }}>
-  {activePage === 1 && (
-    <Page1
-      bomPath={bomPath}
-      setBomPath={setBomPath}
-      removeHItems={removeHItems}
-      setRemoveHItems={setRemoveHItems}
-      removeMirror={removeMirror}
-      setRemoveMirror={setRemoveMirror}
-      ready2={ready2}
-      setReady2={setReady2}
-      ready3={ready3}
-      setReady3={setReady3}
-      drawingPath={drawingPath}
-      setDrawingPath={setDrawingPath}
-      currentPhase={currentPhase}
-      setCurrentPhase={setCurrentPhase}
-      statuses={statuses}
-      setStatuses={setStatuses}
-      score2={score2}
-      score3={score3}
-      comment={comment}
-      excelButtonColor={excelButtonColor}
-      handleStart={handleStart}
-      getButtonLabel={getButtonLabel}
-      openExcel={openExcel}
-      openExcelPurchases={openExcelPurchases}
-    />
-  )}
 
-  {activePage === 2 && (
-    <div style={{ padding: '20px' }}>
-      <h2>This is Page 2</h2>
-      {/* Your Page2 content here */}
+
+  // PAGE 2 Process
+
+
+  return (
+    <div style={{ display: 'flex', height: '100vh' }}>
+      <SideMenu setActivePage={setActivePage} />
+
+
+      <div style={{ flexGrow: 1, overflowY: 'auto' }}>
+        {activePage === 1 && (
+          <Page1
+            bomPath={bomPath}
+            setBomPath={setBomPath}
+            removeHItems={removeHItems}
+            setRemoveHItems={setRemoveHItems}
+            removeMirror={removeMirror}
+            setRemoveMirror={setRemoveMirror}
+            ready2={ready2}
+            setReady2={setReady2}
+            ready3={ready3}
+            setReady3={setReady3}
+            drawingPath={drawingPath}
+            setDrawingPath={setDrawingPath}
+            currentPhase={currentPhase}
+            setCurrentPhase={setCurrentPhase}
+            statuses={statuses}
+            setStatuses={setStatuses}
+            score2={score2}
+            score3={score3}
+            comment={comment}
+            excelButtonColor={excelButtonColor}
+            handleStart={handleStart}
+            getButtonLabel={getButtonLabel}
+            openExcel={openExcel}
+            openExcelPurchases={openExcelPurchases}
+          />
+        )}
+
+        {activePage === 2 && (
+          <Page2
+            drawingPath={drawingPath}
+            setDrawingPath={setDrawingPath}
+            statues={statuses}
+            setStatuses={setStatuses}
+            score2={score2}
+            score3={score3}
+            comment={comment}
+            excelButtonColor={excelButtonColor}
+            getButtonLabel={getButtonLabel}
+            purchases_Excel={Purchases_Excel}
+            setPurchases_Excel={setPurchases_Excel}
+            setComment={setComment} // ✅ Add this
+          />
+        )}
+
+        {activePage === 3 && (
+          <div style={{ padding: '20px' }}>
+            <h2>This is Page 3</h2>
+            {/* Your Page2 content here */}
+          </div>
+        )}
+      </div>
+
     </div>
-  )}
-
-  {activePage === 3 && (
-    <div style={{ padding: '20px' }}>
-      <h2>This is Page 3</h2>
-      {/* Your Page2 content here */}
-    </div>
-  )}
-</div>
-
-  </div>
-);
+  );
 
 }
 
