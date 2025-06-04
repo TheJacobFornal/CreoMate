@@ -1,0 +1,9 @@
+Y:\00 - IT_Instalki\CreoMate
+Folder musisz skopiować do siebie na pulpit lokalny
+A natępnie odpalić instalkę.
+
+
+1.1.1
+- naprawa Havix (Eryk BOM)
+
+

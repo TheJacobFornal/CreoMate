@@ -6,8 +6,13 @@ from openpyxl import load_workbook
 import csv
 from itertools import zip_longest
 import pandas as pd
+import re
 
 
+def clean_illegal_chars(val):
+    if isinstance(val, str):
+        return re.sub(r'[\x00-\x08\x0B-\x0C\x0E-\x1F]', '', val)
+    return val
 
 def main(main_lines, extension_lines, Excel_path, readyBom_path):
 
@@ -38,8 +43,10 @@ def main(main_lines, extension_lines, Excel_path, readyBom_path):
         cleaned_row = [col.strip() for col in parsed_row]
         rows.append(cleaned_row)
 
-    # Convert to DataFrame
     df = pd.DataFrame(rows, columns=header)
+
+    # Clean illegal Excel characters
+    df = df.applymap(clean_illegal_chars)
 
     # Save to Excel
     df.to_excel(Excel_path, index=False)
