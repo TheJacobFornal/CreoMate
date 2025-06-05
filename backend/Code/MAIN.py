@@ -89,7 +89,7 @@ def purchase_main(Purchases_Excel_path, drowings_folder = None):
     print("Purchases Excel Path:", Purchases_Excel_path, flush=True)
     print("Drowings Folder:", drowings_folder, flush=True)
     
-    Excel_Part_1.mainP(Path(Purchases_Excel_path), removeHItems=False, Zakupy = True)
+    Excel_Part_1.main(Path(Purchases_Excel_path), removeHItems=False, Zakupy = True)
 
 
 

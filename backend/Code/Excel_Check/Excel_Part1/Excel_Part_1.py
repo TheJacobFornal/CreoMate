@@ -4,6 +4,8 @@ from openpyxl.styles import PatternFill
 import re
 
 counter_wrong = 0
+max_row = 0
+min_row = 0
 
 def contains_exactly_one_letter(s):
     letters = re.findall(r'[A-Za-z]', s)
@@ -21,9 +23,11 @@ def contain_num(text):
     return any(char.isdigit() for char in text)
 
 def remove_dash_Type(ws, removeHItems):
+    global min_row
+    global max_row
     global counter_wrong
     TypeIndex = 5
-    for row in range(ws.max_row, 1, -1):                                                        
+    for row in range(max_row, min_row, -1):                                                        
         Type_value = ws.cell(row, TypeIndex).value
         if Type_value is not None:
             Type_value = str(Type_value).strip()  
@@ -106,16 +110,40 @@ def check_production(ws, row):                                                  
     if not Material_cell.value or not Cieplna_cell.value or not Powierzchnia_cell.value:               # Produkiowane nie materiału i obróbek - oliwkowy
         color_row(ws, row, True, "ABA200")                                          
         counter_wrong += 1
+        
+        
+def get_max_min_row(ws, zakupy=False):
+    global max_row
+    global min_row
+    max_row = 0
+    min_row = 0
+    for row in ws.iter_rows(min_row=5, max_col=2, values_only=True):
+        if row[1] is not None:
+            max_row += 1
+    if zakupy:
+        max_row += 4
+        min_row = 5
+    else:
+        min_row = 2
+        max_row = ws.max_row + 1
+    return max_row, min_row
 
 def main(Excel_path, removeHItems=False, Zakupy=False):
     global counter_wrong
+    global max_row
+    global min_row
+   
     counter_wrong = 0
     TypeIndex = 5
     wb = load_workbook(Excel_path)
     ws = wb.active
+    max_row, min_row = get_max_min_row(ws, Zakupy)
     remove_dash_Type(ws, removeHItems)
+    print("Max row:", max_row, flush=True)
+    print("Min row:", min_row, flush=True)
 
     for row in range(2, ws.max_row + 1):
+      
         Type_value = ws.cell(row, TypeIndex).value
         check_Material_Obrobki_brak(ws, row)
 
