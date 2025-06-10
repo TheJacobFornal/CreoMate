@@ -142,14 +142,21 @@ def create_app():
     def run_phase10():
         global Purchases_Excel_path
         global Drowings_dir
+
         
 
-        print(Drowings_dir, flush=True)
-        if Drowings_dir != None:
-            Main1.purchase_main(Path(Purchases_Excel_path))
+        if Drowings_dir is None:
+            scoreExcel, scoreDrawings = Main1.purchase_main(Path(Purchases_Excel_path)), None
         else:
-            Main1.purchase_main(Path(Purchases_Excel_path), Drowings_dir)
-        return {"ready": True}   
+            scoreExcel, scoreDrawings = Main1.purchase_main(Path(Purchases_Excel_path), Drowings_dir)
+
+        print(scoreExcel, scoreDrawings, flush=True)
+        return {
+            "ready": True,
+            "scoreExcel": scoreExcel,
+            "scoreDrawings": scoreDrawings
+        }
+  
 
     @app.get("/isExcelOpen_Purchases")
     def isExcelOpen_Purchases():

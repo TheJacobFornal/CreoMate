@@ -23,7 +23,7 @@ function Step3({ drawingPath, setDrawingPath, ready, setReady, status, setStatus
         <h3 id="scpre_header">{score3}</h3>
       </div>
 
-      <div className="input_line_phase">
+      <div className="input_line_phase" style={{ marginLeft: '15px' }}>
         <label className="label_main">Rysunki:</label>
         <div className="input_icon_div">
           <input
@@ -37,7 +37,7 @@ function Step3({ drawingPath, setDrawingPath, ready, setReady, status, setStatus
         </div>
       </div>
       
-      <div className="switch-container">
+      <div className="switch-container" style={{ marginLeft: '15px' }}>
         <label className="switch">
           <input
             type="checkbox"

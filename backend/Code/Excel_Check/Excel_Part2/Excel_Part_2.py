@@ -1,7 +1,10 @@
 from openpyxl import load_workbook
 from pathlib import Path
 from openpyxl.styles import PatternFill
+from Code.Excel_Check.Excel_Addision import Excel_addition
 
+min_row = 0
+max_row = 0
 wrong_counter = 0
 def color_row(ws, row_num, type, color = "FFFF00"):
     if type:
@@ -23,13 +26,15 @@ def check_profile(ws, row):                                                 # co
 
     if number_creo != number_val:
         wrong_counter += 1
-        #print("Wrong profile", flush=True)
         color_row(ws, row, True, "A1A1A1")
     else:
         color_row(ws, row, False)
 
 def modify_left_duplicate(ws, row_left, creo_left_number, removeMirror):
     global wrong_counter
+    global max_row
+    global min_row
+    
     Quantity_Index = 4
     Creo_Index = 1
     Uwagi_Index = 9
@@ -38,7 +43,7 @@ def modify_left_duplicate(ws, row_left, creo_left_number, removeMirror):
     right_name = creo_left_number[:-1]  # base part of the name
 
     right = False
-    for row in range(1, ws.max_row + 1):  # find right component
+    for row in range(min_row, max_row):  # find right component
         creo_right_value = ws.cell(row, Creo_Index).value
 
         if (
@@ -78,35 +83,45 @@ def modify_left_duplicate(ws, row_left, creo_left_number, removeMirror):
             color_row(ws, row_left, True, "42FF48")
 
 
-def main(Excel_path, removeMirror):
+def main(Excel_path, removeMirror, Zakupy=False):
     global wrong_counter
+    global max_row
+    global min_row
+    
     wrong_counter = 0
     Name_Index = 3
     Type_Index = 5
     Creo_Index = 1
     wb = load_workbook(Excel_path)
     ws = wb.active
-
-    for row in range(1, ws.max_row + 1):
+    
+    max_row, min_row = Excel_addition.get_max_min_row(ws, Zakupy)
+    print("kuba part 2", flush=True)
+    for row in range(min_row, max_row):
         Name_value = ws.cell(row, Name_Index).value
         Type_value = ws.cell(row, Type_Index).value
         creo_val = ws.cell(row, Creo_Index).value
 
+       
         if Name_value is not None:
-            Upper_name = Name_value.upper()
+            Upper_name = str(Name_value).upper()
             ws.cell(row, Name_Index).value = Upper_name                                            # upper letter in kol. Name
             if Name_value.__contains__("PROFIL_") and Type_value.__contains__("H"):                # Profile with dimensions Type: H
-                check_profile(ws, row)
+                if Zakupy:
+                    continue
+                else:
+                    check_profile(ws, row)
             else:
                 Numer_val = ws.cell(row, 2).value                                                  # Number contain "_" - brown
-                if Numer_val is not None and  Numer_val.__contains__("_"):
+                if Numer_val is not None and  str(Numer_val).__contains__("_"):
+                    print("Number with underscore found in row:", row, flush=True)
                     wrong_counter += 1
-                    #print("Wrong _", flush=True)
                     color_row(ws, row, True, "D3A6FF")
 
-                number_creo = creo_val.split("-")[0]                                               # Left element
-                if number_creo.__contains__("L") and Type_value != "H":
-                    modify_left_duplicate(ws, row, number_creo, removeMirror)
+                if not Zakupy:
+                    number_creo = creo_val.split("-")[0]                                               # Left element
+                    if number_creo.__contains__("L") and Type_value != "H":
+                        modify_left_duplicate(ws, row, number_creo, removeMirror)
 
 
 

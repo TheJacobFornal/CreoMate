@@ -31,9 +31,11 @@ def phase2(Excel_path, removeHItems=False, removeMirror=False):
 
     if number_of_rows == 0:
         return "No rows to process."
+    
+    correct_lines = number_of_rows - counter_wrong
 
-    percent_correct = 100 - round((counter_wrong / number_of_rows) * 100, 2)
-    text = f"{counter_wrong}/{number_of_rows} ({percent_correct}%)"
+    percent_correct = int(round((correct_lines / number_of_rows) * 100, 2))
+    text = f"{correct_lines}/{number_of_rows} ({percent_correct}%)"
 
     return text
 
@@ -46,7 +48,8 @@ def phase3(drowings_folder, Excel_path):
 
 
     if number_of_rows != 0:
-        text = str(counter_wrong) + "/" + str(number_of_rows) + " (" + str(100 - round((counter_wrong / number_of_rows) * 100, 2)) + "%)"
+        percentage = 100 - round((counter_wrong / number_of_rows) * 100)
+        text = f"{counter_wrong}/{number_of_rows} ({percentage}%)"
     else:
         text = "0/0 (100%)"
     return text
@@ -84,12 +87,29 @@ def open_Excel_purchases(Purchases_Excel_path):
     os.startfile(Purchases_Excel_path)
 
 def purchase_main(Purchases_Excel_path, drowings_folder = None):
+    counter_wrong = 0
+    missing_counter = 0
+ 
     Excel_addition.main(Purchases_Excel_path)
-    print("Starting purchase main function...", flush=True)
-    print("Purchases Excel Path:", Purchases_Excel_path, flush=True)
-    print("Drowings Folder:", drowings_folder, flush=True)
+    counter_wrong += Excel_Part_1.main(Path(Purchases_Excel_path), removeHItems=False, Zakupy = True)
+    counter_wrong += Excel_Part_2.main(Path(Purchases_Excel_path), removeMirror=False, Zakupy = True)
     
-    Excel_Part_1.main(Path(Purchases_Excel_path), removeHItems=False, Zakupy = True)
+    number_of_rows_drawings  = Excel_addition.number_of_rows_drawings(Purchases_Excel_path)
+    number_of_rows= Excel_addition.number_of_rows(Purchases_Excel_path, Zakupy = True)
+    
+    correct_lines_Excel = number_of_rows - counter_wrong
+    percentage = int(round((correct_lines_Excel / number_of_rows) * 100, 0))
+    score_excel = f"{correct_lines_Excel}/{number_of_rows} ({percentage}%)"
+    
+    if drowings_folder is not None:
+        missing_counter += Finder_main.main(Path(Purchases_Excel_path), drowings_folder, Zakupy_bool = True)
+        correct_lines = number_of_rows_drawings - missing_counter
+        percentage_drawings = int(round((correct_lines / number_of_rows_drawings) * 100))
+        score_drowings = f"{correct_lines}/{number_of_rows_drawings} ({percentage_drawings}%)"        
+
+        return score_excel, score_drowings
+    
+    return score_excel, None
 
 
 

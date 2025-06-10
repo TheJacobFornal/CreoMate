@@ -1,4 +1,4 @@
-function Step3({ drawingPath, setDrawingPath, score3 }) {
+function Step3({ drawingPath, setDrawingPath, score_drowings }) {
   const handleChooseFolder = async () => {
     const res = await fetch('http://127.0.0.1:8000/chooseFolder');
     const data = await res.json();
@@ -11,10 +11,10 @@ function Step3({ drawingPath, setDrawingPath, score3 }) {
         <h2 style={{ color: 'red' }}>
           <span style={{ color: 'blue' }}>Sprawdzanie rysunków</span>
         </h2>
-        <h3 id="scpre_header">{score3}</h3>
+        <h3 id="scpre_header">{score_drowings}</h3>
       </div>
 
-      <div className="input_line_phase">
+      <div className="input_line_phase" style={{ marginLeft: '14px' }}>
         <label className="label_main">Rysunki:</label>
         <div className="input_icon_div">
           <input

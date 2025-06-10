@@ -1,7 +1,7 @@
 from openpyxl import load_workbook
 from pathlib import Path
 from openpyxl.styles import PatternFill
-import re
+from Code.Excel_Check.Excel_Addision import Excel_addition
 
 counter_wrong = 0
 max_row = 0
@@ -112,21 +112,7 @@ def check_production(ws, row):                                                  
         counter_wrong += 1
         
         
-def get_max_min_row(ws, zakupy=False):
-    global max_row
-    global min_row
-    max_row = 0
-    min_row = 0
-    for row in ws.iter_rows(min_row=5, max_col=2, values_only=True):
-        if row[1] is not None:
-            max_row += 1
-    if zakupy:
-        max_row += 4
-        min_row = 5
-    else:
-        min_row = 2
-        max_row = ws.max_row + 1
-    return max_row, min_row
+
 
 def main(Excel_path, removeHItems=False, Zakupy=False):
     global counter_wrong
@@ -137,7 +123,7 @@ def main(Excel_path, removeHItems=False, Zakupy=False):
     TypeIndex = 5
     wb = load_workbook(Excel_path)
     ws = wb.active
-    max_row, min_row = get_max_min_row(ws, Zakupy)
+    max_row, min_row = Excel_addition.get_max_min_row(ws, Zakupy)
     remove_dash_Type(ws, removeHItems)
     print("Max row:", max_row, flush=True)
     print("Min row:", min_row, flush=True)

@@ -17,17 +17,17 @@ function Step2({ removeHItems, setRemoveHItems, removeMirror, setRemoveMirror, r
         </h2>
         <h3 id="scpre_header">{score2}</h3>
       </div>
-      <label className="label_main">
+      <label className="label_main" style={{ marginLeft: '15px' }}>
         <input type="checkbox" checked={removeHItems} onChange={() => setRemoveHItems(!removeHItems)} />
         Usuwaj elementy z H1, H2, H...
       </label>
       <br />
-      <label className="label_main">
+      <label className="label_main" style={{ marginLeft: '15px' }}>
         <input type="checkbox" checked={removeMirror} onChange={() => setRemoveMirror(!removeMirror)} />
         Usuwaj elementy Lustrzane Lewe
       </label>
       <br />
-  <div className="switch-container">
+  <div className="switch-container" style={{ marginLeft: '15px' }}>
     <label className="switch">
       <input
         type="checkbox"

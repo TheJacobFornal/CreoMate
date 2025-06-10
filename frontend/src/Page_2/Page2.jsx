@@ -3,6 +3,7 @@ import Step1 from './P2_components/P2_Step1';
 import Step3 from './P2_components/P2_Step3';
 import bulb from '../assets/bulb.png';
 import './Page2.css';
+import { useEffect } from 'react'; // already present
 
 
 
@@ -13,7 +14,6 @@ const Page2 = ({
   drawingPath, setDrawingPath,
   currentPhase,
   statuses, setStatuses,
-  score2, score3,
   comment, setComment, 
   excelButtonColor,
   getButtonLabel,
@@ -23,27 +23,49 @@ const Page2 = ({
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(prev => !prev);
+  const [score_Excel, setScore_Excel] = useState(" ");
+  const [score_drowings, setScore_drowings] = useState(" ");
+
+useEffect(() => {
+  if (purchases_Excel) {
+    setExcelButtonColor("#0066ff"); // blue
+  }
+}, [purchases_Excel]);
 
 
+const runPage2Process = async () => {
+  let excelOpen = false
+  excelOpen = await isExcelOpen()
 
+    
+  if (excelOpen) {
+    setComment("Excel jest już otwarty. Zamknij go!");
+    return;
+  }
 
-  const runPage2Process = async () => {
-   if (purchases_Excel === "") {
-      setComment("Wybierz plik Excel!");
-      return;
-    }
+  let dotCount = 0;
+  const loadingInterval = setInterval(() => {
+    dotCount = (dotCount + 1) % 4;
+    setComment("Loading" + ".".repeat(dotCount));
+  }, 500);
+
 
   try {
-    setComment("Uruchamianie procesu dla Page2...");
-    const res = await fetch("http://127.0.0.1:8000/page2_main"); // Adjust the endpoint
+    const res = await fetch("http://127.0.0.1:8000/page2_main");
     const data = await res.json();
+    clearInterval(loadingInterval);
 
     if (data.ready) {
-      setComment("Excel zakupy gotowy.");
+      setScore_Excel(data.scoreExcel || "Brak wyniku");
+      setScore_drowings(data.scoreDrawings || " ");
+
+      let message = `Excel zakupy gotowy`
+      setComment(message);
     } else {
-      setComment("Popraw Excel");
+      setComment("Popraw Excel, aby kontunułować");
     }
   } catch (err) {
+    clearInterval(loadingInterval);
     console.error("Błąd Page2:", err);
     setComment("Wystąpił błąd podczas procesu Page2.");
   }
@@ -68,11 +90,9 @@ const openExcelPurchases_Zakupy = async () => {
     const data = await res.json();
     if (data.ready) {
       setComment("Excel zakupy otwarty.");
-      setExcelButtonColor("#0066ff");
     }
   } catch (err) {
     console.error("Błąd otwierania excela zakupowego:", err);
-    setComment("Nie udało się otworzyć excela zakupowego.");
   }
 };
 
@@ -103,9 +123,6 @@ const openExcelPurchases_Zakupy = async () => {
               <h5>Produkowane</h5>
               <p>Materiał / Obróbki - <span style={{ backgroundColor: '#ABA200', color: "#ABA200" }}>........</span></p>
               <p>"_" w numerze - <span style={{ backgroundColor: '#D3A6FF', color: "#D3A6FF" }}>........</span></p>
-              <p>Długość Profilu - <span style={{ backgroundColor: 'grey', color: "grey" }}>........</span></p>
-              <p>Lewy elem (P) - <span style={{ backgroundColor: '#FF3399', color: "#FF3399" }}>........</span></p>
-              <p>Tylko Lewy elem - <span style={{ backgroundColor: '#42FF48', color: "#42FF48" }}>........</span></p>
             </div>
             <div className="setion_legend" id="last_section_lengend">
               <h5>Rysunki</h5>
@@ -114,7 +131,7 @@ const openExcelPurchases_Zakupy = async () => {
           </div>
 
           <div className="phase_div">
-            <Step1 purchases_Excel={purchases_Excel} setPurchases_Excel={setPurchases_Excel} />
+            <Step1 purchases_Excel={purchases_Excel} setPurchases_Excel={setPurchases_Excel} score_Excel={score_Excel} />
           </div>
 
 
@@ -123,7 +140,7 @@ const openExcelPurchases_Zakupy = async () => {
               drawingPath={drawingPath}
               setDrawingPath={setDrawingPath}
 
-              score3={score3}
+              score_drowings = {score_drowings}
             />
           </div>
         </div>

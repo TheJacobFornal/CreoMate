@@ -269,13 +269,16 @@
   padding: 10px;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.137);
   overflow-y: auto;
-  
+  font-family: 'Rubik';
+  font-weight: 400;
 }
 
 .hint-panel h4 {    
   font-size: 18px;
   margin-top: 10px;
   margin-bottom: 0px;
+  font-family: 'Rubik';
+  font-weight: 600;
 }
 
 #last_section_lengend {
@@ -283,8 +286,8 @@
 }
 
 .hint-toggle img{
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
 }
 
 
@@ -292,6 +295,8 @@
   font-size: 16px;
   margin-top: 10px;
   margin-bottom: -10px;
+  font-family: 'Rubik';
+  font-weight: 600;
 }
 
 .setion_legend {

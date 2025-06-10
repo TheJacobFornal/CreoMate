@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import Page1 from './Page_1/Page1';
 import Page2 from './Page_2/Page2';
+import Page3 from './Page_3/Page3';
 import './App.css';
 import SideMenu from './SideMenu/SideMenu';
 
@@ -210,8 +211,6 @@ function App() {
             setDrawingPath={setDrawingPath}
             statues={statuses}
             setStatuses={setStatuses}
-            score2={score2}
-            score3={score3}
             comment={comment}
             excelButtonColor={excelButtonColor}
             getButtonLabel={getButtonLabel}
@@ -223,10 +222,7 @@ function App() {
         )}
 
         {activePage === 3 && (
-          <div style={{ padding: '20px' }}>
-            <h2>This is Page 3</h2>
-            {/* Your Page2 content here */}
-          </div>
+          <Page3></Page3>
         )}
       </div>
 
