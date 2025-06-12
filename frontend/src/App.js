@@ -73,7 +73,7 @@ function App() {
           <Page2
             drawingPath={drawingPath}
             setDrawingPath={setDrawingPath}
-            statues={statuses}
+            statuses={statuses}
             setStatuses={setStatuses}
             comment={comment}
             excelButtonColor={excelButtonColor}

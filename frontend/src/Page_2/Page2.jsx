@@ -139,7 +139,7 @@ const openExcelPurchases_Zakupy = async () => {
               drawingPath={drawingPath}
               setDrawingPath={setDrawingPath}
 
-              score_drowings = {score_drowings}
+              score_drowings={score_drowings}
             />
           </div>
         </div>
