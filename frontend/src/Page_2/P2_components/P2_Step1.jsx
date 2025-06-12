@@ -20,7 +20,7 @@ function Step1({ purchases_Excel, setPurchases_Excel, score_Excel }) {
           <input
             value={purchases_Excel}
             style={{ width: '560px' }}
-            readFOnly
+            readOnly
             id="custom-input"
           />
           <button id="button_folder" onClick={handleChooseFile}>📁</button>

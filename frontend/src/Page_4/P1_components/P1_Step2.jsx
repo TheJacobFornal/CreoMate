@@ -43,7 +43,7 @@ function Step2({ removeHItems, setRemoveHItems, removeMirror, setRemoveMirror, r
             setStatuses((s) => ({ ...s, phase2: 'idle' }));
             setCurrentPhase(2); // Optional: move back to phase 2
           }
-        }}s
+        }}
       />
       <span className="slider"></span>
     </label>
