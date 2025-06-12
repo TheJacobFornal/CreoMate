@@ -228,8 +228,6 @@ function App() {
 
         {activePage === 4 && (
           <Page4
-            bomPath={bomPath}
-            setBomPath={setBomPath}
             removeHItems={removeHItems}
             setRemoveHItems={setRemoveHItems}
             removeMirror={removeMirror}
