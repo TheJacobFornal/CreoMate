@@ -227,30 +227,7 @@ function App() {
         )}
 
         {activePage === 4 && (
-          <Page4
-            removeHItems={removeHItems}
-            setRemoveHItems={setRemoveHItems}
-            removeMirror={removeMirror}
-            setRemoveMirror={setRemoveMirror}
-            ready2={ready2}
-            setReady2={setReady2}
-            ready3={ready3}
-            setReady3={setReady3}
-            drawingPath={drawingPath}
-            setDrawingPath={setDrawingPath}
-            currentPhase={currentPhase}
-            setCurrentPhase={setCurrentPhase}
-            statuses={statuses}
-            setStatuses={setStatuses}
-            score2={score2}
-            score3={score3}
-            comment={comment}
-            excelButtonColor={excelButtonColor}
-            handleStart={handleStart}
-            getButtonLabel={getButtonLabel}
-            openExcel={openExcel}
-            openExcelPurchases={openExcelPurchases}
-          />
+          <Page4 />
         )}
       </div>
 
