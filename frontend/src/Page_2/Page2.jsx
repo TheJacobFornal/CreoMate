@@ -14,10 +14,9 @@ const Page2 = ({
   drawingPath, setDrawingPath,
   currentPhase,
   statuses, setStatuses,
-  comment, setComment, 
+  comment, setComment,
   excelButtonColor,
-  getButtonLabel,
-  purchases_Excel, 
+  purchases_Excel,
   setPurchases_Excel,
   setExcelButtonColor
 }) => {
