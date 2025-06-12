@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import Page1 from './Page_1/Page1';
 import Page2 from './Page_2/Page2';
 import Page3 from './Page_3/Page3';
+import Page4 from './Page_4/Page4';
 import './App.css';
 import SideMenu from './SideMenu/SideMenu';
 
@@ -223,6 +224,35 @@ function App() {
 
         {activePage === 3 && (
           <Page3></Page3>
+        )}
+
+        {activePage === 4 && (
+          <Page4
+            bomPath={bomPath}
+            setBomPath={setBomPath}
+            removeHItems={removeHItems}
+            setRemoveHItems={setRemoveHItems}
+            removeMirror={removeMirror}
+            setRemoveMirror={setRemoveMirror}
+            ready2={ready2}
+            setReady2={setReady2}
+            ready3={ready3}
+            setReady3={setReady3}
+            drawingPath={drawingPath}
+            setDrawingPath={setDrawingPath}
+            currentPhase={currentPhase}
+            setCurrentPhase={setCurrentPhase}
+            statuses={statuses}
+            setStatuses={setStatuses}
+            score2={score2}
+            score3={score3}
+            comment={comment}
+            excelButtonColor={excelButtonColor}
+            handleStart={handleStart}
+            getButtonLabel={getButtonLabel}
+            openExcel={openExcel}
+            openExcelPurchases={openExcelPurchases}
+          />
         )}
       </div>
 
