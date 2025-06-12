@@ -7,28 +7,13 @@ import './Page4.css';
 
 
 
-const Page4 = ({
-  removeHItems, setRemoveHItems,
-  removeMirror, setRemoveMirror,
-  ready2, setReady2,
-  ready3, setReady3,
-  drawingPath, setDrawingPath,
-  currentPhase,
-  statuses, setStatuses,
-  score2, score3,
-  comment,
-  excelButtonColor,
-  handleStart,
-  getButtonLabel,
-  openExcel,
-  openExcelPurchases,
-  setCurrentPhase, // ✅ Only once
-}) => {
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
   // Local state for excel path used only on Page4
   const [bomPath, setBomPath] = useState('');
+
 
   
 

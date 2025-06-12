@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useEffect } from 'react';
 import Page1 from './Page_1/Page1';
 import Page2 from './Page_2/Page2';
 import Page3 from './Page_3/Page3';
@@ -26,8 +25,6 @@ function App() {
   const [excelButtonColor, setExcelButtonColor] = useState("#949494");
   const [activePage, setActivePage] = useState(1);
   const [Purchases_Excel, setPurchases_Excel] = useState("");
-
-
 
   const resetApp = () => {
     setBomPath('');
@@ -157,8 +154,6 @@ function App() {
     }
   };
 
-
-
   const getButtonLabel = () => {
     if (currentPhase <= 3) return `Start Etap ${currentPhase}`;
     if (currentPhase === 4) return "Wygeneruj Gotowy Excel";
@@ -166,16 +161,9 @@ function App() {
     return "Proces zakończony";
   };
 
-
-
-  // PAGE 2 Process
-
-
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <SideMenu setActivePage={setActivePage} />
-
-
       <div style={{ flexGrow: 1, overflowY: 'auto' }}>
         {activePage === 1 && (
           <Page1
@@ -205,7 +193,6 @@ function App() {
             openExcelPurchases={openExcelPurchases}
           />
         )}
-
         {activePage === 2 && (
           <Page2
             drawingPath={drawingPath}
@@ -221,11 +208,7 @@ function App() {
             setExcelButtonColor={setExcelButtonColor}
           />
         )}
-
-        {activePage === 3 && (
-          <Page3></Page3>
-        )}
-
+        {activePage === 3 && <Page3 />}
         {activePage === 4 && (
           <Page4
             removeHItems={removeHItems}
@@ -253,10 +236,8 @@ function App() {
           />
         )}
       </div>
-
     </div>
   );
-
 }
 
 export default App;
