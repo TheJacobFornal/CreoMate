@@ -78,7 +78,6 @@ def main(main_lines):
                 curr_line = remove_last_comma(curr_line)
                 main_lines[i] = curr_line
 
-
             curr_result = parse_fixed_width_line(curr_line)
 
             if i < len(main_lines) - 1:                                         # check if next exist

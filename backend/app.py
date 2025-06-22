@@ -16,6 +16,7 @@ import time
 from tkinter import Tk, filedialog
 import os
 from Code import MAIN as Main1
+from Code.BOM_Tree import BOM_Tree_main
 
 
 
@@ -177,7 +178,18 @@ def create_app():
         Purchases_Excel_path = filedialog.askopenfilename()
         root.destroy()
         return {"path": Purchases_Excel_path}
-  
+    
+    
+    
+     ## Page 3 - TreeMate ##
+    @app.get("/Tree_phase1")
+    def Tree_phase1():
+        global Excel_path
+        global BOM_path
+        print("Kuba to tree", flush= True)
+        BOM_Tree_main.main(BOM_path, Excel_path)
+        return True
+        
 
     return app
 

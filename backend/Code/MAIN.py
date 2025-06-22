@@ -114,6 +114,10 @@ def purchase_main(Purchases_Excel_path, drowings_folder = None):
 
 
 
+
+
+
+
    
 
 

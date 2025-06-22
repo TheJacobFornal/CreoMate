@@ -131,7 +131,7 @@ const Page4 = () => {
     }
 
     const phaseUrls = {
-      1: 'http://127.0.0.1:8000/run-phase1',
+      1: 'http://127.0.0.1:8000/Tree_phase1',
       2: 'http://127.0.0.1:8000/run-phase2',
       3: 'http://127.0.0.1:8000/run-phase3',
       4: 'http://127.0.0.1:8000/run-phase4',
