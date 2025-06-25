@@ -4,10 +4,10 @@ import './Page3.css';
 const Page3 = () => {
     return (
         <div className="page3-wrapper">
-            <h2 className="page3-title">Instrukcja:</h2>
+            <h2 className="page3-title">Ustawienia</h2>
 
             <div className="instruction-box">
-                <h3 className="section-header">✅ Wspólna dla obu procesów</h3>
+                <h3 className="section-header">Wspólna dla obu procesów</h3>
                 <ul className="instruction-list">
                     <li>Usuwamy myślnik w Typie</li>
                     <ul>
@@ -40,7 +40,7 @@ const Page3 = () => {
                     </li>
                 </ul>
 
-                <h3 className="section-header">🛠️ Tylko dla Konstruktorów</h3>
+                <h3 className="section-header">Tylko dla Konstruktorów</h3>
                 <ul className="instruction-list">
                     <li>Dla Profili, weryfikacja czy początek nazwy Creo jest w numerze detalu → <span className="tag gray">szary</span></li>
                     <li>

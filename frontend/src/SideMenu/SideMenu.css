@@ -1,9 +1,25 @@
 .side-menu {
-  width: 50px;
+  width: 45px;
   background-color: #c9c7c7;
   display: flex;
   flex-direction: column;
+  justify-content: space-between; /* top and bottom */
   align-items: center;
-  padding-top: 10px;
-  color: white;
+  padding: 10px 0;
+ 
 }
+
+.top-icons {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 0px; /* space between each icon */
+}
+
+
+.icon {
+  margin: 20px 0;
+  cursor: pointer;
+}
+
+

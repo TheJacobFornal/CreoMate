@@ -9,7 +9,7 @@ function Step3({ drawingPath, setDrawingPath, ready, setReady, status, setStatus
     <div className="step3-container">
       <div class="step1-header_container">
         <h2 style={{ color: 'red' }}>
-          Etap 3: <span style={{ color: 'blue' }}>Sprawdzanie rysunków</span>
+          Etap 3: <span style={{ color: 'blue' }}>Sprawdzanie i Podlinkowywanie rysunków</span>
           <span style={{
             display: 'inline-block',
             width: '12px',

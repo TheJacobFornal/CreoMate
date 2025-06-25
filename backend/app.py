@@ -186,9 +186,26 @@ def create_app():
     def Tree_phase1():
         global Excel_path
         global BOM_path
-        print("Kuba to tree", flush= True)
-        BOM_Tree_main.main(BOM_path, Excel_path)
-        return True
+        
+        print("Tree: ", Excel_path, BOM_path, flush=True)
+        
+        BOM_Tree_main.main(BOM_path, Excel_path, readyBOM_path)
+        return {"ready": True}
+    
+    
+    @app.get("/Tree_phase2")
+    def run_phase2_tree():
+        global Excel_path
+        message = Main1.phase_2_Tree(Excel_path)
+        print("running tree 2", flush=True)
+        return {"ready": False, "message": message}
+     
+    @app.get("/Tree_phase3")   
+    def run_phase3_tree():
+        global Excel_path
+        message = Main1.phase_3_Tree(Excel_path)
+        print("running tree 3", flush=True)
+        return {"ready": False, "message": message}
         
 
     return app

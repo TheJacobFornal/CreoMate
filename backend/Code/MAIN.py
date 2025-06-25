@@ -113,7 +113,16 @@ def purchase_main(Purchases_Excel_path, drowings_folder = None):
 
 
 
+def phase_2_Tree(Excel_path):
+    Excel_addition.main(Excel_path)
+    Excel_Part_1.main_Tree(Excel_path)
+    print("hello from pahse 2 tree", flush=True)
+    return "Kuba "
 
+
+def phase_3_Tree(Excel_path):
+    print("hello from pahse 3 tree", flush=True)
+    return "Kuba to szef"
 
 
 

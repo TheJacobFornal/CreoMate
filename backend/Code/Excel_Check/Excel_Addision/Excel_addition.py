@@ -3,16 +3,43 @@ from pathlib import Path
 from openpyxl.styles import PatternFill
 
 
-def remove_bg_color(ws):
+# List of hex RGB colors (uppercase, without '#') to match
+TAG_COLORS = {
+    "00FFB7",  # Mint Aqua
+    "FFFF00",  # Bright Yellow
+    "FF0000",  # Red
+    "F76700",  # Orange
+    "ABA200",  # Olive
+    "D3A6FF",  # Lavender Violet
+    "00B0F0",  # Cyan Blue
+    "A1887F",  # Light Brown / Taupe
+    "B0BEC5",  # Cool Gray
+    "FF3399",  # Hot Pink
+    "42FF48",  # Neon Green
+    "DDD8B8",  # sandy,
+    "379392",  # Dark syjan
+}
+
+def remove_tag_colors(ws):
     for row in ws.iter_rows():
         for cell in row:
-            cell.fill = PatternFill(fill_type=None)
+            fill = cell.fill
+            if fill and fill.fill_type == "solid":
+                color_obj = fill.start_color
+
+                # Get RGB color safely
+                if color_obj.type == "rgb" and color_obj.rgb:
+                    hex_rgb = color_obj.rgb[-6:].upper()
+                    if hex_rgb in TAG_COLORS:
+                        cell.fill = PatternFill(fill_type=None)
+
+
 
 def main(Excel_path):
     if Excel_path.is_file():
         wb = load_workbook(Excel_path)
         ws = wb.active
-        remove_bg_color(ws)
+        remove_tag_colors(ws)
 
         wb.save(Excel_path)
 

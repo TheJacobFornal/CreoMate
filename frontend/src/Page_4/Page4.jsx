@@ -46,7 +46,7 @@ const Page4 = () => {
     setExcelButtonColor('#949494');
   };
 
-  const runPhase = async (phaseKey, url) => {
+    const runPhase = async (phaseKey, url) => {
     setStatuses(s => ({ ...s, [phaseKey]: 'running' }));
     let dotCount = 0;
     setComment('Loading');
@@ -59,15 +59,8 @@ const Page4 = () => {
     setTimeout(async () => {
       clearInterval(loadingInterval);
       try {
-        let res = (phaseKey === 'phase2')
-          ? await fetch(url, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ removeHItems, removeMirror }),
-            })
-          : await fetch(url);
-
-        const data = await res.json();
+        const res = await fetch(url);           // ← FIXED LINE
+        const data = await res.json();          // ← PARSE RESPONSE
 
         if (phaseKey === 'phase1' && data.ready) {
           setComment('BOM został poprawnie przetworzony i zapisany w Excelu.');
@@ -132,9 +125,9 @@ const Page4 = () => {
 
     const phaseUrls = {
       1: 'http://127.0.0.1:8000/Tree_phase1',
-      2: 'http://127.0.0.1:8000/run-phase2',
-      3: 'http://127.0.0.1:8000/run-phase3',
-      4: 'http://127.0.0.1:8000/run-phase4',
+      2: 'http://127.0.0.1:8000/Tree_phase2',
+      3: 'http://127.0.0.1:8000/Tree_phase3',
+      4: 'http://127.0.0.1:8000/Tree_phase4',
       10: 'http://127.0.0.1:8000/run-phase10',
     };
 
@@ -179,7 +172,7 @@ const Page4 = () => {
   return (
     <div className="Page_1">
       <div className="header_container">
-        <h1 id="Header">CreoMate</h1>
+        <h1 id="Header">TreeMate</h1>
       </div>
 
       <div className="box">

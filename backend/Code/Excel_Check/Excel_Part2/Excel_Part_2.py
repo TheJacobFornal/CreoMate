@@ -106,7 +106,7 @@ def main(Excel_path, removeMirror, Zakupy=False):
         if Name_value is not None:
             Upper_name = str(Name_value).upper()
             ws.cell(row, Name_Index).value = Upper_name                                            # upper letter in kol. Name
-            if Name_value.__contains__("PROFIL_") and Type_value.__contains__("H"):                # Profile with dimensions Type: H
+            if Upper_name.__contains__("PROFIL_") and Type_value.__contains__("H"):                # Profile with dimensions Type: H
                 if Zakupy:
                     continue
                 else:

@@ -1,6 +1,9 @@
 import pathlib
+import pandas as pd
+import os
+from openpyxl import load_workbook
 
-
+del_counter = 0
 
 def remove_last_comma(line):
     return line[:-1]
@@ -18,89 +21,125 @@ def parse_fixed_width_line(line):
     field5 = line[117:142].strip()
     return field1, field2, field3, field4, field5
 
-def merge_two_lines(curr_result, next_lines_table):
+def merge_two_lines(curr_result, next_lines_table):                                             # merge next_line and curr_line
     next_line = next_lines_table[0]
     next_result = parse_fixed_width_line(next_line)
     
     for i in range(0, 5):
         print(i + 1, next_result[i])
         if next_result[i].strip() != "":
-            print("next_result", next_result[i])
-            print("curr_result_tabel", curr_result[i + 1])
             curr_result[i] = curr_result[i].strip() + " " + next_result[i].strip()
-            print("połaczone: ", curr_result[i])
+
     
     
     return curr_result
 
-def format_row_to_fixed_width(row):
-    widths = [35, 33, 38, 5, 26]
+def format_row_to_fixed_width(row):                                                                 # save fileds from table to one line
+    widths = [32, 32, 38, 5, 26]
 
     padded_fields = [row[i].strip().ljust(widths[i]) for i in range(min(len(row), len(widths)))]
 
     return ', '.join(padded_fields)
 
-def mod_long_name(lines):
-    for i in range(len(lines) - 1):
-        curr_line = lines[i]
-        curr_line_table = curr_line.split(",") 
+
+def mod_long_name(curr_line, next_line, lines, index):
+    global del_counter
+    line = curr_line
+    curr_line = remove_last_comma(curr_line)
+    curr_line = remove_first_comma(curr_line)
+
+    curr_line_table = curr_line.split(",")
+    next_line_table = next_line.split(",")
+
+
+    if len(next_line_table) < 4 and len(next_line_table) > 1:                           # too long name in next row
+        curr_result = list(parse_fixed_width_line(curr_line))
+        next_result = list(parse_fixed_width_line(next_line))
         
-        if len(curr_line) == 1:
-            continue
+        curr_line_table = merge_two_lines(curr_result, next_line_table)                 # merge curr_line and next_line
+        curr_line = format_row_to_fixed_width(curr_line_table)
 
-        curr_line = remove_last_comma(curr_line)
-        curr_line = remove_first_comma(curr_line)
+        del lines[index]
+        del_counter += 1
+        return " , " + curr_line + " , " + "\n"
+    return line
 
-        next_line = lines[i + 1]
-        next_line_table = next_line.split(",") 
-        next_result = remove_first_comma(next_line)
 
-        if 1 < len(next_line_table) < 4:
-            curr_result = list(parse_fixed_width_line(curr_line))
-            next_result = list(parse_fixed_width_line(next_line))
+def txt_to_single_excel(txt_path, excel_path):
+    with open(txt_path, 'r', encoding='utf-8-sig') as f:
+        lines = f.readlines()
 
-            for j in range(5):
-                print(j + 1, curr_result[j])
+    # Split each line by commas into a list of cells
+    data = []
+    for line in lines:
+        stripped = line.strip()
+        if stripped:  # skip empty lines
+            row = [cell.strip() for cell in stripped.split(',')]
+            data.append(row)
 
-            print(" ")    
-            for j in range(5):
-                print(j + 1, next_result[j])
+    # Convert to DataFrame and write to Excel
+    df = pd.DataFrame(data)
+    df.to_excel(excel_path, index=False, header=False)
+    
+    wb = load_workbook(excel_path)
+    ws = wb.active
 
-            print(" ")
-            print("curr_result_before: ", curr_result)
+    for column in ws.columns:
+        max_length = 0
+        col = column[0].column_letter
+        for cell in column:
+            try:
+                if cell.value:
+                    max_length = max(max_length, len(cell.value.strip()))
+                    if isinstance(cell.value, str):
+                        cell.value = cell.value.strip()
+            except:
+                pass
 
-            curr_line_table = merge_two_lines(curr_result, next_line_table)
+            adjustment_width = max_length + 2
+            ws.column_dimensions[col].width = adjustment_width
 
-            print(" ")
-            print(curr_line_table)
 
-            curr_line = format_row_to_fixed_width(curr_line_table)
 
-            print("curr_line: ", curr_line)
-            print(next_line_table)
-            print(" ")
+    for row in ws.iter_rows(min_row=2):  # skip header
+        cell = row[4]  # colum D = ILOSC
+        try:
+            value = int(cell.value)
+            cell.value = value
+        except (ValueError, TypeError):
+            pass
 
+    wb.save(excel_path)
         
-                    
-        
 
-def main(BOM_path = r"C:\Users\JakubFornal\Downloads\tree_1.txt", Excel_path = r"C:\Users\JakubFornal\Desktop\CreoMate\BOM CreoMate.xlsx"):
-    print(BOM_path, Excel_path)
-    BOM_ready = r"C:\Users\JakubFornal\Downloads\tree_ready.txt"
-    curr_line = []
+def main(BOM_path, Excel_path, BOM_ready):
+    global del_counter
+    
+    lines = []
     with open(BOM_path, "r", encoding='utf-8') as f:
         lines = f.readlines()
-        for i in range(0, len(lines) - 1):
-            if not lines[i].__contains__("Assembly"):                                                 # not include header
-                    curr_line = lines[i]
-                    
+        i = 0
+        while i < len(lines):
+            if not lines[i].__contains__("Assembly"):
+                if len(lines[i].strip()) == 0:
+                    i += 1
+                    continue
+                if i < len(lines) - 1:
+                    lines[i] = mod_long_name(lines[i], lines[i + 1], lines, i)
+            i += 1  # move to next line only if not deleted (otherwise mod_long_name deletes next line)
+             
+                
+                
                                  
-    curr_line = mod_long_name(lines)
     
     with open(BOM_ready, "w", encoding="utf-8") as f:
-        f.writelines(curr_line)
+        f.writelines(lines)
                     
-    
+    txt_to_single_excel(BOM_ready, Excel_path)
     
 if __name__ == "__main__":
-    main()
+    main(
+        Excel_path=r"C:\Users\JakubFornal\Desktop\CreoMate\Zamówienia CreoMate.xlsx",
+        BOM_path=r"C:\Users\JakubFornal\Downloads\im32_00000000-montaz_poduszki-z.bom (1).4",
+        BOM_ready=r"C:\Users\JakubFornal\Desktop\CreoMate\readyBOM.txt"
+    )

@@ -55,7 +55,31 @@ def remove_dash_Type(ws, removeHItems):
         else:
             color_row(ws, row, True, "00FFB7")                                                           # Brak Type / Błędny Typ - light blue
             counter_wrong += 1  
-           
+
+
+
+
+def check_type_creo_name(ws, row, creo):                                                               # check creo type at the end
+    """ 
+    Checks if the last part of the string (after last '-') is a single letter 
+    and that letter is one of 'H', 'L', or 'F'.
+    """
+    global counter_wrong
+    
+    creo_name = str(creo)
+    print(creo_name, flush=True)
+    
+    if not creo_name or '-' not in creo_name:
+        return False
+
+    last_part = creo_name.split('-')[-1].strip()
+    
+    
+    if not last_part in {'H', 'L', 'F', 'T', 'W', 'O', 'S', 'N'}:
+        counter_wrong += 1
+        color_row(ws, row, True, "379392") 
+
+               
 
 
 def check_handlowe(ws, row):            # Sprawdza części handlowe
@@ -95,8 +119,6 @@ def check_Material_Obrobki_brak(ws, row):                            # Sprawdza 
         ws.cell(row, Powierzchnia_index).value = "Brak / None"
 
 
-
-
 def check_production(ws, row):                                                                          # Sprawdza części produkcyjne                                           
     global counter_wrong
     Material_index = 6
@@ -112,12 +134,119 @@ def check_production(ws, row):                                                  
         counter_wrong += 1
         
         
+    
+def highlight_repeated_in_column(ws, col):
+    global max_row
+    global min_row
+    global counter_wrong
+    """
+        Highlights rows where values in column B are repeated.
+        """
+    value_count = {}
+        
+    # First pass: count occurrences
+    for row in range(2, max_row):  # Assuming row 1 is header
+        val = ws.cell(row, col).value
+        if val in value_count:
+            value_count[val].append(row)
+        else:
+            value_count[val] = [row]
+    
+     # Second pass: highlight rows with repeated values
+    for rows in value_count.values():
+        if len(rows) > 1:
+            for row in rows:
+                color_row(ws, row, True, "DDD8B8")
+                counter_wrong += 1
+                
+
+        
+        
+def main_Tree(Excel_path):
+    global counter_wrong
+    global max_row
+    global min_row
+    
+    deleated_counter = 0
+    counter_wrong = 0
+    producent_index = 6
+
+    
+    
+    wb = load_workbook(Excel_path)
+    ws = wb.active
+    
+    print("excel tree 1", flush=True)
+
+    
+    for row in range(ws.max_row, 0, -1):  # iterate from bottom to top
+        creo_name = ws.cell(row, 2).value
+        check_type_creo_name(ws, row, creo_name)
+        if creo_name is None:
+            continue
+        type = creo_name.split('-')[-1]
+        
+        producent = ws.cell(row, producent_index).value
+        
+        
+        if producent is not None:                             #usuwa ".kat"
+            if producent.__contains__("kat."):
+                producent = producent.replace("kat.", "")
+            
+            producent = producent.lower()    
+            producent = producent.strip().capitalize()
+            ws.cell(row, producent_index).value = producent
+        
+        if "H" in type or type == "N":
+            print(type)
+            if contain_num(type):                                           #H1, H2, H3
+                print("Number in type: ", type)
+                ws.delete_rows(row)
+            else:
+                if producent is None:                
+                    color_row(ws, row, True)          
+               
+                    
+                    
+                
+    wb.save(Excel_path)
+            
+def check_if_colored(cell):
+    TAG_COLORS = {
+        "00FFB7",  # Mint Aqua
+        "FFFF00",  # Bright Yellow
+        "FF0000",  # Red
+        "F76700",  # Orange
+        "ABA200",  # Olive
+        "D3A6FF",  # Lavender Violet
+        "00B0F0",  # Cyan Blue
+        "A1887F",  # Light Brown / Taupe
+        "B0BEC5",  # Cool Gray
+        "FF3399",  # Hot Pink
+        "42FF48",  # Neon Green
+        "379392",  # Dark syjan
+    }
+
+    fill = cell.fill
+    if fill is None or fill.fill_type != 'solid':
+        return False  # Not colored or no solid fill
+
+    fg_color = fill.start_color.rgb
+    if fg_color is None:
+        return False
+
+    # If color is ARGB (8 chars), get the last 6 (RGB)
+    if len(fg_color) == 8:
+        fg_color = fg_color[-6:]
+
+    return fg_color.upper() not in TAG_COLORS
 
 
 def main(Excel_path, removeHItems=False, Zakupy=False):
     global counter_wrong
     global max_row
     global min_row
+    creo_index = 1
    
     counter_wrong = 0
     TypeIndex = 5
@@ -128,8 +257,19 @@ def main(Excel_path, removeHItems=False, Zakupy=False):
     print("Max row:", max_row, flush=True)
     print("Min row:", min_row, flush=True)
 
+    highlight_repeated_in_column(ws, 2)
+    
     for row in range(2, ws.max_row + 1):
-      
+        
+        if not Zakupy:
+            creo_name = ws.cell(row, creo_index).value
+            check_type_creo_name(ws, row, creo_name)
+            highlight_repeated_in_column(ws, 2)
+        else:
+            if not check_if_colored:
+                highlight_repeated_in_column(ws, 2)
+                
+                
         Type_value = ws.cell(row, TypeIndex).value
         check_Material_Obrobki_brak(ws, row)
 

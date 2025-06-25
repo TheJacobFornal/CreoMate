@@ -173,7 +173,8 @@ function App() {
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
-      <SideMenu setActivePage={setActivePage} />
+    <SideMenu activePage={activePage} setActivePage={setActivePage} />
+
 
 
       <div style={{ flexGrow: 1, overflowY: 'auto' }}>

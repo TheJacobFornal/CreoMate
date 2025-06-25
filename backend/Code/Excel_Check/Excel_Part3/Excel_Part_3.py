@@ -42,7 +42,7 @@ def main(Excel_path):
                 temp = temp.capitalize()
 
                 ws.cell(row, Uwagi_Index).value = temp
-                print(temp)
+               
     wb.save(Excel_path)
 
 
