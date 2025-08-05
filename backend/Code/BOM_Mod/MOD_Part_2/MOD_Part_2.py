@@ -1,12 +1,12 @@
 
 def parse_fixed_width_line(line):
     # Extract fixed-width fields
-    field1 = line[0:33].strip().rstrip(',')
-    field2 = line[34:67].strip().rstrip(',')
-    field3 = line[68:110].strip().rstrip(',')
+    field1 = line[0:33].strip().rstrip('`')
+    field2 = line[34:67].strip().rstrip('`')
+    field3 = line[68:110].strip().rstrip('`')
 
     # Get remaining fields
-    rest = line[110:].split(',')
+    rest = line[110:].split('`')
     rest = [r.strip() for r in rest if r.strip()]
 
     # Combine all cleaned fields into one array
@@ -37,7 +37,7 @@ def format_row_to_fixed_width(row):
     # Pad fields with spaces using ljust
     padded_fields = [row[i].strip().ljust(widths[i]) for i in range(min(len(row), len(widths)))]
 
-    return ', '.join(padded_fields)
+    return '` '.join(padded_fields)
 
 
 def change_comma_names(main_line):
@@ -49,13 +49,13 @@ def change_comma_names(main_line):
 
     changed = False
 
-    if field1.__contains__(","):
+    if field1.__contains__("`"):
         main_result[0] = f'"{field1}"'
         changed = True
-    if field2.__contains__(","):
+    if field2.__contains__("`"):
         main_result[1] = f'"{field2}"'
         changed = True
-    if field3.__contains__(","):
+    if field3.__contains__("`"):
         main_result[2] = f'"{field3}"'
         changed = True
 
@@ -64,8 +64,7 @@ def change_comma_names(main_line):
     else:
         return None
 
-def remove_last_comma(line):
-    return line[:-1]
+
 
 def main(main_lines):
     del_counter = 0
@@ -74,9 +73,6 @@ def main(main_lines):
     for i in range(0, len(main_lines)):                                         # repair too long names
         if i < len(main_lines):                             # correct number of lines after removed next from too long
             curr_line = main_lines[i].strip()
-            if curr_line.endswith(","):
-                curr_line = remove_last_comma(curr_line)
-                main_lines[i] = curr_line
 
             curr_result = parse_fixed_width_line(curr_line)
 
@@ -93,12 +89,16 @@ def main(main_lines):
                     changed_lines.append(i)
 
 
+
     for i in range(1, len(main_lines)):
         if i not in changed_lines:
             new_line = change_comma_names(main_lines[i])
             if new_line is not None:
                 main_lines[i] = new_line
-                #print(main_lines[i])
+
+                
+                
+
 
 
 

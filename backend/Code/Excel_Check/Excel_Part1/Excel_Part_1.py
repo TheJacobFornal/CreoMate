@@ -61,13 +61,14 @@ def remove_dash_Type(ws, removeHItems):
 
 def check_type_creo_name(ws, row, creo):                                                               # check creo type at the end
     """ 
+    IN: IL10_9-PROFIL_45X45L-H
+
     Checks if the last part of the string (after last '-') is a single letter 
     and that letter is one of 'H', 'L', or 'F'.
     """
     global counter_wrong
     
     creo_name = str(creo)
-    print(creo_name, flush=True)
     
     if not creo_name or '-' not in creo_name:
         return False
@@ -75,9 +76,12 @@ def check_type_creo_name(ws, row, creo):                                        
     last_part = creo_name.split('-')[-1].strip()
     
     
-    if not last_part in {'H', 'L', 'F', 'T', 'W', 'O', 'S', 'N'}:
+    
+    
+    if not last_part in {'H', 'P', 'L', 'F', 'T', 'W', 'O', 'S', 'N', 'D', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6','H7', 'H8','H9', 'H10','H11', 'H12','H13', 'H14'} :
+        print("last_part:", last_part, flush=True)
         counter_wrong += 1
-        color_row(ws, row, True, "379392") 
+        color_row(ws, row, True, "00FFB7") 
 
                
 
@@ -106,7 +110,7 @@ def check_handlowe(ws, row):            # Sprawdza części handlowe
         counter_wrong += 1
         
     
-def check_Material_Obrobki_brak(ws, row):                            # Sprawdza czy materiału i obróbek wartość nie jest "Brak" lub "brak"
+def check_Material_Obrobki_brak(ws, row):                                                           # Sprawdza czy materiału i obróbek wartość nie jest "Brak" lub "brak"
     Cieplna_index = 7
     Powierzchnia_index = 8
 
@@ -119,7 +123,7 @@ def check_Material_Obrobki_brak(ws, row):                            # Sprawdza 
         ws.cell(row, Powierzchnia_index).value = "Brak / None"
 
 
-def check_production(ws, row):                                                                          # Sprawdza części produkcyjne                                           
+def check_production(ws, row):                                                                         # Sprawdza części produkcyjne                                           
     global counter_wrong
     Material_index = 6
     Cieplna_index = 7
@@ -135,6 +139,7 @@ def check_production(ws, row):                                                  
         
         
     
+                
 def highlight_repeated_in_column(ws, col):
     global max_row
     global min_row
@@ -145,21 +150,24 @@ def highlight_repeated_in_column(ws, col):
     value_count = {}
         
     # First pass: count occurrences
-    for row in range(2, max_row):  # Assuming row 1 is header
-        val = ws.cell(row, col).value
-        if val in value_count:
-            value_count[val].append(row)
-        else:
-            value_count[val] = [row]
+    for row in range(2, max_row): 
+        typ = ws.cell(row, 5).value
+
+        if typ in {'P', 'L', 'F', 'T', 'W', 'O', 'S', 'D'}:
+            val = ws.cell(row, col).value
+            if val in value_count:
+                
+                value_count[val].append(row)
+            else:
+                value_count[val] = [row]
     
      # Second pass: highlight rows with repeated values
     for rows in value_count.values():
         if len(rows) > 1:
+            #
             for row in rows:
                 color_row(ws, row, True, "DDD8B8")
-                counter_wrong += 1
                 
-
         
         
 def main_Tree(Excel_path):
@@ -175,8 +183,6 @@ def main_Tree(Excel_path):
     
     wb = load_workbook(Excel_path)
     ws = wb.active
-    
-    print("excel tree 1", flush=True)
 
     
     for row in range(ws.max_row, 0, -1):  # iterate from bottom to top
@@ -225,6 +231,7 @@ def check_if_colored(cell):
         "FF3399",  # Hot Pink
         "42FF48",  # Neon Green
         "379392",  # Dark syjan
+        "DDD8B8", # Sandy
     }
 
     fill = cell.fill
@@ -259,7 +266,7 @@ def main(Excel_path, removeHItems=False, Zakupy=False):
 
     highlight_repeated_in_column(ws, 2)
     
-    for row in range(2, ws.max_row + 1):
+    for row in range(1, ws.max_row + 1):
         
         if not Zakupy:
             creo_name = ws.cell(row, creo_index).value
@@ -276,9 +283,12 @@ def main(Excel_path, removeHItems=False, Zakupy=False):
         if Type_value is not None:
             if Type_value == "H" or Type_value == "N":
                 check_handlowe(ws, row)
-            elif Type_value == "L" or Type_value == "F" or Type_value == "O" or Type_value == "W" or Type_value == "T":
+            elif Type_value == "L" or Type_value == "F" or Type_value == "O" or Type_value == "W" or Type_value == "T" or Type_value == "D":
                 check_production(ws, row)
 
     wb.save(Excel_path)
 
     return counter_wrong
+
+        
+

@@ -17,12 +17,24 @@ def main(BOM_path, Excel_path, readyBom_path):
     ###////          Part 1         ////###
     main_lines, extension_lines = part_1.main(BOM_path)
 
+
+
     print("part 2:", flush=True)
     ###////          Part 2         ////###
     main_lines = part_2.main(main_lines)
 
 
+
     print("part 3:", flush=True)
     ###////          Part 3         ////###
     part_3.main(main_lines, extension_lines, Excel_path, readyBom_path)
+
+
+if __name__ == "__main__":
+    BOM_path = r"C:\Users\JakubFornal\Desktop\PROJECTS\CreoMate\BOM\NoweBOMY\fd90_00000000-montaz_opaski-z.bom.1"
+    Excel_path = r"C:\Users\JakubFornal\Desktop\CreoMate\BOM CreoMate.xlsx"
+    readyBom_path = r"C:\Users\JakubFornal\Desktop\CreoMate\readyBOM.txt"
+
+    main(BOM_path, Excel_path, readyBom_path)
+
 

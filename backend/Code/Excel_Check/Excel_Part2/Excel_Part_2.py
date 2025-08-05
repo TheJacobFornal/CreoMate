@@ -82,6 +82,14 @@ def modify_left_duplicate(ws, row_left, creo_left_number, removeMirror):
 
             color_row(ws, row_left, True, "42FF48")
 
+def check_if_mirror(creo_name):
+    x = creo_name[-1]
+    print("x: ", x, flush=True)
+    if x == "L":
+        print("Left mirror found in name:", creo_name, flush=True)
+        return True
+    return False
+    
 
 def main(Excel_path, removeMirror, Zakupy=False):
     global wrong_counter
@@ -96,8 +104,7 @@ def main(Excel_path, removeMirror, Zakupy=False):
     ws = wb.active
     
     max_row, min_row = Excel_addition.get_max_min_row(ws, Zakupy)
-    print("kuba part 2", flush=True)
-    for row in range(min_row, max_row):
+    for row in range(1, max_row):
         Name_value = ws.cell(row, Name_Index).value
         Type_value = ws.cell(row, Type_Index).value
         creo_val = ws.cell(row, Creo_Index).value
@@ -119,11 +126,11 @@ def main(Excel_path, removeMirror, Zakupy=False):
                     color_row(ws, row, True, "D3A6FF")
 
                 if not Zakupy:
-                    number_creo = creo_val.split("-")[0]                                               # Left element
-                    if number_creo.__contains__("L") and Type_value != "H":
+                    number_creo = creo_val.split("-")[0]  # Left element
+                    
+                    if check_if_mirror(number_creo) and Type_value in {'P', 'L', 'F', 'T', 'W', 'O', 'S', 'D',}:
+                        print("Left mirror found in row:", number_creo, flush=True)
                         modify_left_duplicate(ws, row, number_creo, removeMirror)
-
-
 
 
     wb.save(Excel_path)

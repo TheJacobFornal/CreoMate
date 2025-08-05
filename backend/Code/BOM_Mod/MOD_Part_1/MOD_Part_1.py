@@ -1,7 +1,7 @@
 from pathlib import Path
 
 def get_hashes(line):
-    target_str = "xxxxxxxxxx,xxxxxxxxxx,xxxxxxxxxx,xxxxxxxxxx"
+    target_str = "xxxxxxxxxx`xxxxxxxxxx`xxxxxxxxxx`xxxxxxxxxx"
     return line.strip() == target_str
 
 def main(bom_file):
@@ -22,5 +22,7 @@ def main(bom_file):
 
         main_lines = lines[0: first_hash - 1]
         extension_lines = lines[first_hash + 2: second_hash - 1]
+
+
  
     return main_lines, extension_lines

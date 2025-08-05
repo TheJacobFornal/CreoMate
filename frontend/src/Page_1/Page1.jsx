@@ -46,7 +46,7 @@ const Page1 = ({
             <h4>Legenda Kolorów</h4>
             <div className="setion_legend">
               <p>Brak Typu - <span style={{ backgroundColor: '#00FFB7', color: '#00FFB7' }}>........</span></p>
-              <p>Powtórzenie - <span style={{ backgroundColor: '#379392', color: '#379392' }}>........</span></p>
+              <p>Powtórzenie - <span style={{ backgroundColor: '#DDD8B8', color: '#DDD8B8' }}>........</span></p>
             </div>
             <div className="setion_legend">
               <h5>Handlowe</h5>

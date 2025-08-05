@@ -15,16 +15,18 @@ def clean_illegal_chars(val):
     return val
 
 def main(main_lines, extension_lines, Excel_path, readyBom_path):
-
-
     combined_lines = []
     space = "                              ,                                 ,                               ,                           ,"
 
     i = 0
     for main, ext in zip_longest(main_lines, extension_lines):
-        new_line = (main.strip() if main else space) + " , " + (ext.strip() if ext else " ") + "\n"
+        new_line = (main.strip() if main else space) + " ` " + (ext.strip() if ext else " ") + "\n"
         i = i + 1
         combined_lines.append(new_line)
+
+
+    for line in combined_lines:
+        print(line)
 
     with open(readyBom_path, "w", encoding="utf-8") as f:
         f.writelines(combined_lines)
@@ -33,13 +35,12 @@ def main(main_lines, extension_lines, Excel_path, readyBom_path):
         lines = f.readlines()
 
     # First line is the header
-    header = [col.strip() for col in lines[0].split(',')]
+    header = [col.strip() for col in lines[0].split('`')]
     rows = []
 
     for line in lines[1:]:
         # Use csv reader to correctly parse quoted commas
-        reader = csv.reader([line], skipinitialspace=True)
-        parsed_row = next(reader)
+        parsed_row = [col.strip() for col in line.split('`')]
         cleaned_row = [col.strip() for col in parsed_row]
         rows.append(cleaned_row)
 
@@ -81,3 +82,5 @@ def main(main_lines, extension_lines, Excel_path, readyBom_path):
             pass
 
     wb.save(Excel_path)
+
+
