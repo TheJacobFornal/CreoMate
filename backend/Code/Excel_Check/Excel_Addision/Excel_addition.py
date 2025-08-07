@@ -13,11 +13,13 @@ TAG_COLORS = {
     "D3A6FF",  # Lavender Violet
     "00B0F0",  # Cyan Blue
     "A1887F",  # Light Brown / Taupe
-    "B0BEC5",  # Cool Gray
-    "FF3399",  # Hot Pink
+    "A1A1A1",  # Cool Gray
+    "FF0095",  # Hot Pink
     "42FF48",  # Neon Green
     "DDD8B8",  # sandy,
     "379392",  # Dark syjan
+    "DDD8B8", # sandy,
+    "6699FF",   # Light Blue
 }
 
 def remove_tag_colors(ws):

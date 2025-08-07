@@ -27,7 +27,7 @@ def phase2(Excel_path, removeHItems=False, removeMirror=False):
     counter_3 = Excel_Part_3.main(Excel_path)
 
     counter_wrong = counter_1 + counter_2 + counter_3
-    number_of_rows = Excel_addition.number_of_rows(Excel_path)
+    number_of_rows = Excel_addition.number_of_rows(Excel_path) - 1
 
     if number_of_rows == 0:
         return "No rows to process."
@@ -124,6 +124,13 @@ def phase_3_Tree(Excel_path):
     print("hello from pahse 3 tree", flush=True)
     return "Kuba to szef"
 
+
+def my_function():
+    return "Hello from my_function!"
+
+if __name__ == "__main__":
+    result = my_function()
+    print("Output:", result)
 
 
 

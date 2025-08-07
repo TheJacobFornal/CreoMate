@@ -25,9 +25,6 @@ def main(main_lines, extension_lines, Excel_path, readyBom_path):
         combined_lines.append(new_line)
 
 
-    for line in combined_lines:
-        print(line)
-
     with open(readyBom_path, "w", encoding="utf-8") as f:
         f.writelines(combined_lines)
 
