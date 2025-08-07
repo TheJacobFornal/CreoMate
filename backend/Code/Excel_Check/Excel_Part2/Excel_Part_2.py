@@ -42,8 +42,7 @@ def is_cell_colored(cell):
         return False
 
 
-
-
+zakupy = False
 min_row = 0
 max_row = 0
 wrong_counter = 0
@@ -83,7 +82,6 @@ def modify_left_duplicate(ws, row_left, base_name_left, removeMirror):
     
     for row in range(min_row, max_row + 1):  # find right component
         creo_right_value = ws.cell(row, 1).value
-        print(creo_right_value, base_name, base_name_left, flush=True)
         if (
             creo_right_value
             and base_name in creo_right_value
@@ -110,7 +108,7 @@ def modify_left_duplicate(ws, row_left, base_name_left, removeMirror):
         left_quantity = ws.cell(row_left, 4).value
 
         if not str(left_quantity).__contains__("+"): # no duplicates
-            quantity = "0+ " + str(left_quantity).strip() + "L"
+            quantity = "0+" + str(left_quantity).strip() + "L"
             ws.cell(row_left, 4).value = quantity
 
             Note = "Wykonać w lustrze!"
@@ -125,25 +123,31 @@ def check_if_mirror(creo_name):
         return True
     return False
  
-def highlight_repeated_in_column(ws, col: int):
+def highlight_repeated_in_column(ws, col: int):                                             # check for repeated values in a column 
     """Highlights rows where column values are repeated."""
     value_count = {}
     global wrong_counter
+    global zakupy
 
     for row in range(2, max_row + 1):
-        print("row:", row, flush=True)
+        print("row:", ws.cell(row, 2).value, flush=True)
         if is_cell_colored(ws.cell(row, 1)):
             continue
         typ = ws.cell(row, 5).value
-        creo_name = ws.cell(row, 1).value
-
-        if creo_name:
-            base_name = creo_name.split('-')[0] 
         
-        if typ in VALID_TYPES and not base_name.endswith('L'):
-            val = ws.cell(row, col).value
-            value_count.setdefault(val, []).append(row)
-            
+        if not zakupy:
+            creo_name = ws.cell(row, 1).value
+            if creo_name:
+                base_name = creo_name.split('-')[0] 
+        
+            if typ in VALID_TYPES and not base_name.endswith('L'):
+                val = ws.cell(row, col).value
+                value_count.setdefault(val, []).append(row)
+        else:
+            if typ in VALID_TYPES:
+                val = ws.cell(row, col).value
+                value_count.setdefault(val, []).append(row)
+                
     for value, rows in value_count.items():
         print(f"Value: {value} → Rows: {rows}")
 
@@ -160,11 +164,10 @@ def main(Excel_path, removeMirror, Zakupy=False):
     global wrong_counter
     global max_row
     global min_row
+    global zakupy 
+    zakupy = Zakupy
     
     wrong_counter = 0
-    Name_Index = 3
-    Type_Index = 5
-    Creo_Index = 1
     wb = load_workbook(Excel_path)
     ws = wb.active
     
@@ -215,6 +218,6 @@ if __name__ == "__main__":
     else:
         removeMirror = False
         
-    main(Path(r"C:\Users\JakubFornal\Desktop\CreoMate\BOM CreoMate.xlsx"), removeMirror, Zakupy=False)
+    main(Path(r"C:\Users\JakubFornal\Desktop\CreoMate\Zamówienia CreoMate.xlsx"), removeMirror, Zakupy=True)
     print("finished")
-    os.startfile(Path(r"C:\Users\JakubFornal\Desktop\CreoMate\BOM CreoMate.xlsx"))
+    os.startfile(Path(r"C:\Users\JakubFornal\Desktop\CreoMate\Zamówienia CreoMate.xlsx"))

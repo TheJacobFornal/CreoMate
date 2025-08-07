@@ -76,7 +76,10 @@ function App() {
         } else if (phaseKey === "phase3" && data.message) {
           setScore3(data.message);
           setComment(data.ready ? "Etap 3 zakończony pomyślnie. Wygeneruj Excel do działu zakupów." : "Sprawdź rysunki, aby kontynuować.");
+        } else if (phaseKey === "phase4") {
+          setComment(data.ready ? "Wygenerowano gotowy plik." : "Nie udało się wygenerować pliku.");
         }
+
 
         setStatuses(s => ({ ...s, [phaseKey]: data.ready ? 'done' : 'running' }));
         if (data.ready) setCurrentPhase(p => p < 5 ? p + 1 : p);
@@ -119,6 +122,8 @@ function App() {
       setComment("Wybierz plik BOM!");
       return;
     }
+
+
 
     const phaseUrls = {
       1: "http://127.0.0.1:8000/run-phase1",
@@ -163,6 +168,7 @@ function App() {
     if (currentPhase <= 3) return `Start Etap ${currentPhase}`;
     if (currentPhase === 4) return "Wygeneruj Gotowy Excel";
     if (currentPhase === 5) return "Nowy BOM";
+    setComment("Proces zakończony");
     return "Proces zakończony";
   };
 

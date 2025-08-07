@@ -90,7 +90,7 @@ def purchase_main(Purchases_Excel_path, drowings_folder = None):
     counter_wrong = 0
     missing_counter = 0
  
-    Excel_addition.main(Purchases_Excel_path)
+    Excel_addition.main(Purchases_Excel_path)                               # clear Excel file from colors
     counter_wrong += Excel_Part_1.main(Path(Purchases_Excel_path), removeHItems=False, Zakupy = True)
     counter_wrong += Excel_Part_2.main(Path(Purchases_Excel_path), removeMirror=False, Zakupy = True)
     
