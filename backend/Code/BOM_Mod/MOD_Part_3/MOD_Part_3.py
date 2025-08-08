@@ -16,11 +16,11 @@ def clean_illegal_chars(val):
 
 def main(main_lines, extension_lines, Excel_path, readyBom_path):
     combined_lines = []
-    space = "                              ,                                 ,                               ,                           ,"
+    space = "                              `                                 `                               `                           `"
 
     i = 0
     for main, ext in zip_longest(main_lines, extension_lines):
-        new_line = (main.strip() if main else space) + " ` " + (ext.strip() if ext else " ") + "\n"
+        new_line = (main.strip() if main else space) + (ext.strip() if ext else " ") + "\n"
         i = i + 1
         combined_lines.append(new_line)
 
@@ -58,8 +58,8 @@ def main(main_lines, extension_lines, Excel_path, readyBom_path):
         for cell in column:
             try:
                 if cell.value:
-                    max_length = max(max_length, len(cell.value.strip()))
-                    if isinstance(cell.value, str):
+                    max_length = max(max_length, len(cell.value.strip()))               # SETTING COLUMN WIDTH
+                    if isinstance(cell.value, str):                             # REMOVING SPACES FROM SIDEES OF CELL
                         cell.value = cell.value.strip()
             except:
                 pass

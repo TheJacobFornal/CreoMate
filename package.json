@@ -1,6 +1,6 @@
 {
   "name": "CreoMate",
-  "version": "1.5.5",
+  "version": "1.6.0",
   "description": "CreoMate app",
   "main": "main.js",
   "scripts": {

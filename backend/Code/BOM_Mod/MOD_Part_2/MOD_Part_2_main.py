@@ -70,7 +70,7 @@ def main(main_lines):
     del_counter = 0
     changed_lines = []
 
-    for i in range(0, len(main_lines)):                                         # repair too long names
+    for i in range(0, len(main_lines)):                                         # repair too long names MAIN
         if i < len(main_lines):                             # correct number of lines after removed next from too long
             curr_line = main_lines[i].strip()
 

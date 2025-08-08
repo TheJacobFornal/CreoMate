@@ -168,7 +168,6 @@ function App() {
     if (currentPhase <= 3) return `Start Etap ${currentPhase}`;
     if (currentPhase === 4) return "Wygeneruj Gotowy Excel";
     if (currentPhase === 5) return "Nowy BOM";
-    setComment("Proces zakończony");
     return "Proces zakończony";
   };
 

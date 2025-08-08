@@ -113,6 +113,7 @@ const openExcelPurchases_Zakupy = async () => {
             <div className="setion_legend">
               <p>Brak Typu - <span style={{ backgroundColor: '#00FFB7', color: '#00FFB7' }}>........</span></p>
               <p>Powtórzenie - <span style={{ backgroundColor: '#DDD8B8', color: '#DDD8B8' }}>........</span></p>
+              <p>Nr Kat (B) - <span style={{ backgroundColor: '#6699FF', color: '#6699FF' }}>........</span></p>
             </div>
             <div className="setion_legend">
               <h5>Handlowe</h5>
