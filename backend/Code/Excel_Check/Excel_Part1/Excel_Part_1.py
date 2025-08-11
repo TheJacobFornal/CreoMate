@@ -6,10 +6,22 @@ from Code.Excel_Check.Excel_Addision import Excel_addition
 
 # ===== Constants =====
 TAG_COLORS = {
-    "00FFB7", "FFFF00", "FF0000", "F76700", "ABA200", "D3A6FF", "00B0F0",
-    "A1887F", "B0BEC5", "FF3399", "42FF48", "379392", "DDD8B8","6699FF"
+    "00FFB7",
+    "FFFF00",
+    "FF0000",
+    "F76700",
+    "ABA200",
+    "D3A6FF",
+    "00B0F0",
+    "A1887F",
+    "B0BEC5",
+    "FF3399",
+    "42FF48",
+    "379392",
+    "DDD8B8",
+    "6699FF",
 }
-VALID_TYPES = {'H', 'P', 'L', 'F', 'T', 'W', 'O', 'S', 'N', 'D'}
+VALID_TYPES = {"H", "P", "L", "F", "T", "W", "O", "S", "N", "D"}
 VALID_H_TYPES = {f"H{i}" for i in range(1, 15)}
 VALID_CREO_SUFFIX = VALID_TYPES.union(VALID_H_TYPES)
 
@@ -31,7 +43,8 @@ def is_cell_colored(cell):
         return True
     else:
         return False
-    
+
+
 # ===== Globals =====
 counter_wrong = 0
 max_row = 0
@@ -41,7 +54,7 @@ min_row = 0
 # ===== Utility Functions =====
 def contains_exactly_one_letter(s: str) -> bool:
     """Checks if a string contains exactly one letter."""
-    return len(re.findall(r'[A-Za-z]', s)) == 1
+    return len(re.findall(r"[A-Za-z]", s)) == 1
 
 
 def contain_num(text: str) -> bool:
@@ -49,16 +62,20 @@ def contain_num(text: str) -> bool:
     return any(char.isdigit() for char in text)
 
 
-def color_row(ws, row_num: int, highlight: bool, color: str = "FFFF00"):    
-    fill = PatternFill(start_color=color, end_color=color, fill_type='solid') if highlight else PatternFill(fill_type=None)
+def color_row(ws, row_num: int, highlight: bool, color: str = "FFFF00"):
+    fill = (
+        PatternFill(start_color=color, end_color=color, fill_type="solid")
+        if highlight
+        else PatternFill(fill_type=None)
+    )
     for col in range(1, 10):
         ws.cell(row=row_num, column=col).fill = fill
 
 
 def check_if_colored(cell) -> bool:
-    """Checks if a cell is colored with a known tag color."""               # check if cell is colored with a known tag color - zakupy tag
+    """Checks if a cell is colored with a known tag color."""  # check if cell is colored with a known tag color - zakupy tag
     fill = cell.fill
-    if not fill or fill.fill_type != 'solid':
+    if not fill or fill.fill_type != "solid":
         return False
     fg_color = fill.start_color.rgb
     if not fg_color:
@@ -78,39 +95,45 @@ def remove_dash_Type(ws, removeHItems: bool):
     for row in range(max_row, min_row - 1, -1):
         print("row:", ws.cell(row, 2), flush=True)
         Type_value = ws.cell(row, TypeIndex).value
-        if Type_value:                      
-            Type_value = str(Type_value).strip()                            # remove "-" from type col.
+        if Type_value:
+            Type_value = str(Type_value).strip()  # remove "-" from type col.
             removed_dash = Type_value.replace("-", "")
             ws.cell(row, TypeIndex).value = removed_dash
 
-            if "H" in removed_dash and contain_num(removed_dash) and not is_cell_colored(ws.cell(row, 1)):                      # incorrect H1, H2, etc. types
+            if (
+                "H" in removed_dash
+                and contain_num(removed_dash)
+                and not is_cell_colored(ws.cell(row, 1))
+            ):  # incorrect H1, H2, etc. types
                 if removeHItems:
                     ws.delete_rows(row)
                     continue
-                color_row(ws, row, True, "FFFF00") # yellow
+                color_row(ws, row, True, "FFFF00")  # yellow
                 counter_wrong += 1
                 print("H1 type wrong")
-                
+
                 continue
 
-            if len(removed_dash) > 1 and not is_cell_colored(ws.cell(row, 1)): 
-                color_row(ws, row, True, "00FFB7")                  # aqua
+            if len(removed_dash) > 1 and not is_cell_colored(ws.cell(row, 1)):
+                color_row(ws, row, True, "00FFB7")  # aqua
                 counter_wrong += 1
                 print("Type wrong")
         elif not is_cell_colored(ws.cell(row, 1)):
-            color_row(ws, row, True, "00FFB7")                      # aqua
+            color_row(ws, row, True, "00FFB7")  # aqua
             counter_wrong += 1
             print("Type wrong")
 
 
-def check_type_creo_name(ws, row: int, creo: str):              
+def check_type_creo_name(ws, row: int, creo: str):
     """Validates that the Creo name has a proper type suffix."""
     global counter_wrong
-    if not creo or '-' not in creo:
+    if not creo or "-" not in creo:
         return
 
-    last_part = creo.split('-')[-1].strip()
-    if last_part not in VALID_CREO_SUFFIX and not is_cell_colored(ws.cell(row, 1)):             # check creo name suffix like IL40_04020004A-KRAZEK-T (-T)
+    last_part = creo.split("-")[-1].strip()
+    if last_part not in VALID_CREO_SUFFIX and not is_cell_colored(
+        ws.cell(row, 1)
+    ):  # check creo name suffix like IL40_04020004A-KRAZEK-T (-T)
         counter_wrong += 1
         color_row(ws, row, True, "00FFB7")
         print("Type wrong")
@@ -125,37 +148,62 @@ def check_handlowe(ws, row: int):
     Nazwa_val = ws.cell(row, Nazwa_index).value
     Numer_val = ws.cell(row, Numer_index).value
 
-    if (Nazwa_val and str(Nazwa_val).strip().lower() == "nazwa katalogowa" or                       # default values - nie uzupełnione relacje
-        Numer_val and str(Numer_val).strip().lower() == "nr. katalogowy" or
-        Producent_cell and Producent_cell.value == "Producent") and not is_cell_colored(ws.cell(row, 1)):
+    if (
+        Nazwa_val
+        and str(Nazwa_val).strip().lower()
+        == "nazwa katalogowa"  # default values - nie uzupełnione relacje
+        or Numer_val
+        and str(Numer_val).strip().lower() == "nr. katalogowy"
+        or Producent_cell
+        and Producent_cell.value == "Producent"
+    ) and not is_cell_colored(ws.cell(row, 1)):
         color_row(ws, row, True, "F76700")
         counter_wrong += 1
         print("def names wrong")
         return
 
-    if not Producent_cell.value or Nazwa_val is None or Numer_val is None and not is_cell_colored(ws.cell(row, 1)):   # check if there is producent, nazwa, numer
-        color_row(ws, row, True, "FF0000")   # red
+    if (
+        not Producent_cell.value
+        or Nazwa_val is None
+        or Numer_val is None
+        and not is_cell_colored(ws.cell(row, 1))
+    ):  # check if there is producent, nazwa, numer
+        color_row(ws, row, True, "FF0000")  # red
         counter_wrong += 1
         print("lack of product wrong")
 
 
-def check_Material_Obrobki_brak(ws, row: int):              # change brak -> brak / none in columns 7, 8
+def check_Material_Obrobki_brak(
+    ws, row: int
+):  # change brak -> brak / none in columns 7, 8
     """Normalizes 'Brak' values in Obróbki columns."""
     Cieplna_index, Powierzchnia_index = 7, 8
 
-    if ws.cell(row, Cieplna_index).value and str(ws.cell(row, Cieplna_index).value).strip().lower() == "brak":
+    if (
+        ws.cell(row, Cieplna_index).value
+        and str(ws.cell(row, Cieplna_index).value).strip().lower() == "brak"
+    ):
         ws.cell(row, Cieplna_index).value = "Brak / None"
 
-    if ws.cell(row, Powierzchnia_index).value and str(ws.cell(row, Powierzchnia_index).value).strip().lower() == "brak":
+    if (
+        ws.cell(row, Powierzchnia_index).value
+        and str(ws.cell(row, Powierzchnia_index).value).strip().lower() == "brak"
+    ):
         ws.cell(row, Powierzchnia_index).value = "Brak / None"
 
 
-def check_production(ws, row: int):                                                     # sprawdza obróbki i materiał - col. 6, 7, 8 musi być uzuepłniona                                   
+def check_production(
+    ws, row: int
+):  # sprawdza obróbki i materiał - col. 6, 7, 8 musi być uzuepłniona
     """Highlights missing material or obróbki in production rows."""
     global counter_wrong
     Material_index, Cieplna_index, Powierzchnia_index = 6, 7, 8
 
-    if not (ws.cell(row, Material_index).value and ws.cell(row, Cieplna_index).value and ws.cell(row, Powierzchnia_index).value) and not is_cell_colored(ws.cell(row, 1)):
+    if not (
+        ws.cell(row, Material_index).value
+        and ws.cell(row, Cieplna_index).value
+        and ws.cell(row, Powierzchnia_index).value
+    ) and not is_cell_colored(ws.cell(row, 1)):
         color_row(ws, row, True, "ABA200")
         counter_wrong += 1
         print("produkowane oborki wrong")
@@ -172,17 +220,19 @@ def main_Tree(Excel_path: Path):
         if not creo_name:
             continue
 
-        check_type_creo_name(ws, row, creo_name)                                                       # IL40_04020004A-KRAZEK-T - typ w nazwie creo
+        check_type_creo_name(
+            ws, row, creo_name
+        )  # IL40_04020004A-KRAZEK-T - typ w nazwie creo
 
         producent = ws.cell(row, producent_index).value
 
-        if producent:                                                                                   # modyfikcja producenta - usuwa KAT          
+        if producent:  # modyfikcja producenta - usuwa KAT
             producent = producent.replace("kat.", "").strip().capitalize()
             producent = producent.replace("kat", "").strip().capitalize()
             ws.cell(row, producent_index).value = producent
 
-        typ = creo_name.split('-')[-1]
-        if typ == "H"  or typ == "N":
+        typ = creo_name.split("-")[-1]
+        if typ == "H" or typ == "N":
             if contain_num(typ):
                 ws.delete_rows(row)
             elif not producent:
@@ -194,51 +244,59 @@ def main_Tree(Excel_path: Path):
 def check_clear_Number(ws, row):
     global counter_wrong
     Numer_val = ws.cell(row, 2).value
-    if isinstance(Numer_val, str) and "nr kat" in Numer_val.lower() and not is_cell_colored(ws.cell(row, 1)):        # "nr kat" w numerze
+    if (
+        isinstance(Numer_val, str)
+        and "nr kat" in Numer_val.lower()
+        and not is_cell_colored(ws.cell(row, 1))
+    ):  # "nr kat" w numerze
         color_row(ws, row, True, "6699FF")
         counter_wrong += 1
         print("nr kat in numer", Numer_val, flush=True)
-        
+
+
 def main(Excel_path: Path, removeHItems=False, Zakupy=False) -> int:
     global counter_wrong, max_row, min_row
     counter_wrong = 0
     TypeIndex = 5
-    
+
     wb = load_workbook(Excel_path)
     ws = wb.active
     max_row, min_row = Excel_addition.get_max_min_row(ws, Zakupy)
     print("min_row:", min_row)
 
-
-    remove_dash_Type(ws, removeHItems)          # usuwa dash z Typu kol. 5
+    remove_dash_Type(ws, removeHItems)  # usuwa dash z Typu kol. 5
 
     for row in range(min_row, ws.max_row + 1):
-    
+
         if not Zakupy:
             creo_name = ws.cell(row, 1).value
-            check_type_creo_name(ws, row, creo_name)                     # IL40_04020004A-KRAZEK-T - typ w nazwie creo 
-        #else:
-           #if not check_if_colored(ws.cell(row, 1)):
-                #highlight_repeated_in_column(ws, 2)
+            check_type_creo_name(
+                ws, row, creo_name
+            )  # IL40_04020004A-KRAZEK-T - typ w nazwie creo
+        # else:
+        # if not check_if_colored(ws.cell(row, 1)):
+        # highlight_repeated_in_column(ws, 2)
 
-        check_clear_Number(ws, row)                     # Check for "nr kat" in Numer column
-        
+        check_clear_Number(ws, row)  # Check for "nr kat" in Numer column
+
         Type_value = ws.cell(row, TypeIndex).value
         check_Material_Obrobki_brak(ws, row)
 
-        if Type_value:                                  # check production and handlowe
+        if Type_value:  # check production and handlowe
             if Type_value in {"H", "N"}:
                 check_handlowe(ws, row)
             elif Type_value in {"L", "F", "O", "W", "T", "D"}:
                 check_production(ws, row)
-                
-    
+
     print("Counter wrong:", counter_wrong, flush=True)
     wb.save(Excel_path)
     return counter_wrong
 
 
 if __name__ == "__main__":
-    main(Path(r"C:\Users\JakubFornal\Desktop\CreoMate\Zamówienia CreoMate.xlsx"),False, Zakupy=True)
+    main(
+        Path(r"C:\Users\JakubFornal\Desktop\CreoMate\Zamówienia CreoMate.xlsx"),
+        False,
+        Zakupy=True,
+    )
     print("finished part 1")
-    

@@ -1,6 +1,7 @@
 import sys
 import io
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 from pathlib import Path
 from openpyxl import load_workbook
 import csv
@@ -11,33 +12,56 @@ import re
 
 def clean_illegal_chars(val):
     if isinstance(val, str):
-        return re.sub(r'[\x00-\x08\x0B-\x0C\x0E-\x1F]', '', val)
+        return re.sub(r"[\x00-\x08\x0B-\x0C\x0E-\x1F]", "", val)
     return val
+
+
+def check_if_add_sign(line):
+    line = line[-5:]
+    if line.__contains__("`"):
+        return False
+    else:
+        return True
+
 
 def main(main_lines, extension_lines, Excel_path, readyBom_path):
     combined_lines = []
     space = "                              `                                 `                               `                           `"
 
+    okey = True
     i = 0
+
+    add_sign = check_if_add_sign(main_lines[2])
+    sign = "`"
+
+    print("add sign :", add_sign)
+    print(main_lines[2])
     for main, ext in zip_longest(main_lines, extension_lines):
-        new_line = (main.strip() if main else space) + (ext.strip() if ext else " ") + "\n"
+        if not main or not ext:  # parts are not aligning
+            okey = False
+
+        new_line = (
+            (main.strip() if main else space)
+            + (sign if add_sign else " ")
+            + (ext.strip() if ext else " ")
+            + "\n"
+        )
         i = i + 1
         combined_lines.append(new_line)
-
 
     with open(readyBom_path, "w", encoding="utf-8") as f:
         f.writelines(combined_lines)
 
-    with open(readyBom_path, 'r', encoding='utf-8') as f:
+    with open(readyBom_path, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
     # First line is the header
-    header = [col.strip() for col in lines[0].split('`')]
+    header = [col.strip() for col in lines[0].split("`")]
     rows = []
 
     for line in lines[1:]:
         # Use csv reader to correctly parse quoted commas
-        parsed_row = [col.strip() for col in line.split('`')]
+        parsed_row = [col.strip() for col in line.split("`")]
         cleaned_row = [col.strip() for col in parsed_row]
         rows.append(cleaned_row)
 
@@ -58,8 +82,12 @@ def main(main_lines, extension_lines, Excel_path, readyBom_path):
         for cell in column:
             try:
                 if cell.value:
-                    max_length = max(max_length, len(cell.value.strip()))               # SETTING COLUMN WIDTH
-                    if isinstance(cell.value, str):                             # REMOVING SPACES FROM SIDEES OF CELL
+                    max_length = max(
+                        max_length, len(cell.value.strip())
+                    )  # SETTING COLUMN WIDTH
+                    if isinstance(
+                        cell.value, str
+                    ):  # REMOVING SPACES FROM SIDEES OF CELL
                         cell.value = cell.value.strip()
             except:
                 pass
@@ -78,6 +106,7 @@ def main(main_lines, extension_lines, Excel_path, readyBom_path):
         except (ValueError, TypeError):
             pass
 
+    print("aligning: ", okey)
     wb.save(Excel_path)
 
-
+    return okey

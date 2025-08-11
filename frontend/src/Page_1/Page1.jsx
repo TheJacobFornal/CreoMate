@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
-import Step1 from './P1_components/P1_Step1';
-import Step2 from './P1_components/P1_Step2';
-import Step3 from './P1_components/P1_Step3';
-import bulb from '../assets/bulb.png';
-import './Page1.css';
-
-
+import React, { useState } from "react";
+import Step1 from "./P1_components/P1_Step1";
+import Step2 from "./P1_components/P1_Step2";
+import Step3 from "./P1_components/P1_Step3";
+import bulb from "../assets/bulb.png";
+import "./Page1.css";
 
 const Page1 = ({
-  bomPath, setBomPath,
-  removeHItems, setRemoveHItems,
-  removeMirror, setRemoveMirror,
-  ready2, setReady2,
-  ready3, setReady3,
-  drawingPath, setDrawingPath,
+  bomPath,
+  setBomPath,
+  removeHItems,
+  setRemoveHItems,
+  removeMirror,
+  setRemoveMirror,
+  ready2,
+  setReady2,
+  ready3,
+  setReady3,
+  drawingPath,
+  setDrawingPath,
   currentPhase,
-  statuses, setStatuses,
-  score2, score3,
+  statuses,
+  setStatuses,
+  score2,
+  score3,
   comment,
   excelButtonColor,
   handleStart,
@@ -24,11 +30,13 @@ const Page1 = ({
   openExcel,
   openExcelPurchases,
   setCurrentPhase, // ✅ Only once
+  resultTable, // ✅ Only once
+  correctFileName,
+  correctFileNameChecked,
+  setCorrectFileNameChecked,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const toggleMenu = () => setIsMenuOpen(prev => !prev);
-
-  
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   return (
     <div className="Page_1">
@@ -42,35 +50,100 @@ const Page1 = ({
             <img src={bulb} alt="Hint Icon" />
           </div>
 
-          <div className={`hint-panel ${isMenuOpen ? 'open' : ''}`}>
+          <div className={`hint-panel ${isMenuOpen ? "open" : ""}`}>
             <h4>Legenda Kolorów</h4>
             <div className="setion_legend">
-              <p>Brak Typu - <span style={{ backgroundColor: '#00FFB7', color: '#00FFB7' }}>........</span></p>
-              <p>Powtórzenie - <span style={{ backgroundColor: '#DDD8B8', color: '#DDD8B8' }}>........</span></p>
-              <p>Nr Kat (B) - <span style={{ backgroundColor: '#6699FF', color: '#6699FF' }}>........</span></p>
+              <p>
+                Brak Typu -{" "}
+                <span style={{ backgroundColor: "#00FFB7", color: "#00FFB7" }}>
+                  ........
+                </span>
+              </p>
+              <p>
+                Powtórzenie -{" "}
+                <span style={{ backgroundColor: "#DDD8B8", color: "#DDD8B8" }}>
+                  ........
+                </span>
+              </p>
+              <p>
+                Nr Kat (B) -{" "}
+                <span style={{ backgroundColor: "#6699FF", color: "#6699FF" }}>
+                  ........
+                </span>
+              </p>
             </div>
             <div className="setion_legend">
               <h5>Handlowe</h5>
-              <p>H1, H2, H... - <span style={{ backgroundColor: 'yellow', color: 'yellow' }}>........</span></p>
-              <p>Brak Producenta - <span style={{ backgroundColor: 'red', color: 'red' }}>........</span></p>
-              <p>Domyślne opisy - <span style={{ backgroundColor: 'orange', color: 'orange' }}>........</span></p>
+              <p>
+                H1, H2, H... -{" "}
+                <span style={{ backgroundColor: "yellow", color: "yellow" }}>
+                  ........
+                </span>
+              </p>
+              <p>
+                Brak Producenta -{" "}
+                <span style={{ backgroundColor: "red", color: "red" }}>
+                  ........
+                </span>
+              </p>
+              <p>
+                Domyślne opisy -{" "}
+                <span style={{ backgroundColor: "orange", color: "orange" }}>
+                  ........
+                </span>
+              </p>
             </div>
             <div className="setion_legend">
               <h5>Produkowane</h5>
-              <p>Materiał / Obróbki - <span style={{ backgroundColor: '#ABA200', color: "#ABA200" }}>........</span></p>
-              <p>"_" w numerze - <span style={{ backgroundColor: '#D3A6FF', color: "#D3A6FF" }}>........</span></p>
-              <p>Długość Profilu - <span style={{ backgroundColor: 'grey', color: "grey" }}>........</span></p>
-              <p>Lewy elem (P) - <span style={{ backgroundColor: '#FF3399', color: "#FF3399" }}>........</span></p>
-              <p>Tylko Lewy elem - <span style={{ backgroundColor: '#42FF48', color: "#42FF48" }}>........</span></p>
+              <p>
+                Materiał / Obróbki -{" "}
+                <span style={{ backgroundColor: "#ABA200", color: "#ABA200" }}>
+                  ........
+                </span>
+              </p>
+              <p>
+                "_" w numerze -{" "}
+                <span style={{ backgroundColor: "#D3A6FF", color: "#D3A6FF" }}>
+                  ........
+                </span>
+              </p>
+              <p>
+                Długość Profilu -{" "}
+                <span style={{ backgroundColor: "grey", color: "grey" }}>
+                  ........
+                </span>
+              </p>
+              <p>
+                Lewy elem (P) -{" "}
+                <span style={{ backgroundColor: "#FF3399", color: "#FF3399" }}>
+                  ........
+                </span>
+              </p>
+              <p>
+                Tylko Lewy elem -{" "}
+                <span style={{ backgroundColor: "#42FF48", color: "#42FF48" }}>
+                  ........
+                </span>
+              </p>
             </div>
             <div className="setion_legend" id="last_section_lengend">
               <h5>Rysunki</h5>
-              <p>Brak Rysunku - <span style={{ backgroundColor: '#00B0F0', color: "#00B0F0" }}>........</span></p>
+              <p>
+                Brak Rysunku -{" "}
+                <span style={{ backgroundColor: "#00B0F0", color: "#00B0F0" }}>
+                  ........
+                </span>
+              </p>
             </div>
           </div>
 
           <div className="phase_div">
-            <Step1 bomPath={bomPath} setBomPath={setBomPath} status={statuses.phase1} />
+            <Step1
+              bomPath={bomPath}
+              setBomPath={setBomPath}
+              status={statuses.phase1}
+              correctFileName={correctFileName}
+            />
           </div>
 
           <div className="phase_div">
@@ -85,6 +158,7 @@ const Page1 = ({
               setStatuses={setStatuses}
               setCurrentPhase={setCurrentPhase}
               score2={score2}
+              correctFileName={correctFileName}
             />
           </div>
 
@@ -98,6 +172,10 @@ const Page1 = ({
               setStatuses={setStatuses}
               setCurrentPhase={setCurrentPhase}
               score3={score3}
+              resultTable={resultTable} // ✅ Only once
+              correctFileName={correctFileName}
+              correctFileNameChecked={correctFileNameChecked}
+              setCorrectFileNameChecked={setCorrectFileNameChecked}
             />
           </div>
         </div>
@@ -108,9 +186,7 @@ const Page1 = ({
       </div>
 
       <div className="buttons_container">
-
-        <div className="button_div_1">
-          </div>
+        <div className="button_div_1"></div>
         <div className="button_div_2">
           <button
             onClick={handleStart}

@@ -1,43 +1,46 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
-import Page1 from './Page_1/Page1';
-import Page2 from './Page_2/Page2';
-import Page3 from './Page_3/Page3';
-import Page4 from './Page_4/Page4';
-import './App.css';
-import SideMenu from './SideMenu/SideMenu';
+import React, { useState } from "react";
+import { useEffect } from "react";
+import Page1 from "./Page_1/Page1";
+import Page2 from "./Page_2/Page2";
+import Page3 from "./Page_3/Page3";
+import Page4 from "./Page_4/Page4";
+import "./App.css";
+import SideMenu from "./SideMenu/SideMenu";
 
 function App() {
-  const [bomPath, setBomPath] = useState('');
+  const [bomPath, setBomPath] = useState("");
   const [removeHItems, setRemoveHItems] = useState(false);
   const [removeMirror, setRemoveMirror] = useState(false);
   const [ready2, setReady2] = useState(false);
   const [ready3, setReady3] = useState(false);
-  const [drawingPath, setDrawingPath] = useState('');
+  const [drawingPath, setDrawingPath] = useState("");
   const [currentPhase, setCurrentPhase] = useState(1);
   const [statuses, setStatuses] = useState({
-    phase1: 'idle',
-    phase2: 'idle',
-    phase3: 'idle',
+    phase1: "idle",
+    phase2: "idle",
+    phase3: "idle",
   });
   const [score2, setScore2] = useState(" ");
   const [score3, setScore3] = useState(" ");
-  const [comment, setComment] = useState("Witaj w CreoMate! Wybierz plik BOM i rozpocznij proces.");
+  const [comment, setComment] = useState(
+    "Witaj w CreoMate! Wybierz plik BOM i rozpocznij proces."
+  );
   const [excelButtonColor, setExcelButtonColor] = useState("#949494");
   const [activePage, setActivePage] = useState(1);
   const [Purchases_Excel, setPurchases_Excel] = useState("");
-
-
+  const [resultTable, setResultTable] = useState([]);
+  const [correctFileName, setCorrectFileName] = useState(false); // corecction is needed
+  const [correctFileNameChecked, setCorrectFileNameChecked] = useState(false); // checkbox state
 
   const resetApp = () => {
-    setBomPath('');
+    setBomPath("");
     setRemoveHItems(false);
     setRemoveMirror(false);
     setReady2(false);
     setReady3(false);
-    setDrawingPath('');
+    setDrawingPath("");
     setCurrentPhase(1);
-    setStatuses({ phase1: 'idle', phase2: 'idle', phase3: 'idle' });
+    setStatuses({ phase1: "idle", phase2: "idle", phase3: "idle" });
     setScore2(" ");
     setScore3(" ");
     setComment("Witaj w CreoMate! Wybierz plik BOM i rozpocznij proces.");
@@ -45,7 +48,7 @@ function App() {
   };
 
   const runPhase = async (phaseKey, url) => {
-    setStatuses(s => ({ ...s, [phaseKey]: 'running' }));
+    setStatuses((s) => ({ ...s, [phaseKey]: "running" }));
     let dotCount = 0;
     setComment("Loading");
 
@@ -56,36 +59,88 @@ function App() {
 
     setTimeout(async () => {
       clearInterval(loadingInterval);
+      console.log(`Running `, correctFileNameChecked);
       try {
-        let res = (phaseKey === "phase2")
-          ? await fetch(url, {
+        let res;
+
+        if (phaseKey === "phase2") {
+          res = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ removeHItems, removeMirror }),
-          })
-          : await fetch(url);
+          });
+        } else if (phaseKey === "phase3") {
+          res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ correctFileNameChecked }),
+          });
+        } else {
+          res = await fetch(url);
+        }
 
         const data = await res.json();
 
+        console.log("Response data:", data);
+        console.log("Phase key:", phaseKey);
+
+        // Phase 1
         if (phaseKey === "phase1" && data.ready) {
-          setComment("BOM został poprawnie przetworzony i zapisany w Excelu.");
-          setExcelButtonColor("#0066ff");
+          if (!data.okey) {
+            setComment(
+              "BOM nie został poprawnie przetworzony. Sprawdź plik Excel."
+            );
+            setExcelButtonColor("#ff0000");
+          } else {
+            setComment(
+              "BOM został poprawnie przetworzony i zapisany w Excelu."
+            );
+            setExcelButtonColor("#0066ff");
+          }
+          // Phase 2
         } else if (phaseKey === "phase2" && data.message) {
           setScore2(data.message);
-          setComment(data.ready ? "Etap 2 zakończony pomyślnie. Możesz przejść do etapu 3." : "Popraw Excel, aby kontynuować.");
-        } else if (phaseKey === "phase3" && data.message) {
+          setExcelButtonColor("#0066ff");
+          setComment(
+            data.ready
+              ? "Etap 2 zakończony pomyślnie. Możesz przejść do etapu 3."
+              : "Popraw Excel, aby kontynuować."
+          );
+          // Phase 3
+        } else if (phaseKey === "phase3") {
           setScore3(data.message);
-          setComment(data.ready ? "Etap 3 zakończony pomyślnie. Wygeneruj Excel do działu zakupów." : "Sprawdź rysunki, aby kontynuować.");
+          setComment(
+            data.ready
+              ? "Etap 3 zakończony pomyślnie. Wygeneruj Excel do działu zakupów."
+              : "Sprawdź rysunki, aby kontynuować."
+          );
+          if (data.result_table) {
+            setResultTable([]);
+            setResultTable(data.result_table);
+            setCorrectFileName(true);
+            setComment(
+              "Sprawdź nazwy rysunków i zaznacz checkbox, aby je poprawić."
+            );
+            console.log("Result table:", data.result_table);
+            console.log("correctState: ", correctFileName);
+          }
+          // Phase 4
         } else if (phaseKey === "phase4") {
-          setComment(data.ready ? "Wygenerowano gotowy plik." : "Nie udało się wygenerować pliku.");
+          setComment(
+            data.ready
+              ? "Wygenerowano gotowy Excel ;)"
+              : "Nie udało się wygenerować pliku."
+          );
         }
 
-
-        setStatuses(s => ({ ...s, [phaseKey]: data.ready ? 'done' : 'running' }));
-        if (data.ready) setCurrentPhase(p => p < 5 ? p + 1 : p);
+        setStatuses((s) => ({
+          ...s,
+          [phaseKey]: data.ready ? "done" : "running",
+        }));
+        if (data.ready) setCurrentPhase((p) => (p < 5 ? p + 1 : p));
       } catch (err) {
-        setStatuses(s => ({ ...s, [phaseKey]: 'idle' }));
-        alert(`Error running ${phaseKey}: ${err.message}`);
+        setStatuses((s) => ({ ...s, [phaseKey]: "idle" }));
+        alert(`Error running ${phaseKey}: ${err.message} szef`);
       }
     }, 1700);
   };
@@ -104,7 +159,7 @@ function App() {
 
   const handleStart = async () => {
     let excelOpen = false;
-    if (currentPhase > 1) {
+    if (currentPhase >= 1) {
       excelOpen = await isExcelOpen();
     }
 
@@ -122,8 +177,6 @@ function App() {
       setComment("Wybierz plik BOM!");
       return;
     }
-
-
 
     const phaseUrls = {
       1: "http://127.0.0.1:8000/run-phase1",
@@ -162,8 +215,6 @@ function App() {
     }
   };
 
-
-
   const getButtonLabel = () => {
     if (currentPhase <= 3) return `Start Etap ${currentPhase}`;
     if (currentPhase === 4) return "Wygeneruj Gotowy Excel";
@@ -171,18 +222,13 @@ function App() {
     return "Proces zakończony";
   };
 
-
-
   // PAGE 2 Process
 
-
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-    <SideMenu activePage={activePage} setActivePage={setActivePage} />
+    <div style={{ display: "flex", height: "100vh" }}>
+      <SideMenu activePage={activePage} setActivePage={setActivePage} />
 
-
-
-      <div style={{ flexGrow: 1, overflowY: 'auto' }}>
+      <div style={{ flexGrow: 1, overflowY: "auto" }}>
         {activePage === 1 && (
           <Page1
             bomPath={bomPath}
@@ -209,6 +255,10 @@ function App() {
             getButtonLabel={getButtonLabel}
             openExcel={openExcel}
             openExcelPurchases={openExcelPurchases}
+            resultTable={resultTable}
+            correctFileName={correctFileName} // boolean
+            correctFileNameChecked={correctFileNameChecked} // checkbox state
+            setCorrectFileNameChecked={setCorrectFileNameChecked}
           />
         )}
 
@@ -228,18 +278,12 @@ function App() {
           />
         )}
 
-        {activePage === 3 && (
-          <Page3></Page3>
-        )}
+        {activePage === 3 && <Page3></Page3>}
 
-        {activePage === 4 && (
-          <Page4 />
-        )}
+        {activePage === 4 && <Page4 />}
       </div>
-
     </div>
   );
-
 }
 
 export default App;
