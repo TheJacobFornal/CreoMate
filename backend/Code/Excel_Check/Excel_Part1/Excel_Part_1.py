@@ -93,35 +93,34 @@ def remove_dash_Type(ws, removeHItems: bool):
     global max_row, min_row
 
     for row in range(max_row, min_row - 1, -1):
-        print("row:", ws.cell(row, 2), flush=True)
         Type_value = ws.cell(row, TypeIndex).value
         if Type_value:
             Type_value = str(Type_value).strip()  # remove "-" from type col.
             removed_dash = Type_value.replace("-", "")
             ws.cell(row, TypeIndex).value = removed_dash
 
+            print(removed_dash)
             if (
                 "H" in removed_dash
                 and contain_num(removed_dash)
                 and not is_cell_colored(ws.cell(row, 1))
             ):  # incorrect H1, H2, etc. types
+                print("H1 item: ", ws.cell(row, 2))
                 if removeHItems:
                     ws.delete_rows(row)
                     continue
                 color_row(ws, row, True, "FFFF00")  # yellow
                 counter_wrong += 1
-                print("H1 type wrong")
 
                 continue
 
             if len(removed_dash) > 1 and not is_cell_colored(ws.cell(row, 1)):
                 color_row(ws, row, True, "00FFB7")  # aqua
                 counter_wrong += 1
-                print("Type wrong")
+
         elif not is_cell_colored(ws.cell(row, 1)):
             color_row(ws, row, True, "00FFB7")  # aqua
             counter_wrong += 1
-            print("Type wrong")
 
 
 def check_type_creo_name(ws, row: int, creo: str):
@@ -159,7 +158,6 @@ def check_handlowe(ws, row: int):
     ) and not is_cell_colored(ws.cell(row, 1)):
         color_row(ws, row, True, "F76700")
         counter_wrong += 1
-        print("def names wrong")
         return
 
     if (
@@ -170,7 +168,6 @@ def check_handlowe(ws, row: int):
     ):  # check if there is producent, nazwa, numer
         color_row(ws, row, True, "FF0000")  # red
         counter_wrong += 1
-        print("lack of product wrong")
 
 
 def check_Material_Obrobki_brak(
@@ -295,8 +292,8 @@ def main(Excel_path: Path, removeHItems=False, Zakupy=False) -> int:
 
 if __name__ == "__main__":
     main(
-        Path(r"C:\Users\JakubFornal\Desktop\CreoMate\Zamówienia CreoMate.xlsx"),
-        False,
-        Zakupy=True,
+        Path(r"C:\Users\JakubFornal\Downloads\BOM CreoMate_baza — kopia — kopia.xlsx"),
+        True,
+        Zakupy=False,
     )
     print("finished part 1")

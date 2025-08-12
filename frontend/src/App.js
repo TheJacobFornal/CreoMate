@@ -68,7 +68,7 @@ function App() {
       clearInterval(loadingInterval);
       try {
         let res;
-
+        console.log("checked: ", correctFileNameChecked);
         if (phaseKey === "phase2") {
           res = await fetch(url, {
             method: "POST",
@@ -124,16 +124,28 @@ function App() {
           if (data.filesToCorrection || data.filesUnchangedAble) {
             setFilesToCorrection([]);
             setFilesUnchangedAble([]);
-            setCorrectFileName(true);
 
             setFilesToCorrection(data.filesToCorrection);
 
             setFilesUnchangedAble(data.filesUnchangedAble);
 
+            if (
+              data.filesToCorrection.length === 0 &&
+              data.filesUnchangedAble.length === 0
+            ) {
+              console.log(
+                "tables ",
+                data.filesToCorrection.length,
+                data.filesUnchangedAble.length
+              );
+              setCurrentPhase(3);
+              setComment("Nazw rysunków nie trzeba poprawiać");
+            } else {
+              setCorrectFileName(true);
+              setComment("Sprawdź nazwy rysunków");
+            }
+
             console.log("phase 30");
-            setComment(
-              "Sprawdź nazwy rysunków i zaznacz checkbox, aby je poprawić."
-            );
           }
 
           // Phase 3
@@ -201,7 +213,7 @@ function App() {
       return;
     }
 
-    if (drawingPath === "" && currentPhase === 3) {
+    if (drawingPath === "" && (currentPhase === 3 || currentPhase === 30)) {
       setComment("Wybierz folder z rysunkami!");
       return;
     }

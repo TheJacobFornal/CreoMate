@@ -117,19 +117,28 @@ def purchase_main(Purchases_Excel_path, drowings_folder=None):
     )
     number_of_rows = Excel_addition.number_of_rows(Purchases_Excel_path, Zakupy=True)
 
-    correct_lines_Excel = number_of_rows - counter_wrong
-    percentage = int(round((correct_lines_Excel / number_of_rows) * 100, 0))
-    score_excel = f"{correct_lines_Excel}/{number_of_rows} ({percentage}%) - znaleziono"
+    if number_of_rows > 0:
+        correct_lines_Excel = number_of_rows - counter_wrong
+        percentage = int(round((correct_lines_Excel / number_of_rows) * 100, 0))
+        score_excel = (
+            f"{correct_lines_Excel}/{number_of_rows} ({percentage}%) - poprawne"
+        )
+    else:
+        score_excel = "brak danych w Excel"
 
     if drowings_folder is not None:
         missing_counter += Finder_main.main(
             Path(Purchases_Excel_path), drowings_folder, Zakupy_bool=True
         )
-        correct_lines = number_of_rows_drawings - missing_counter
-        percentage_drawings = int(
-            round((correct_lines / number_of_rows_drawings) * 100)
-        )
-        score_drowings = f"{correct_lines}/{number_of_rows_drawings} ({percentage_drawings}%) - znaleziono"
+
+        if number_of_rows_drawings > 0:
+            correct_lines = number_of_rows_drawings - missing_counter
+            percentage_drawings = int(
+                round((correct_lines / number_of_rows_drawings) * 100)
+            )
+            score_drowings = f"{correct_lines}/{number_of_rows_drawings} ({percentage_drawings}%) - znaleziono"
+        else:
+            score_drowings = "nie ma rysunków"
 
         return score_excel, score_drowings
 

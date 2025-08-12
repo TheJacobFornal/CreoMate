@@ -18,17 +18,16 @@ def check_correction(file_path, correctFileName):
 
     if not len(parts) == 3:
         filesUnchangedAble.append(file_name)
-        print("files unchang: ", file_name)
     else:
         end = file_name.split("-")[-1]
         if any(char.isdigit() for char in end):
             if end[1] == "_":  # DWG file like "f_3"
-                filesToCorrection.append(file_name)
                 if correctFileName:
                     repair_fileName(file_path)
+                else:
+                    filesToCorrection.append(file_name)
             else:
                 filesUnchangedAble.append(file_name)
-                print("files unchang: ", file_name)
 
 
 def repair_fileName(file_path):  # repair file name like "f_3" to "f"
@@ -37,7 +36,6 @@ def repair_fileName(file_path):  # repair file name like "f_3" to "f"
 
     base_name = parts[:2]
     base_name = base_name[0] + "-" + base_name[1]
-    print("Base name:", base_name)
 
     end = parts[-1]
     correct_end = end[:1]
@@ -49,7 +47,6 @@ def repair_fileName(file_path):  # repair file name like "f_3" to "f"
 
 def rename_file(old_path, new_name):
     print(f"Renaming {old_path} to {new_name}")
-
     extension = old_path.suffix
     new_name = new_name + extension
 

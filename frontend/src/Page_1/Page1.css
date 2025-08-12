@@ -170,8 +170,8 @@
 
 
 .button_div_2 button {
-  padding: 12px 22px;
-  font-size: 18px;
+  padding: 12px 10px;
+  font-size: 180px;
   background-color: #00ff3c;
   color: rgb(54, 53, 53);
   border: none;
@@ -369,7 +369,7 @@
 }
 
 .name_correction {
-  border: 1px solid rgba(0, 0, 0, 0.034); /* very light border */
+  border: 1px solid rgba(0, 0, 0, 0); /* very light border */
   border-radius: 8px; /* smooth rounded corners */
   background: rgba(255, 255, 255, 0.6); /* subtle translucent white */
   backdrop-filter: blur(10px); /* glass-like effect */

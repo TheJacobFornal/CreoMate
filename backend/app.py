@@ -94,6 +94,8 @@ def create_app():
         body = await request.json()
         correctFileName = body.get("correctFileNameChecked", False)
 
+        print("check remove names: ", correctFileName, flush=True)
+
         filesToCorrection, filesUnchangedAble = Main1.namesCorrection(
             Drowings_dir, correctFileName
         )

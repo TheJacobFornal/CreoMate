@@ -158,12 +158,12 @@
 
 
 .button_div_2 button {
-  padding: 12px 22px;
+  padding: 12px 15px;
   font-size: 18px;
-  background-color:#00ff3c;
+  background-color: #00ff3c;
   color: rgb(54, 53, 53);
   border: none;
-  font-weight: bold; 
+  font-weight: bold;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
