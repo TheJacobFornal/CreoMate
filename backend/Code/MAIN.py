@@ -41,32 +41,30 @@ def phase2(Excel_path, removeHItems=False, removeMirror=False):
     return text
 
 
-def phase3(drowings_folder, Excel_path, correctFileName):
+def namesCorrection(drowings_folder, correctNames):
+    filesToCorrection, filesUnchangedAble = File_correct.main(
+        drowings_folder, correctNames
+    )
+
+    return filesToCorrection, filesUnchangedAble
+
+
+def phase3(drowings_folder, Excel_path):
     counter_wrong = 0
     Excel_addition.main(Excel_path)
-    filesNameReady = False
 
-    filesToCorrection, filesUnchangedAble = File_correct.main(drowings_folder, correctFileName)
+    counter_wrong = Finder_main.main(Excel_path, drowings_folder)
+    number_of_rows = Excel_addition.number_of_rows_drawings(Excel_path)
 
-        if len(filesToCorrection) == 0 and len(filesUnchangedAble) == 0:
-        filesNameReady = True
-        
-    if filesNameReady:    
-        counter_wrong = Finder_main.main(Excel_path, drowings_folder)
-        number_of_rows = Excel_addition.number_of_rows_drawings(Excel_path)
+    correct_lines = number_of_rows - counter_wrong
 
-        correct_lines = number_of_rows - counter_wrong
-
-        if number_of_rows != 0:
-            percentage = round((correct_lines / number_of_rows) * 100)
-            text = f"{correct_lines}/{number_of_rows} ({percentage}%) - znaleziono"
-        else:
-            text = "0/0 (0%)"
+    if number_of_rows != 0:
+        percentage = round((correct_lines / number_of_rows) * 100)
+        text = f"{correct_lines}/{number_of_rows} ({percentage}%) - znaleziono"
     else:
-        text = ""
-        correct_lines = 0
+        text = "0/0 (0%)"
 
-    return text, filesToCorrection, filesUnchangedAble
+    return text
 
 
 def copy_Excel_to_Purchases(Excel_path, Purchases_Excel_path):

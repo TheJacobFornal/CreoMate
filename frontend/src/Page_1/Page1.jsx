@@ -15,6 +15,8 @@ const Page1 = ({
   ready2,
   setReady2,
   ready3,
+  ready30,
+  setReady30,
   setReady3,
   drawingPath,
   setDrawingPath,
@@ -30,10 +32,13 @@ const Page1 = ({
   openExcel,
   openExcelPurchases,
   setCurrentPhase, // ✅ Only once
-  resultTable, // ✅ Only once
   correctFileName,
   correctFileNameChecked,
   setCorrectFileNameChecked,
+  filesToCorrection,
+  filesUnchangedAble,
+  setCorrectFileName,
+  setComment,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
@@ -172,10 +177,15 @@ const Page1 = ({
               setStatuses={setStatuses}
               setCurrentPhase={setCurrentPhase}
               score3={score3}
-              resultTable={resultTable} // ✅ Only once
               correctFileName={correctFileName}
               correctFileNameChecked={correctFileNameChecked}
               setCorrectFileNameChecked={setCorrectFileNameChecked}
+              filesToCorrection={filesToCorrection}
+              filesUnchangedAble={filesUnchangedAble}
+              setCorrectFileName={setCorrectFileName}
+              ready30={ready30}
+              setReady30={setReady30}
+              setComment={setComment}
             />
           </div>
         </div>

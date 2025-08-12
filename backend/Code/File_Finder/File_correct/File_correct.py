@@ -6,34 +6,45 @@ from openpyxl.styles import PatternFill
 
 
 wrong_counter = 0
-result = []
+filesToCorrection = []
+filesUnchangedAble = []
 
 
 def check_correction(file_path, correctFileName):
-    global result
+    global filesUnchangedAble, filesToCorrection
     file_name = file_path.stem
-    end = file_name.split("-")[-1]
-    if any(char.isdigit() for char in end):
-        result.append(file_name)
-        if correctFileName:
-            repair_fileName(file_path)
+
+    parts = file_name.split("-")
+
+    if not len(parts) == 3:
+        filesUnchangedAble.append(file_name)
+        print("files unchang: ", file_name)
+    else:
+        end = file_name.split("-")[-1]
+        if any(char.isdigit() for char in end):
+            if end[1] == "_":  # DWG file like "f_3"
+                filesToCorrection.append(file_name)
+                if correctFileName:
+                    repair_fileName(file_path)
+            else:
+                filesUnchangedAble.append(file_name)
+                print("files unchang: ", file_name)
 
 
-def repair_fileName(file_path):
+def repair_fileName(file_path):  # repair file name like "f_3" to "f"
     file_name = file_path.stem
     parts = file_name.split("-")
 
-    if len(parts) == 3:
-        base_name = parts[:2]
-        base_name = base_name[0] + "-" + base_name[1]
-        print("Base name:", base_name)
+    base_name = parts[:2]
+    base_name = base_name[0] + "-" + base_name[1]
+    print("Base name:", base_name)
 
-        end = parts[-1]
-        correct_end = end[:1]
+    end = parts[-1]
+    correct_end = end[:1]
 
-        corrected_name = str(base_name) + "-" + str(correct_end)
+    corrected_name = str(base_name) + "-" + str(correct_end)
 
-        rename_file(Path(file_path), corrected_name)
+    rename_file(Path(file_path), corrected_name)
 
 
 def rename_file(old_path, new_name):
@@ -44,27 +55,22 @@ def rename_file(old_path, new_name):
 
     new_path = old_path.with_name(new_name)
 
-    if new_path.exists():
-        print(f"File {new_path} already exists. Skipping rename.")
-        # old_path.unlink(missing_ok=True)
-
-    # old_path.rename(new_path)
+    old_path.rename(new_path)
 
 
 def main(folder, correctFileName=True):
-    global result
+    global filesToCorrection, filesUnchangedAble
     wrong_counter = 0
-    result = []
+    filesToCorrection = []
+    filesUnchangedAble = []
+
     folder_path = Path(folder)
 
     for file in folder_path.iterdir():
-        check_correction(file, correctFileName)
+        if file.suffix.lower() in (".dwg", ".pdf", ".stp"):
+            check_correction(file, correctFileName)
 
-    print("table result:")
-
-    print(result)
-
-    return result
+    return filesToCorrection, filesUnchangedAble
 
 
 if __name__ == "__main__":

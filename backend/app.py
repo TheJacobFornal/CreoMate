@@ -78,16 +78,30 @@ def create_app():
         message = Main1.phase2(Excel_path, remove_h_items, remove_mirror)
         return {"ready": False, "message": message}
 
-    @app.post("/run-phase3")
-    async def run_phase3(request: Request):
+    @app.get("/run-phase3")
+    def run_phase3(request: Request):
         global Drowings_dir
+
+        score = Main1.phase3(Drowings_dir, Excel_path)
+
+        return {"ready": False, "message": score}
+
+    @app.post("/run-namesCorrection")
+    async def run_namesCorrection(request: Request):
+        global Drowings_dir
+        print("phase 30 pyton check")
 
         body = await request.json()
         correctFileName = body.get("correctFileNameChecked", False)
 
-        score, result_table = Main1.phase3(Drowings_dir, Excel_path, correctFileName)
-        print("Phase 3 score: finiedhed", flush=True)
-        return {"ready": False, "message": score, "result_table": result_table}
+        filesToCorrection, filesUnchangedAble = Main1.namesCorrection(
+            Drowings_dir, correctFileName
+        )
+        return {
+            "ready": False,
+            "filesToCorrection": filesToCorrection,
+            "filesUnchangedAble": filesUnchangedAble,
+        }
 
     @app.get("/run-phase4")
     def run_phase4():

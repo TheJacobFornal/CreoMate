@@ -11,8 +11,11 @@ function App() {
   const [bomPath, setBomPath] = useState("");
   const [removeHItems, setRemoveHItems] = useState(false);
   const [removeMirror, setRemoveMirror] = useState(false);
+
   const [ready2, setReady2] = useState(false);
   const [ready3, setReady3] = useState(false);
+  const [ready30, setReady30] = useState(false);
+
   const [drawingPath, setDrawingPath] = useState("");
   const [currentPhase, setCurrentPhase] = useState(1);
   const [statuses, setStatuses] = useState({
@@ -28,7 +31,9 @@ function App() {
   const [excelButtonColor, setExcelButtonColor] = useState("#949494");
   const [activePage, setActivePage] = useState(1);
   const [Purchases_Excel, setPurchases_Excel] = useState("");
-  const [resultTable, setResultTable] = useState([]);
+  const [filesToCorrection, setFilesToCorrection] = useState([]);
+  const [filesUnchangedAble, setFilesUnchangedAble] = useState([]);
+
   const [correctFileName, setCorrectFileName] = useState(false); // corecction is needed
   const [correctFileNameChecked, setCorrectFileNameChecked] = useState(false); // checkbox state
 
@@ -38,6 +43,7 @@ function App() {
     setRemoveMirror(false);
     setReady2(false);
     setReady3(false);
+    setReady30(false);
     setDrawingPath("");
     setCurrentPhase(1);
     setStatuses({ phase1: "idle", phase2: "idle", phase3: "idle" });
@@ -58,8 +64,8 @@ function App() {
     }, 500);
 
     setTimeout(async () => {
+      console.log("Phase key:", phaseKey);
       clearInterval(loadingInterval);
-      console.log(`Running `, correctFileNameChecked);
       try {
         let res;
 
@@ -69,7 +75,7 @@ function App() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ removeHItems, removeMirror }),
           });
-        } else if (phaseKey === "phase3") {
+        } else if (phaseKey === "phase30") {
           res = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -82,7 +88,6 @@ function App() {
         const data = await res.json();
 
         console.log("Response data:", data);
-        console.log("Phase key:", phaseKey);
 
         // Phase 1
         if (phaseKey === "phase1" && data.ready) {
@@ -97,6 +102,7 @@ function App() {
             );
             setExcelButtonColor("#0066ff");
           }
+
           // Phase 2
         } else if (phaseKey === "phase2" && data.message) {
           setScore2(data.message);
@@ -106,26 +112,44 @@ function App() {
               ? "Etap 2 zakończony pomyślnie. Możesz przejść do etapu 3."
               : "Popraw Excel, aby kontynuować."
           );
+
+          // Phase 30
+        } else if (phaseKey === "phase30") {
+          console.log(data.filesToCorrection);
+          setComment(
+            data.ready
+              ? "Nazwy rysunków są okey"
+              : "Sprawdź nazwy rysunki, aby kontynuować."
+          );
+          if (data.filesToCorrection || data.filesUnchangedAble) {
+            setFilesToCorrection([]);
+            setFilesUnchangedAble([]);
+            setCorrectFileName(true);
+
+            setFilesToCorrection(data.filesToCorrection);
+
+            setFilesUnchangedAble(data.filesUnchangedAble);
+
+            console.log("phase 30");
+            setComment(
+              "Sprawdź nazwy rysunków i zaznacz checkbox, aby je poprawić."
+            );
+          }
+
           // Phase 3
         } else if (phaseKey === "phase3") {
+          setCorrectFileName(false);
+          console.log("phase3, correctrStatus: ", correctFileName);
           setScore3(data.message);
           setComment(
             data.ready
               ? "Etap 3 zakończony pomyślnie. Wygeneruj Excel do działu zakupów."
               : "Sprawdź rysunki, aby kontynuować."
           );
-          if (data.result_table) {
-            setResultTable([]);
-            setResultTable(data.result_table);
-            setCorrectFileName(true);
-            setComment(
-              "Sprawdź nazwy rysunków i zaznacz checkbox, aby je poprawić."
-            );
-            console.log("Result table:", data.result_table);
-            console.log("correctState: ", correctFileName);
-          }
-          // Phase 4
-        } else if (phaseKey === "phase4") {
+        }
+
+        // Phase 4
+        else if (phaseKey === "phase4") {
           setComment(
             data.ready
               ? "Wygenerowano gotowy Excel ;)"
@@ -137,10 +161,19 @@ function App() {
           ...s,
           [phaseKey]: data.ready ? "done" : "running",
         }));
-        if (data.ready) setCurrentPhase((p) => (p < 5 ? p + 1 : p));
+        if (data.ready) {
+          setCurrentPhase((p) => {
+            console.log("p", p);
+            if (p === 2) return 30; // special jump from 2 → 30
+            if (p === 30) return 3; // special jump from 30 → 3
+            if (p < 5) return p + 1; // normal increment
+            return p;
+          });
+        }
       } catch (err) {
         setStatuses((s) => ({ ...s, [phaseKey]: "idle" }));
         alert(`Error running ${phaseKey}: ${err.message} szef`);
+        console.log(err.message);
       }
     }, 1700);
   };
@@ -184,9 +217,10 @@ function App() {
       3: "http://127.0.0.1:8000/run-phase3",
       4: "http://127.0.0.1:8000/run-phase4",
       10: "http://127.0.0.1:8000/run-phase10",
+      30: "http://127.0.0.1:8000/run-namesCorrection",
     };
 
-    if (currentPhase >= 1 && currentPhase <= 4) {
+    if ((currentPhase >= 1 && currentPhase <= 4) || currentPhase == 30) {
       await runPhase(`phase${currentPhase}`, phaseUrls[currentPhase]);
     } else if (currentPhase === 5) {
       resetApp();
@@ -219,6 +253,7 @@ function App() {
     if (currentPhase <= 3) return `Start Etap ${currentPhase}`;
     if (currentPhase === 4) return "Wygeneruj Gotowy Excel";
     if (currentPhase === 5) return "Nowy BOM";
+    if (currentPhase === 30) return "Sprawdź nazwy";
     return "Proces zakończony";
   };
 
@@ -240,6 +275,8 @@ function App() {
             ready2={ready2}
             setReady2={setReady2}
             ready3={ready3}
+            ready30={ready30}
+            setReady30={setReady30}
             setReady3={setReady3}
             drawingPath={drawingPath}
             setDrawingPath={setDrawingPath}
@@ -255,10 +292,13 @@ function App() {
             getButtonLabel={getButtonLabel}
             openExcel={openExcel}
             openExcelPurchases={openExcelPurchases}
-            resultTable={resultTable}
+            filesToCorrection={filesToCorrection}
+            filesUnchangedAble={filesUnchangedAble}
             correctFileName={correctFileName} // boolean
             correctFileNameChecked={correctFileNameChecked} // checkbox state
             setCorrectFileNameChecked={setCorrectFileNameChecked}
+            setCorrectFileName={setCorrectFileName}
+            setComment={setComment}
           />
         )}
 

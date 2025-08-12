@@ -11,7 +11,6 @@ function Step2({
   score2,
   correctFileName,
 }) {
-  console.log("Correct file name state in Step2:", correctFileName);
   return (
     <div>
       <div
@@ -76,7 +75,7 @@ function Step2({
                   setReady(checked);
                   if (checked) {
                     setStatuses((s) => ({ ...s, phase2: "done" }));
-                    setCurrentPhase(3);
+                    setCurrentPhase(30);
                   } else {
                     setStatuses((s) => ({ ...s, phase2: "idle" }));
                     setCurrentPhase(2);

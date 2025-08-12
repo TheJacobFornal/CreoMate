@@ -44,7 +44,6 @@ function Step1({ bomPath, setBomPath, status, correctFileName }) {
             <input
               value={bomPath}
               style={{ width: "560px" }}
-              readFOnly
               id="custom-input"
             />
             <button id="button_folder" onClick={handleChooseFile}>
