@@ -127,7 +127,7 @@ def modify_left_duplicate(ws, row_left, base_name_left, removeMirror):
 def check_if_mirror(creo_name):
     x = creo_name[-1]
     if x == "L":
-        print("Left mirror found in name:", creo_name, flush=True)
+
         return True
     return False
 
@@ -156,15 +156,11 @@ def highlight_repeated_in_column(ws, col: int):  # check for repeated values in 
                 val = ws.cell(row, col).value
                 value_count.setdefault(val, []).append(row)
 
-    for value, rows in value_count.items():
-        print(f"Value: {value} → Rows: {rows}")
-
     for rows in value_count.values():
         if len(rows) > 1:
             for row in rows:
                 color_row(ws, row, True, "DDD8B8")
                 wrong_counter += 1
-                print("counter ++ repetion", ws.cell(row, 1).value, flush=True)
 
 
 def main(Excel_path, removeMirror, Zakupy=False):
@@ -203,7 +199,7 @@ def main(Excel_path, removeMirror, Zakupy=False):
                     and str(Numer_val).__contains__("_")
                     and not is_cell_colored(ws.cell(row, 1))
                 ):
-                    print("Number with underscore found in row:", row, flush=True)
+
                     wrong_counter += 1
                     color_row(ws, row, True, "D3A6FF")
 
@@ -222,12 +218,10 @@ def main(Excel_path, removeMirror, Zakupy=False):
                         "S",
                         "D",
                     }:
-                        print("Left mirror found in row:", base_name, flush=True)
+
                         modify_left_duplicate(ws, row, base_name, removeMirror)
 
     highlight_repeated_in_column(ws, 2)  # powtórzenia w kolumnie 2
-
-    print("Counter wrong:", wrong_counter, flush=True)
 
     wb.save(Excel_path)
 
@@ -246,7 +240,7 @@ if __name__ == "__main__":
         removeMirror,
         Zakupy=True,
     )
-    print("finished")
+
     os.startfile(
         Path(r"C:\Users\JakubFornal\Desktop\CreoMate\Zamówienia CreoMate.xlsx")
     )

@@ -29,7 +29,7 @@ def merge_two_lines(curr_result, next_lines_table):  # merge next_line and curr_
     next_result = parse_fixed_width_line(next_line)
 
     for i in range(0, 5):
-        print(i + 1, next_result[i])
+
         if next_result[i].strip() != "":
             curr_result[i] = curr_result[i].strip() + " " + next_result[i].strip()
 
@@ -52,8 +52,8 @@ def mod_long_name(curr_line, next_line, lines, index):
     curr_line = remove_last_comma(curr_line)
     curr_line = remove_first_comma(curr_line)
 
-    curr_line_table = curr_line.split(",")
-    next_line_table = next_line.split(",")
+    curr_line_table = curr_line.split("`")
+    next_line_table = next_line.split("`")
 
     if (
         len(next_line_table) < 4 and len(next_line_table) > 1
@@ -82,6 +82,7 @@ def txt_to_single_excel(txt_path, excel_path):
         stripped = line.strip()
         if stripped:  # skip empty lines
             row = [cell.strip() for cell in stripped.split("`")]
+
             data.append(row)
 
     # Convert to DataFrame and write to Excel
@@ -125,12 +126,14 @@ def main(BOM_path, Excel_path, BOM_ready):
         lines = f.readlines()
         i = 0
         while i < len(lines):
-            if not lines[i].__contains__("Assembly"):
-                if len(lines[i].strip()) == 0:
+            if not lines[i].__contains__("Assembly"):  # product line
+                if len(lines[i].strip()) == 0:  # empty line
                     i += 1
                     continue
                 if i < len(lines) - 1:
+
                     lines[i] = mod_long_name(lines[i], lines[i + 1], lines, i)
+
             i += 1  # move to next line only if not deleted (otherwise mod_long_name deletes next line)
 
     with open(BOM_ready, "w", encoding="utf-8") as f:
@@ -142,6 +145,6 @@ def main(BOM_path, Excel_path, BOM_ready):
 if __name__ == "__main__":
     main(
         Excel_path=r"C:\Users\JakubFornal\Desktop\CreoMate\Zamówienia CreoMate.xlsx",
-        BOM_path=r"C:\Users\JakubFornal\Downloads\im32_00000000-montaz_poduszki-z.bom (1).4",
+        BOM_path=r"C:\Users\JakubFornal\Downloads\im32_00000000-montaz_poduszki-z.bom.5",
         BOM_ready=r"C:\Users\JakubFornal\Desktop\CreoMate\readyBOM.txt",
     )

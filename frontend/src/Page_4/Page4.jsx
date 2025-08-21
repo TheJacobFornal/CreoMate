@@ -59,7 +59,17 @@ const Page4 = () => {
     setTimeout(async () => {
       clearInterval(loadingInterval);
       try {
-        const res = await fetch(url); // ← FIXED LINE
+        let res;
+        if (phaseKey === "phase2") {
+          res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ removeHItems }),
+          });
+        } else {
+          res = await fetch(url); // ← FIXED LINE
+        }
+
         const data = await res.json(); // ← PARSE RESPONSE
 
         if (phaseKey === "phase1" && data.ready) {
@@ -72,11 +82,23 @@ const Page4 = () => {
               ? "Etap 2 zakończony pomyślnie. Możesz przejść do etapu 3."
               : "Popraw Excel, aby kontynuować."
           );
+        } else if (phaseKey === "phase20") {
+          setComment(
+            data.ready
+              ? "Szablon został przekopiowany"
+              : "Błąd przy przekopiowyniu do szablonu"
+          );
         } else if (phaseKey === "phase3" && data.message) {
           setScore3(data.message);
           setComment(
             data.ready
               ? "Etap 3 zakończony pomyślnie. Wygeneruj Excel do działu zakupów."
+              : "Sprawdź rysunki, aby kontynuować."
+          );
+        } else if (phaseKey === "phase4") {
+          setComment(
+            data.ready
+              ? "Plik Dokumentacja zwraz z folderem jest gotowy"
               : "Sprawdź rysunki, aby kontynuować."
           );
         }
@@ -85,7 +107,13 @@ const Page4 = () => {
           ...s,
           [phaseKey]: data.ready ? "done" : "running",
         }));
-        if (data.ready) setCurrentPhase((p) => (p < 5 ? p + 1 : p));
+        if (data.ready) {
+          setCurrentPhase((p) => {
+            if (p === 2) return 20; // jump from phase 2 → phase 20
+            if (p === 20) return 3; // jump from phase 20 → phase 3
+            return p < 5 ? p + 1 : p; // normal increment
+          });
+        }
       } catch (err) {
         setStatuses((s) => ({ ...s, [phaseKey]: "idle" }));
         alert(`Error running ${phaseKey}: ${err.message}`);
@@ -116,11 +144,6 @@ const Page4 = () => {
       return;
     }
 
-    if (drawingPath === "" && currentPhase === 3) {
-      setComment("Wybierz folder z rysunkami!");
-      return;
-    }
-
     if (bomPath === "" && currentPhase === 1) {
       setComment("Wybierz plik BOM!");
       return;
@@ -132,10 +155,11 @@ const Page4 = () => {
       3: "http://127.0.0.1:8000/Tree_phase3",
       4: "http://127.0.0.1:8000/Tree_phase4",
       10: "http://127.0.0.1:8000/run-phase10",
-      30: "http://127.0.0.1:8000/run-namesCorrection",
+      20: "http://127.0.0.1:8000/copy_Excel_Tree",
     };
 
-    if (currentPhase >= 1 && currentPhase <= 4) {
+    if ((currentPhase >= 1 && currentPhase <= 4) || currentPhase == 20) {
+      console.log("currpahse: ", currentPhase);
       await runPhase(`phase${currentPhase}`, phaseUrls[currentPhase]);
     } else if (currentPhase === 5) {
       resetLocal();
@@ -166,9 +190,9 @@ const Page4 = () => {
 
   const getButtonLabel = () => {
     if (currentPhase <= 3) return `Start Etap ${currentPhase}`;
-    if (currentPhase === 4) return "Wygeneruj Gotowy Excel";
-    if (currentPhase === 5) return "Nowy BOM";
-    return "Proces zakończony";
+    if (currentPhase === 20) return "Przekopij do Szablonu";
+    if (currentPhase === 4) return "Wyczyść";
+    return "Zrestuj";
   };
 
   return (

@@ -1,8 +1,9 @@
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
-const { spawn } = require('child_process');
-const treeKill = require('tree-kill');
-const { exec } = require('child_process');
+const { app, BrowserWindow } = require("electron");
+const path = require("path");
+const fs = require("fs");
+const { spawn } = require("child_process");
+const treeKill = require("tree-kill");
+const { exec } = require("child_process");
 
 let pythonProcess = null;
 
@@ -10,11 +11,11 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1000,
     height: 600,
-     icon: path.join(__dirname, 'icon.ico'),  
+    icon: path.join(__dirname, "icon.ico"),
     autoHideMenuBar: true,
     webPreferences: {
-      contextIsolation: true
-    }
+      contextIsolation: true,
+    },
   });
 
   const isDev = !app.isPackaged;
@@ -22,64 +23,76 @@ function createWindow() {
   if (isDev) {
     win.loadURL("http://localhost:3000");
   } else {
-      win.loadFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
-    }
+    console.log("start front");
+    win.loadFile(path.join(__dirname, "frontend", "build", "index.html"));
+  }
 
   // Kill backend if window is closed directly
-  win.on('closed', () => {
-    if (pythonProcess && typeof pythonProcess.pid === 'number' && !pythonProcess.killed) {
-      treeKill(pythonProcess.pid, 'SIGTERM');
+  win.on("closed", () => {
+    if (
+      pythonProcess &&
+      typeof pythonProcess.pid === "number" &&
+      !pythonProcess.killed
+    ) {
+      treeKill(pythonProcess.pid, "SIGTERM");
     }
   });
 }
 
-app.setPath('userData', path.join(app.getPath('temp'), 'CreoMate'));
-
-
+app.setPath("userData", path.join(app.getPath("temp"), "CreoMate"));
 function startPythonBackend() {
+  console.log("starting backend ///");
   let exePath;
   let args = [];
 
   if (app.isPackaged) {
     // When packaged, run the compiled executable (e.g., from PyInstaller)
-    exePath = path.join(process.resourcesPath, 'app.exe');
+    exePath = path.join(process.resourcesPath, "app.exe");
+    if (!fs.existsSync(exePath)) {
+      console.error(`Backend executable not found at ${exePath}`);
+      return;
+    }
   } else {
     // In dev mode, run Python script with the Python interpreter
-    exePath = 'python';  // or 'python3' depending on your OS
-    args = [path.join(__dirname, 'backend', 'app.py')];
+    exePath = "python"; // or 'python3' depending on your OS
+    args = [path.join(__dirname, "backend", "app.py")];
   }
 
+  console.log(`Starting backend: ${exePath} ${args.join(" ")}`);
   pythonProcess = spawn(exePath, args, {
-    stdio: ['ignore', 'pipe', 'pipe']
+    stdio: ["ignore", "pipe", "pipe"],
   });
 
-  pythonProcess.stdout.on('data', (data) => {
+  pythonProcess.stdout.on("data", (data) => {
     process.stdout.write(`PYTHON: ${data}`);
   });
 
-  pythonProcess.stderr.on('data', (data) => {
+  pythonProcess.stderr.on("data", (data) => {
     process.stderr.write(`PYTHON ERROR: ${data}`);
   });
 
-  pythonProcess.on('error', (err) => {
-    console.error('Failed to start backend:', err);
+  pythonProcess.on("error", (err) => {
+    console.error("Failed to start backend:", err);
   });
 }
 
 app.whenReady().then(() => {
+  console.log("starting app..");
   startPythonBackend();
   createWindow();
 });
 
-
-
-app.on('before-quit', () => {
-  if (pythonProcess && typeof pythonProcess.pid === 'number' && !pythonProcess.killed) {
-    treeKill(pythonProcess.pid, 'SIGTERM');
+app.on("before-quit", () => {
+  if (
+    pythonProcess &&
+    typeof pythonProcess.pid === "number" &&
+    !pythonProcess.killed
+  ) {
+    treeKill(pythonProcess.pid, "SIGTERM");
   }
 
   // Fallback: kill any remaining app.exe by name
-  exec('taskkill /F /IM app.exe', (error, stdout, stderr) => {
+  exec("taskkill /F /IM app.exe", (error, stdout, stderr) => {
     if (error) {
       console.error(`taskkill error: ${error.message}`);
     }
@@ -91,4 +104,3 @@ app.on('before-quit', () => {
     }
   });
 });
-

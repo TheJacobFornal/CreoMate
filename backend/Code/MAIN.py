@@ -1,21 +1,22 @@
 from pathlib import Path
 import shutil
-from Code.BOM_Mod import MOD_main
-from Code.Excel_Check.Excel_Part1 import Excel_Part_1
-from Code.Excel_Check.Excel_Part2 import Excel_Part_2
-from Code.Excel_Check.Excel_Part3 import Excel_Part_3
-from Code.Excel_Check.Excel_Addision import Excel_addition
-from Code.File_Finder import Finder_main
-from Code.File_Finder.File_correct import File_correct
-from Code.Excel_Purchases import Excel_Purchases_main
+from .BOM_Mod import MOD_main
+from .Excel_Check.Excel_Part1 import Excel_Part_1
+from .Excel_Check.Excel_Part2 import Excel_Part_2
+from .Excel_Check.Excel_Part3 import Excel_Part_3
+from .Excel_Check.Excel_Addision import Excel_addition
+from .File_Finder import Finder_main
+from .File_Finder.File_correct import File_correct
+from .Excel_Purchases import Excel_Purchases_main
+from .Excel_Tree import Excel_Tree
+
 
 import os
 
 
 def phase1(BOM_path, readyBOM_path, Excel_path):
-    print("start 1", flush=True)
     okey = MOD_main.main(BOM_path, Excel_path, readyBOM_path)
-    print("phase1: ", okey)
+
     return okey
 
 
@@ -75,13 +76,6 @@ def copy_Excel_to_Purchases(Excel_path, Purchases_Excel_path):
 def copy_Template_Purchases(Purchases_Excel_Template_path, Purchases_Excel_path):
     if Purchases_Excel_Template_path.exists():
         shutil.copy(Purchases_Excel_Template_path, Purchases_Excel_path)
-    else:
-        print(
-            "Template file does not exist:", Purchases_Excel_Template_path, flush=True
-        )
-        raise FileNotFoundError(
-            "Template file not found.", Purchases_Excel_Template_path
-        )
 
 
 def check_Excel_open(Excel_path):
@@ -145,22 +139,35 @@ def purchase_main(Purchases_Excel_path, drowings_folder=None):
     return score_excel, None
 
 
-def phase_2_Tree(Excel_path):
+def phase_2_Tree(Excel_path, remove_h_items):
     Excel_addition.main(Excel_path)
-    Excel_Part_1.main_Tree(Excel_path)
-    print("hello from pahse 2 tree", flush=True)
-    return "Kuba "
+    number_lines, wrong_counter = Excel_Tree.main(Excel_path, remove_h_items)
+    correct_lines = number_lines - wrong_counter
+    percentage = correct_lines / number_lines * 100
+    rounded = round(percentage)
+
+    text = (
+        "("
+        + str(correct_lines)
+        + " / "
+        + str(number_lines)
+        + ") "
+        + str(rounded)
+        + "% - poprawnych"
+    )
+    return text
 
 
-def phase_3_Tree(Excel_path):
-    print("hello from pahse 3 tree", flush=True)
-    return "Kuba to szef"
+def phase_3_Tree(Excel_path, Tree_DWG_dir, Tree_PDF_dir):
+    Excel_Tree.remove_colors(Excel_path)
+    text = Excel_Tree.link_drowings(Excel_path, Tree_DWG_dir, Tree_PDF_dir)
+
+    return text
+
+
+def phase_4_tree(Excel_path):
+    Excel_Tree.remove_colors(Excel_path)
 
 
 def my_function():
     return "Hello from my_function!"
-
-
-if __name__ == "__main__":
-    result = my_function()
-    print("Output:", result)

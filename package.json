@@ -1,6 +1,6 @@
 {
   "name": "CreoMate",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "CreoMate app",
   "main": "main.js",
   "scripts": {
@@ -25,13 +25,20 @@
       "package.json"
     ],
     "extraResources": [
-      {
-        "from": "dist/app.exe",
-        "to": "app.exe"
-      }
+      { "from": "dist/app.exe", "to": "app.exe" }
     ],
     "win": {
       "target": "nsis"
+    },
+
+    "nsis": {
+  "oneClick": false,
+  "allowToChangeInstallationDirectory": true,
+  "perMachine": false,          
+  "allowElevation": false,    
+  "createDesktopShortcut": true,
+  "createStartMenuShortcut": true,
+  "shortcutName": "CreoMate"
     }
   },
   "dependencies": {

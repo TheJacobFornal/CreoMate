@@ -34,8 +34,6 @@ def main(main_lines, extension_lines, Excel_path, readyBom_path):
     add_sign = check_if_add_sign(main_lines[2])
     sign = "`"
 
-    print("add sign :", add_sign)
-    print(main_lines[2])
     for main, ext in zip_longest(main_lines, extension_lines):
         if not main or not ext:  # parts are not aligning
             okey = False
@@ -106,7 +104,6 @@ def main(main_lines, extension_lines, Excel_path, readyBom_path):
         except (ValueError, TypeError):
             pass
 
-    print("aligning: ", okey)
     wb.save(Excel_path)
 
     return okey

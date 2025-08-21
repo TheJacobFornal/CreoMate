@@ -98,7 +98,6 @@ def check_elem(file_name, row, ws):  # check if file exist in dir (elem)
         color_row(ws, row, True, "00B0F0")
         bool = True
         wrong_counter += 1
-        print("PDF not found: ", file_path_pdf, flush=True)
 
     stp_name = file_name + ".stp"  # stp file
     file_path_stp = drowings_dir / stp_name
@@ -106,7 +105,7 @@ def check_elem(file_name, row, ws):  # check if file exist in dir (elem)
         color_row(ws, row, True, "00B0F0")
         if not bool:
             wrong_counter += 1
-            print("stp not found: ", stp_name, flush=True)
+
             bool = True
 
     dwg_name = file_name + ".dwg"  # dwg file
@@ -114,7 +113,7 @@ def check_elem(file_name, row, ws):  # check if file exist in dir (elem)
     if not file_path_dwg.exists():
         color_row(ws, row, True, "00B0F0")
         if not bool:
-            print("dwgt not found: ", dwg_name, flush=True)
+
             wrong_counter += 1
 
 

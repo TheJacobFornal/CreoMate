@@ -51,6 +51,7 @@ function App() {
     setScore3(" ");
     setComment("Witaj w CreoMate! Wybierz plik BOM i rozpocznij proces.");
     setExcelButtonColor("#949494");
+    setReady30(false);
   };
 
   const runPhase = async (phaseKey, url) => {
@@ -139,7 +140,7 @@ function App() {
                 data.filesUnchangedAble.length
               );
               setCurrentPhase(3);
-              setComment("Nazw rysunków nie trzeba poprawiać");
+              setComment("Nie trzeba poprawiać nazw rysunków");
             } else {
               setCorrectFileName(true);
               setComment("Sprawdź nazwy rysunków");

@@ -99,13 +99,12 @@ def remove_dash_Type(ws, removeHItems: bool):
             removed_dash = Type_value.replace("-", "")
             ws.cell(row, TypeIndex).value = removed_dash
 
-            print(removed_dash)
             if (
                 "H" in removed_dash
                 and contain_num(removed_dash)
                 and not is_cell_colored(ws.cell(row, 1))
             ):  # incorrect H1, H2, etc. types
-                print("H1 item: ", ws.cell(row, 2))
+
                 if removeHItems:
                     ws.delete_rows(row)
                     continue
@@ -135,7 +134,6 @@ def check_type_creo_name(ws, row: int, creo: str):
     ):  # check creo name suffix like IL40_04020004A-KRAZEK-T (-T)
         counter_wrong += 1
         color_row(ws, row, True, "00FFB7")
-        print("Type wrong")
 
 
 def check_handlowe(ws, row: int):
@@ -203,7 +201,6 @@ def check_production(
     ) and not is_cell_colored(ws.cell(row, 1)):
         color_row(ws, row, True, "ABA200")
         counter_wrong += 1
-        print("produkowane oborki wrong")
 
 
 # ===== Main functions =====
@@ -248,7 +245,6 @@ def check_clear_Number(ws, row):
     ):  # "nr kat" w numerze
         color_row(ws, row, True, "6699FF")
         counter_wrong += 1
-        print("nr kat in numer", Numer_val, flush=True)
 
 
 def main(Excel_path: Path, removeHItems=False, Zakupy=False) -> int:
@@ -259,7 +255,6 @@ def main(Excel_path: Path, removeHItems=False, Zakupy=False) -> int:
     wb = load_workbook(Excel_path)
     ws = wb.active
     max_row, min_row = Excel_addition.get_max_min_row(ws, Zakupy)
-    print("min_row:", min_row)
 
     remove_dash_Type(ws, removeHItems)  # usuwa dash z Typu kol. 5
 
@@ -285,7 +280,6 @@ def main(Excel_path: Path, removeHItems=False, Zakupy=False) -> int:
             elif Type_value in {"L", "F", "O", "W", "T", "D"}:
                 check_production(ws, row)
 
-    print("Counter wrong:", counter_wrong, flush=True)
     wb.save(Excel_path)
     return counter_wrong
 
@@ -296,4 +290,3 @@ if __name__ == "__main__":
         True,
         Zakupy=False,
     )
-    print("finished part 1")

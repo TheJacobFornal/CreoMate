@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+import shutil
 
 # Use _MEIPASS if running from a PyInstaller bundle
 base_path = Path(getattr(sys, "_MEIPASS", Path(__file__).parent))
@@ -17,17 +18,34 @@ from tkinter import Tk, filedialog
 import os
 from Code import MAIN as Main1
 from Code.BOM_Tree import BOM_Tree_main
+from Code.Excel_Tree import Excel_Tree
 
 
-desktop_path = Path.home() / "Desktop"
+desktop_path = Path("D:")
 
-output_folder = desktop_path / "CreoMate"
+output_folder = Path(r"D:\Creo_Ustawienia\Programiki\CreoMate")
 output_folder.mkdir(parents=True, exist_ok=True)
-Excel_path = output_folder / "BOM CreoMate.xlsx"
+
+
+Excel_path = output_folder / "BOM CreoMate.xlsx"  # general
 readyBOM_path = output_folder / "readyBOM.txt"
-Purchases_Excel_Template_path = output_folder / "Szablon Zamówienia.xlsx"
+
+Purchases_Excel_Template_path = output_folder / "Szablon Zamówienia.xlsx"  # PUrchase
 Purchases_Excel_path = output_folder / "Zamówienia CreoMate.xlsx"
+
 Drowings_dir = None
+
+Tree_dir = output_folder / "Dokumancja"  # Tree
+Tree_dir.mkdir(parents=True, exist_ok=True)
+
+Tree_PDF_dir = Tree_dir / "PDF"
+Tree_PDF_dir.mkdir(parents=True, exist_ok=True)
+
+Tree_DWG_dir = Tree_dir / "DWG"
+Tree_DWG_dir.mkdir(parents=True, exist_ok=True)
+
+Tree_Excel_Template_path = output_folder / "Szablon Tree.xlsx"
+Ready_Tree_Excel = Tree_dir / "Gotowa Dokumentacja.xlsx"
 
 
 counter = 0
@@ -39,6 +57,11 @@ def create_app():
     app.add_middleware(
         CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
     )
+
+    @app.get("/test")
+    def choseFiel():
+
+        return {"path": "test okey"}
 
     @app.get("/chooseFile")
     def choseFiel():
@@ -62,7 +85,6 @@ def create_app():
     def run_phase1():
         global readyBOM_path
         global BOM_path
-        print("app phase1:", BOM_path, flush=True)
         okey = Main1.phase1(BOM_path, readyBOM_path, Excel_path)
         return {"ready": True, "okey": okey}
 
@@ -71,9 +93,6 @@ def create_app():
         body = await request.json()
         remove_h_items = body.get("removeHItems", False)
         remove_mirror = body.get("removeMirror", False)
-
-        print("Remove H Items:", remove_h_items, flush=True)
-        print("Remove Mirror:", remove_mirror, flush=True)
 
         message = Main1.phase2(Excel_path, remove_h_items, remove_mirror)
         return {"ready": False, "message": message}
@@ -89,12 +108,9 @@ def create_app():
     @app.post("/run-namesCorrection")
     async def run_namesCorrection(request: Request):
         global Drowings_dir
-        print("phase 30 pyton check")
 
         body = await request.json()
         correctFileName = body.get("correctFileNameChecked", False)
-
-        print("check remove names: ", correctFileName, flush=True)
 
         filesToCorrection, filesUnchangedAble = Main1.namesCorrection(
             Drowings_dir, correctFileName
@@ -114,7 +130,7 @@ def create_app():
 
     @app.get("/isExcelOpen")
     def check():
-        print("Excel check main", flush=True)
+
         if Main1.check_Excel_open(Excel_path):
             return {"open": True}
         else:
@@ -123,7 +139,6 @@ def create_app():
     @app.get("/openExcel")
     def open_excel():
         global Excel_path
-        print(Excel_path, flush=True)
         if not os.path.exists(Excel_path):
             raise HTTPException(status_code=404, detail="Excel file not found")
 
@@ -155,12 +170,11 @@ def create_app():
                 Path(Purchases_Excel_path), Drowings_dir
             )
 
-        print(scoreExcel, scoreDrawings, flush=True)
         return {"ready": True, "scoreExcel": scoreExcel, "scoreDrawings": scoreDrawings}
 
     @app.get("/isExcelOpen_Purchases")
     def isExcelOpen_Purchases():
-        print("Excel check main purchuses", flush=True)
+
         if Main1.check_Excel_open(Purchases_Excel_path):
             return {"open": True}
         else:
@@ -181,30 +195,50 @@ def create_app():
         global Excel_path
         global BOM_path
 
-        print("Tree: ", Excel_path, BOM_path, flush=True)
-
         BOM_Tree_main.main(BOM_path, Excel_path, readyBOM_path)
         return {"ready": True}
 
-    @app.get("/Tree_phase2")
-    def run_phase2_tree():
+    @app.post("/Tree_phase2")
+    async def run_phase2_tree(request: Request):
+        body = await request.json()
+        remove_h_items = body.get("removeHItems", False)
+
         global Excel_path
-        message = Main1.phase_2_Tree(Excel_path)
-        print("running tree 2", flush=True)
+        message = Main1.phase_2_Tree(Excel_path, remove_h_items)
+
         return {"ready": False, "message": message}
+
+    @app.get("/copy_Excel_Tree")
+    def run_phase3_tree():
+        global Tree_Excel_Template_path
+        global Ready_Tree_Excel
+        global Excel_path
+        global Ready_Tree_Excel_cleaned
+        shutil.copy(Tree_Excel_Template_path, Ready_Tree_Excel)
+
+        Excel_Tree.copy_data_to_template(Excel_path, Ready_Tree_Excel)
+
+        Excel_path = Ready_Tree_Excel
+
+        return {"ready": True}
 
     @app.get("/Tree_phase3")
     def run_phase3_tree():
         global Excel_path
-        message = Main1.phase_3_Tree(Excel_path)
+        message = Main1.phase_3_Tree(Excel_path, Tree_DWG_dir, Tree_PDF_dir)
         print("running tree 3", flush=True)
         return {"ready": False, "message": message}
+
+    @app.get("/Tree_phase4")
+    def run_phase4_tree():
+        Main1.phase_4_tree(Excel_path)
+        return {"ready": True}
 
     return app
 
 
 def run_uvicorn():
-    print("Running Uvicorn...")
+    print("Running Uvicorn...", flush=True)
     uvicorn.run(create_app(), host="127.0.0.1", port=8000, log_config=None)
 
 

@@ -58,7 +58,7 @@ def main(main_lines):
                 next_result = parse_fixed_width_line(next_line)
 
                 if count_backticks(next_line) < 3:  # too long name
-                    # print(f"Too long name: {curr_result[0]}")
+
                     new_line = merge_flexible(curr_result, next_result)
                     result = format_row_to_fixed_width(new_line)
                     main_lines[i] = result

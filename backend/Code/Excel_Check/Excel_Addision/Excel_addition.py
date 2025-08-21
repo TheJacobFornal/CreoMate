@@ -18,9 +18,10 @@ TAG_COLORS = {
     "42FF48",  # Neon Green
     "DDD8B8",  # sandy,
     "379392",  # Dark syjan
-    "DDD8B8", # sandy,
-    "6699FF",   # Light Blue
+    "DDD8B8",  # sandy,
+    "6699FF",  # Light Blue
 }
+
 
 def remove_tag_colors(ws):
     for row in ws.iter_rows():
@@ -36,7 +37,6 @@ def remove_tag_colors(ws):
                         cell.fill = PatternFill(fill_type=None)
 
 
-
 def main(Excel_path):
     if Excel_path.is_file():
         wb = load_workbook(Excel_path)
@@ -44,6 +44,7 @@ def main(Excel_path):
         remove_tag_colors(ws)
 
         wb.save(Excel_path)
+
 
 def number_of_rows(Excel_path, Zakupy=False):
     if Excel_path.is_file():
@@ -70,9 +71,18 @@ def number_of_rows_drawings(Excel_path):
         typeINdex = 5
         for row in range(1, ws.max_row + 1):
             type = ws.cell(row, typeINdex).value
-            
-            if type is not None and (type == "F" or type == "P" or type == "S" or type == "L" or type == "W" or type == "T" or type == "O" or type == "D"):
-               
+
+            if type is not None and (
+                type == "F"
+                or type == "P"
+                or type == "S"
+                or type == "L"
+                or type == "W"
+                or type == "T"
+                or type == "O"
+                or type == "D"
+            ):
+
                 counter += 1
         return counter
     return counter
@@ -93,10 +103,3 @@ def get_max_min_row(ws, zakupy=False):
         min_row = 2
         max_row = ws.max_row
     return max_row, min_row
-
-
-
-
-
-
-
