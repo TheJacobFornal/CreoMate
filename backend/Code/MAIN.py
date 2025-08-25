@@ -78,6 +78,24 @@ def copy_Template_Purchases(Purchases_Excel_Template_path, Purchases_Excel_path)
         shutil.copy(Purchases_Excel_Template_path, Purchases_Excel_path)
 
 
+def copy_Template_Purchases_Wymiana(Purchases_Excel_path):
+    wymiana = Path(r"Y:\00 - IT_Instalki\CreoMate\Szablon Zamówienia.xlsx")
+
+    if wymiana.exists():
+        shutil.copy(wymiana, Purchases_Excel_path)
+    else:
+        raise FileNotFoundError(f"Template not found: {wymiana}")
+
+
+def copy_Tree_Wymiana(Tree_template):
+    wymiana = Path(r"Y:\00 - IT_Instalki\CreoMate\Szablon TreeMate.xlsx")
+
+    if wymiana.exists():
+        shutil.copy(wymiana, Tree_template)
+    else:
+        raise FileNotFoundError(f"Template not found: {wymiana}")
+
+
 def check_Excel_open(Excel_path):
 
     if Path(Excel_path).exists():
