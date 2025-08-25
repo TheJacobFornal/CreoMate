@@ -44,7 +44,7 @@ Tree_PDF_dir.mkdir(parents=True, exist_ok=True)
 Tree_DWG_dir = Tree_dir / "DWG"
 Tree_DWG_dir.mkdir(parents=True, exist_ok=True)
 
-Tree_Excel_Template_path = output_folder / "Szablon TreeMate.xlsx"
+Tree_Excel_Template_path = output_folder / "Szablon Tree.xlsx"
 Ready_Tree_Excel = Tree_dir / "Gotowa Dokumentacja.xlsx"
 
 
@@ -246,10 +246,7 @@ def run():
     server = multiprocessing.Process(target=run_uvicorn)
     server.start()
 
-    Main1.copy_Template_Purchases_Wymiana(Purchases_Excel_Template_path)
     Main1.copy_Template_Purchases(Purchases_Excel_Template_path, Purchases_Excel_path)
-
-    Main1.copy_Tree_Wymiana(Tree_Excel_Template_path)
 
     try:
         while True:
