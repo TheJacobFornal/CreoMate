@@ -1,0 +1,39 @@
+# Don't push project history or temp files
+.history/
+notes/
+{
+*.log
+
+# Node.js
+node_modules/
+dist/
+build/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+requirements.txt
+
+# Electron / React output
+frontend/build/
+BOM/
+Code/__pycache__/
+
+# Windows system files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# VSCode/IDE
+.vscode/
+.idea/
+
+# App packaging artifacts
+*.spec
+*.exe
+*.app
+*.zip
+*.asar

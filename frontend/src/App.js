@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useEffect } from "react";
 import Page1 from "./Page_1/Page1";
 import Page2 from "./Page_2/Page2";
 import Page3 from "./Page_3/Page3";
