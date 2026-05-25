@@ -2,4 +2,8 @@
 
 git brahc przenoszenie rusunków
 
+<<<<<<< HEAD
 git brahcn v2 elo elo
+=======
+git branch 14.077
+>>>>>>> przenoszenie_rysunków
