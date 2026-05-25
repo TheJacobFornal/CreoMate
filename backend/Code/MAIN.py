@@ -42,14 +42,6 @@ def phase2(Excel_path, removeHItems=False, removeMirror=False):
     return text
 
 
-def namesCorrection(drowings_folder, correctNames):
-    filesToCorrection, filesUnchangedAble = File_correct.main(
-        drowings_folder, correctNames
-    )
-
-    return filesToCorrection, filesUnchangedAble
-
-
 def phase3(drowings_folder, Excel_path):
     counter_wrong = 0
     Excel_addition.main(Excel_path)
@@ -68,9 +60,23 @@ def phase3(drowings_folder, Excel_path):
     return text
 
 
+#Phase 4
 def copy_Excel_to_Purchases(Excel_path, Purchases_Excel_path):
     Excel_Purchases_main.main(Excel_path, Purchases_Excel_path)
     os.startfile(Purchases_Excel_path)
+    
+    
+def namesCorrection(drowings_folder, correctNames):
+    filesToCorrection, filesUnchangedAble = File_correct.main(
+        drowings_folder, correctNames
+    )
+
+    return filesToCorrection, filesUnchangedAble
+
+
+
+
+
 
 
 def copy_Template_Purchases(Purchases_Excel_Template_path, Purchases_Excel_path):
@@ -171,3 +177,17 @@ def phase_4_tree(Excel_path):
 
 def my_function():
     return "Hello from my_function!"
+
+
+if __name__ == "__main__":
+    #Excel_path = r"C:\Users\JakubFornal\Desktop\PROJECTS\CreoMate\Material\TESTY.xlsx"
+     
+    Excel_path = r"C:\Users\JakubFornal\Desktop\CreoMate\BOM CreoMate.xlsx"
+    Excel_orders = Path(r"D:\Creo_Ustawienia\Programiki\CreoMate\Zamówienia CreoMate.xlsx")
+    readyBom_path = r"C:\Users\JakubFornal\Desktop\CreoMate\readyBOM.txt"
+
+    #purchase_main(Excel_orders)
+    
+    phase2(Path(Excel_path), True, False)
+    
+    os.startfile(Excel_path)

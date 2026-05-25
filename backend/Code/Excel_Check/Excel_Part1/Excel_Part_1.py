@@ -21,10 +21,47 @@ TAG_COLORS = {
     "DDD8B8",
     "6699FF",
 }
-VALID_TYPES = {"H", "P", "L", "F", "T", "W", "O", "S", "N", "D"}
-VALID_H_TYPES = {f"H{i}" for i in range(1, 15)}
-VALID_CREO_SUFFIX = VALID_TYPES.union(VALID_H_TYPES)
+#VALID_TYPES = {"H", "P", "L", "F", "T", "W", "O", "S", "N", "D"}
+#VALID_H_TYPES = {f"H{i}" for i in range(1, 15)}
+#VALID_CREO_SUFFIX = VALID_TYPES.union(VALID_H_TYPES)
 
+VALID_HANDOLOWE = {
+    "HA",
+    "SE",
+    "CZ",
+    "SN",
+    "PL",
+    "HM",
+    "IO",
+    "PW",
+    "KK",
+    "MA",
+    "NO",
+    "OS",
+    "PS",
+    "PR",
+    "RO",
+    "HS",
+    "SW",
+    "ST",
+    "HU",
+    "PN",
+}
+
+VALID_PRODUCTION = {
+    "D",
+    "F",
+    "L",
+    "P",
+    "T",
+    "U",
+    "W",
+}
+
+VALID_OTHER ={
+    "Z",
+    "S"
+}
 
 def is_cell_colored(cell):
     """
@@ -68,7 +105,7 @@ def color_row(ws, row_num: int, highlight: bool, color: str = "FFFF00"):
         if highlight
         else PatternFill(fill_type=None)
     )
-    for col in range(1, 10):
+    for col in range(1, 11):
         ws.cell(row=row_num, column=col).fill = fill
 
 
@@ -96,29 +133,37 @@ def remove_dash_Type(ws, removeHItems: bool):
         Type_value = ws.cell(row, TypeIndex).value
         if Type_value:
             Type_value = str(Type_value).strip()  # remove "-" from type col.
-            removed_dash = Type_value.replace("-", "")
-            ws.cell(row, TypeIndex).value = removed_dash
+            removed_dash = Type_value.replace("-", "").upper()
+            ws.cell(row, TypeIndex).value = removed_dash.upper()
 
-            if (
-                "H" in removed_dash
-                and contain_num(removed_dash)
-                and not is_cell_colored(ws.cell(row, 1))
-            ):  # incorrect H1, H2, etc. types
-
+            if (isinstance(removed_dash, str)  
+                and len(removed_dash) == 2
+                and removed_dash[0].isalpha()
+                and removed_dash[1].isdigit()):
+                 
                 if removeHItems:
                     ws.delete_rows(row)
                     continue
                 color_row(ws, row, True, "FFFF00")  # yellow
                 counter_wrong += 1
+                
+                print("yellow: ", removed_dash)
 
                 continue
+            
+            elif (removed_dash in VALID_OTHER):
+                continue
 
-            if len(removed_dash) > 1 and not is_cell_colored(ws.cell(row, 1)):
+            elif (removed_dash not in VALID_HANDOLOWE and removed_dash not in VALID_PRODUCTION and removed_dash not in VALID_OTHER) and not is_cell_colored(ws.cell(row, 1)):
                 color_row(ws, row, True, "00FFB7")  # aqua
+                print("aqua 1: ", removed_dash)
                 counter_wrong += 1
+            
 
         elif not is_cell_colored(ws.cell(row, 1)):
             color_row(ws, row, True, "00FFB7")  # aqua
+            print("aqua 2: ", removed_dash)
+            
             counter_wrong += 1
 
 
@@ -129,11 +174,12 @@ def check_type_creo_name(ws, row: int, creo: str):
         return
 
     last_part = creo.split("-")[-1].strip()
-    if last_part not in VALID_CREO_SUFFIX and not is_cell_colored(
-        ws.cell(row, 1)
-    ):  # check creo name suffix like IL40_04020004A-KRAZEK-T (-T)
+
+        
+    if (last_part not in VALID_HANDOLOWE and last_part not in VALID_PRODUCTION and last_part not in VALID_OTHER) and not is_cell_colored(ws.cell(row, 1)):  # check creo name suffix like IL40_04020004A-KRAZEK-T (-T)
         counter_wrong += 1
         color_row(ws, row, True, "00FFB7")
+        print("creo names: ", last_part)
 
 
 def check_handlowe(ws, row: int):
@@ -275,9 +321,9 @@ def main(Excel_path: Path, removeHItems=False, Zakupy=False) -> int:
         check_Material_Obrobki_brak(ws, row)
 
         if Type_value:  # check production and handlowe
-            if Type_value in {"H", "N"}:
+            if Type_value in VALID_HANDOLOWE:
                 check_handlowe(ws, row)
-            elif Type_value in {"L", "F", "O", "W", "T", "D"}:
+            elif Type_value in VALID_PRODUCTION:
                 check_production(ws, row)
 
     wb.save(Excel_path)
@@ -286,7 +332,9 @@ def main(Excel_path: Path, removeHItems=False, Zakupy=False) -> int:
 
 if __name__ == "__main__":
     main(
-        Path(r"C:\Users\JakubFornal\Downloads\BOM CreoMate_baza — kopia — kopia.xlsx"),
+        Path(r"D:\Creo_Ustawienia\Programiki\CreoMate\Zamówienia CreoMate.xlsx"),
         True,
-        Zakupy=False,
+        Zakupy=True,
     )
+    
+    

@@ -98,7 +98,7 @@ def get_max_min_row(ws, zakupy=False):
             max_row += 1
     if zakupy:
         max_row += 4
-        min_row = 5
+        min_row = 8
     else:
         min_row = 2
         max_row = ws.max_row

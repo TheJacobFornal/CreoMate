@@ -65,7 +65,7 @@ def change_comma_names(main_line):
         return None
 
 
-
+ 
 def main(main_lines):
     del_counter = 0
     changed_lines = []

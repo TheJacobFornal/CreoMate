@@ -25,7 +25,7 @@ def copy_CreoMate_to_Purchases(Excel_path, Purchases_Excel_path, ws_BOM, ws_Purc
     print("Start copying from row:", start_row, flush=True)
 
     for row in range(2, ws_BOM.max_row + 1):
-        for col in range(2, 10):
+        for col in range(2, 11):
             value = ws_BOM.cell(row, col).value
             ws_Purchases.cell(start_row, col).value = value
 

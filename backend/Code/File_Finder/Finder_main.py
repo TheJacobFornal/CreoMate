@@ -6,6 +6,15 @@ wrong_counter = 0
 Zakupy = False
 drowings_dir = None
 
+VALID_PRODUCTION = {
+    "D",
+    "F",
+    "L",
+    "P",
+    "T",
+    "U",
+    "W",
+}
 
 def color_row(ws, row_num, type, color="FFFF00"):
     if type:
@@ -47,12 +56,7 @@ def divide_elem(ws):
     for row in range(1, ws.max_row + 1):
         Typ_value = ws.cell(row, Typ_index).value
         if (
-            Typ_value == "F"
-            or Typ_value == "L"
-            or Typ_value == "W"
-            or Typ_value == "T"
-            or Typ_value == "O"
-            or Typ_value == "D"
+            Typ_value in VALID_PRODUCTION
         ):
             if Zakupy:
                 file_name = file_name_from_zakupy(row, ws)

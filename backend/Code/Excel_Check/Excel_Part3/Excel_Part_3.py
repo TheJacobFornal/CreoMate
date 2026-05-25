@@ -11,7 +11,7 @@ def color_row(ws, row_num, type, color="FFFF00"):
         fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
     else:
         fill = PatternFill(fill_type=None)
-    for col in range(1, 10):
+    for col in range(1, 11):
         ws.cell(row=row_num, column=col).fill = fill
 
 

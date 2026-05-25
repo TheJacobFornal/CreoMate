@@ -3,9 +3,10 @@ def parse_fixed_width_line(line):
     field1 = line[0:20].strip().rstrip("`")
     field2 = line[21:47].strip().rstrip("`")
     field3 = line[48:89].strip().rstrip("`")
-    field4 = line[90:117].strip().rstrip("`")
+    field4 = line[92:117].strip().rstrip("`")
+    field5 = line[118:120].strip().rstrip("`")
 
-    return [field1, field2, field3, field4]
+    return [field1, field2, field3, field4, field5]
 
 
 def merge_flexible(curr_result, next_result):
@@ -26,12 +27,13 @@ def merge_flexible(curr_result, next_result):
 
 def format_row_to_fixed_width(row):
     # Define desired field widths
-    widths = [20, 26, 41, 26]
+    widths = [20, 26, 41, 26, 3]
 
     # Pad fields with spaces using ljust
     padded_fields = [
         row[i].strip().ljust(widths[i]) for i in range(min(len(row), len(widths)))
     ]
+
 
     return "` ".join(padded_fields)
 
@@ -53,6 +55,7 @@ def main(main_lines):
 
             curr_result = parse_fixed_width_line(curr_line)
 
+
             if i < len(main_lines) - 1:  # check if next exist
                 next_line = main_lines[i + 1]
                 next_result = parse_fixed_width_line(next_line)
@@ -60,13 +63,14 @@ def main(main_lines):
                 if count_backticks(next_line) < 3:  # too long name
 
                     new_line = merge_flexible(curr_result, next_result)
+ 
                     result = format_row_to_fixed_width(new_line)
                     main_lines[i] = result
+                    
                     del main_lines[i + 1]
                     del_counter += 1
                     changed_lines.append(i)
 
-    for line in main_lines:
-        print(line)
+
 
     return main_lines

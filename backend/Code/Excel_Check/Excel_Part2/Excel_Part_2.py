@@ -21,7 +21,45 @@ TAG_COLORS = {
     "DDD8B8",  # sandy,
     "6699FF",  # Light Blue
 }
-VALID_TYPES = {"H", "P", "L", "F", "T", "W", "O", "S", "N", "D"}
+
+
+VALID_HANDOLOWE = {
+    "HA",
+    "SE",
+    "CZ",
+    "SN",
+    "PL",
+    "HM",
+    "IO",
+    "PW",
+    "KK",
+    "MA",
+    "NO",
+    "OS",
+    "PS",
+    "PR",
+    "RO",
+    "HS",
+    "SW",
+    "ST",
+    "HU",
+    "PN",
+}
+
+VALID_PRODUCTION = {
+    "D",
+    "F",
+    "L",
+    "P",
+    "T",
+    "U",
+    "W",
+}
+
+VALID_OTHER ={
+    "Z",
+    "S"
+}
 
 
 def is_cell_colored(cell):
@@ -54,7 +92,7 @@ def color_row(ws, row_num, type, color="FFFF00"):
         fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
     else:
         fill = PatternFill(fill_type=None)
-    for col in range(1, 10):
+    for col in range(1, 11):
         ws.cell(row=row_num, column=col).fill = fill
 
 
@@ -148,11 +186,11 @@ def highlight_repeated_in_column(ws, col: int):  # check for repeated values in 
             if creo_name:
                 base_name = creo_name.split("-")[0]
 
-            if typ in VALID_TYPES and not base_name.endswith("L"):
+            if typ in VALID_HANDOLOWE or typ in VALID_PRODUCTION or typ in VALID_OTHER and not base_name.endswith("L"):
                 val = ws.cell(row, col).value
                 value_count.setdefault(val, []).append(row)
         else:
-            if typ in VALID_TYPES:
+            if typ in VALID_HANDOLOWE or typ in VALID_PRODUCTION or typ in VALID_OTHER:
                 val = ws.cell(row, col).value
                 value_count.setdefault(val, []).append(row)
 
@@ -162,6 +200,12 @@ def highlight_repeated_in_column(ws, col: int):  # check for repeated values in 
                 color_row(ws, row, True, "DDD8B8")
                 wrong_counter += 1
 
+def change_KP_UPPER(ws):    # change KP col to upper letter
+    for row in range(max_row, min_row - 1, -1):
+        KP = ws.cell(row, 10).value 
+        if KP:
+            ws.cell(row, 10).value = KP.upper()
+       
 
 def main(Excel_path, removeMirror, Zakupy=False):
     global wrong_counter
@@ -185,7 +229,7 @@ def main(Excel_path, removeMirror, Zakupy=False):
             ws.cell(row, 3).value = Upper_name  # upper letter in kol. Name
             if (
                 Upper_name.__contains__("PROFIL_")
-                and Type_value.__contains__("H")
+                and Type_value.__contains__("PR")
                 and not is_cell_colored(ws.cell(row, 1))
             ):  # Profile with dimensions Type: H
                 if Zakupy:
@@ -208,20 +252,13 @@ def main(Excel_path, removeMirror, Zakupy=False):
                         0
                     ]  # IL31_02130302 or IL31_02130302L
 
-                    if check_if_mirror(base_name) and Type_value in {
-                        "P",
-                        "L",
-                        "F",
-                        "T",
-                        "W",
-                        "O",
-                        "S",
-                        "D",
-                    }:
+                    if check_if_mirror(base_name) and Type_value in VALID_PRODUCTION:
 
                         modify_left_duplicate(ws, row, base_name, removeMirror)
 
     highlight_repeated_in_column(ws, 2)  # powtórzenia w kolumnie 2
+    
+    change_KP_UPPER(ws)
 
     wb.save(Excel_path)
 

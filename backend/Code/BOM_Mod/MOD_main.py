@@ -7,10 +7,10 @@ import os
 from openpyxl import load_workbook
 from pandas.core.interchange.from_dataframe import primitive_column_to_ndarray
 
-from Code.BOM_Mod.MOD_Part_1 import MOD_Part_1 as part_1
-from Code.BOM_Mod.MOD_Part_2 import MOD_Part_2_main as part_2_main
-from Code.BOM_Mod.MOD_Part_2 import MOD_Part_2_extension as part_2_extension
-from Code.BOM_Mod.MOD_Part_3.MOD_Part_3 import main as part3_main
+from .MOD_Part_1 import MOD_Part_1 as part_1
+from .MOD_Part_2 import MOD_Part_2_main as part_2_main
+from .MOD_Part_2 import MOD_Part_2_extension as part_2_extension
+from .MOD_Part_3.MOD_Part_3 import main as part3_main
 
 
 def main(BOM_path, Excel_path, readyBom_path):
@@ -24,15 +24,20 @@ def main(BOM_path, Excel_path, readyBom_path):
     main_lines = part_2_main.main(main_lines)
     extension_lines = part_2_extension.main(extension_lines)
 
+        
+    
+    
     print("part 3:", flush=True)
     ###////          Part 3         ////###
+    
+        
     okey = part3_main(main_lines, extension_lines, Excel_path, readyBom_path)
 
     return okey
 
 
 if __name__ == "__main__":
-    BOM_path = r"C:\Users\JakubFornal\Downloads\il42_00000000-stan_kontr-z.bom (2).1"
+    BOM_path = r"C:\Users\JakubFornal\Desktop\PROJECTS\CreoMate\Material\BOM\ab000_00000000-zlozenie_glow-z.bom.10"
     Excel_path = r"C:\Users\JakubFornal\Desktop\CreoMate\BOM CreoMate.xlsx"
     readyBom_path = r"C:\Users\JakubFornal\Desktop\CreoMate\readyBOM.txt"
 
