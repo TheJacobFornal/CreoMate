@@ -2,4 +2,4 @@
 
 git brahc przenoszenie rusunków
 
-git branch 14.07
+git branch 14.077
