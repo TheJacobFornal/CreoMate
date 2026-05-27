@@ -9,9 +9,9 @@ from .File_Finder import Finder_main
 from .File_Finder.File_correct import File_correct
 from .Excel_Purchases import Excel_Purchases_main
 from .Excel_Tree import Excel_Tree
-
-
 import os
+
+global drowings_dir_global 
 
 
 def phase1(BOM_path, readyBOM_path, Excel_path):
@@ -45,7 +45,7 @@ def phase2(Excel_path, removeHItems=False, removeMirror=False):
 def phase3(drowings_folder, Excel_path):
     counter_wrong = 0
     Excel_addition.main(Excel_path)
-
+    
     counter_wrong = Finder_main.main(Excel_path, drowings_folder)
     number_of_rows = Excel_addition.number_of_rows_drawings(Excel_path)
 
@@ -56,12 +56,22 @@ def phase3(drowings_folder, Excel_path):
         text = f"{correct_lines}/{number_of_rows} ({percentage}%) - znaleziono"
     else:
         text = "0/0 (0%)"
-
+        
+    global drowings_dir_global
+    drowings_dir_global = drowings_folder
+        
     return text
-
 
 #Phase 4
 def copy_Excel_to_Purchases(Excel_path, Purchases_Excel_path):
+    global drowings_dir_global
+    
+    
+    #przenoszenie rysunków do folderu "AA_Gotowe Rysunki"
+    ready_drowings_folder = Path(drowings_dir_global) / "AA_Gotowe_Rysunki"
+    ready_drowings_folder.mkdir(exist_ok=True)
+    Finder_main.move_drowings(drowings_dir_global, ready_drowings_folder, Excel_path)
+    
     Excel_Purchases_main.main(Excel_path, Purchases_Excel_path)
     os.startfile(Purchases_Excel_path)
     
@@ -72,12 +82,6 @@ def namesCorrection(drowings_folder, correctNames):
     )
 
     return filesToCorrection, filesUnchangedAble
-
-
-
-
-
-
 
 def copy_Template_Purchases(Purchases_Excel_Template_path, Purchases_Excel_path):
     if Purchases_Excel_Template_path.exists():
@@ -182,12 +186,15 @@ def my_function():
 if __name__ == "__main__":
     #Excel_path = r"C:\Users\JakubFornal\Desktop\PROJECTS\CreoMate\Material\TESTY.xlsx"
      
-    Excel_path = r"C:\Users\JakubFornal\Desktop\CreoMate\BOM CreoMate.xlsx"
+    Excel_path = r"C:\Users\JakubFornal\Desktop\CreoTest\BOM CreoMate.xlsx"
     Excel_orders = Path(r"D:\Creo_Ustawienia\Programiki\CreoMate\Zamówienia CreoMate.xlsx")
     readyBom_path = r"C:\Users\JakubFornal\Desktop\CreoMate\readyBOM.txt"
+    drowings_folder = r"C:\Users\JakubFornal\Desktop\CreoTest\Zamówienie W253011-BE10-02-Wewnętrzne (zakret)"
+    
 
     #purchase_main(Excel_orders)
     
-    phase2(Path(Excel_path), True, False)
+    phase3(Path(drowings_folder), Path(Excel_path))
+    print("main is running")
     
-    os.startfile(Excel_path)
+    #os.startfile(Excel_path)

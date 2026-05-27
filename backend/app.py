@@ -23,12 +23,15 @@ from Code.Excel_Tree import Excel_Tree
 
 desktop_path = Path("D:")
 
-output_folder = Path(r"D:\Creo_Ustawienia\Programiki\CreoMate")
+output_folder = Path(r"D:\Creo_Ustawienia\CreoMate")
 output_folder.mkdir(parents=True, exist_ok=True)
 
 
 Excel_path = output_folder / "BOM CreoMate.xlsx"  # general
 readyBOM_path = output_folder / "readyBOM.txt"
+
+Excel_path.unlink(missing_ok=True)
+    
 
 Purchases_Excel_Template_path = output_folder / "Szablon Zamówienia.xlsx"  # PUrchase
 Purchases_Excel_path = output_folder / "Zamówienia CreoMate.xlsx"
@@ -104,6 +107,7 @@ def create_app():
         score = Main1.phase3(Drowings_dir, Excel_path)
 
         return {"ready": False, "message": score}
+    
 
     @app.post("/run-namesCorrection")
     async def run_namesCorrection(request: Request):
@@ -233,7 +237,6 @@ def create_app():
     def run_phase4_tree():
         Main1.phase_4_tree(Excel_path)
         return {"ready": True}
-
     return app
 
 

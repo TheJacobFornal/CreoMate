@@ -22,8 +22,6 @@ def find_first_empty_row_purchuses(ws):
 def copy_CreoMate_to_Purchases(Excel_path, Purchases_Excel_path, ws_BOM, ws_Purchases):
     start_row = find_first_empty_row_purchuses(ws_Purchases)
 
-    print("Start copying from row:", start_row, flush=True)
-
     for row in range(2, ws_BOM.max_row + 1):
         for col in range(2, 11):
             value = ws_BOM.cell(row, col).value

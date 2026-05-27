@@ -1,6 +1,8 @@
+import copy
 from pathlib import Path
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
+import shutil
 
 wrong_counter = 0
 Zakupy = False
@@ -135,3 +137,37 @@ def main(Excel_path, folder, Zakupy_bool=False):
 
     wb.save(Excel_path)
     return wrong_counter
+
+def move_drowings(primary_Folder, new_Folder, Excel_path):
+    primary_Folder = Path(primary_Folder)   # konwersja na Path
+    new_Folder = Path(new_Folder)            # konwersja na Path
+    
+    wb = load_workbook(Excel_path)
+    ws = wb.active
+    
+    for row in range(1, ws.max_row + 1):
+        typ = ws.cell(row, 5).value
+        print(typ)
+        
+        name_cell = ws.cell(row, 1).value
+        if not name_cell:
+            continue
+        name = str(name_cell).lower().strip()
+        
+        if typ in VALID_PRODUCTION:
+            for ext in ["pdf", "stp", "dwg"]:
+                file_path = primary_Folder / f"{name}.{ext}"
+                if file_path.exists():
+                    shutil.copy(file_path, new_Folder / f"{name}.{ext}")
+        
+        elif typ == "S":
+            print(name, "typ s")
+            folder_path = primary_Folder / name
+            
+            if folder_path.exists():
+                print("folder exist")
+                shutil.copytree(folder_path, new_Folder / name, dirs_exist_ok=True)
+            else:
+                print(f"Folder nie istnieje: {folder_path}")
+            
+       

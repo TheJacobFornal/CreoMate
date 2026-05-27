@@ -1,7 +1,7 @@
 from openpyxl import load_workbook
 from pathlib import Path
 from openpyxl.styles import PatternFill
-from Code.Excel_Check.Excel_Addision import Excel_addition
+from ..Excel_Addision import Excel_addition
 import os
 
 TAG_COLORS = {

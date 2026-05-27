@@ -2,7 +2,7 @@ import re
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
 from pathlib import Path
-from Code.Excel_Check.Excel_Addision import Excel_addition
+from ..Excel_Addision import Excel_addition
 
 # ===== Constants =====
 TAG_COLORS = {
