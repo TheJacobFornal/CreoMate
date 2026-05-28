@@ -41,7 +41,7 @@ function Step2({
           checked={removeHItems}
           onChange={() => setRemoveHItems(!removeHItems)}
         />
-        Usuwaj elementy z H1, H2, H...
+        Usuwaj elementy typu (Litera +  Cyfra) np. P1, H2, C3 ..
       </label>
 
       <div className="switch-container" style={{ marginLeft: "15px" }}>

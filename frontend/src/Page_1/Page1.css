@@ -10,7 +10,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60px;
+  height: 90px;
   padding-bottom: 10px;
   padding-top: 10px;
   color: #2c3e50;
@@ -24,22 +24,20 @@
   margin-bottom: 5px;
 }
 
-.main-box {
+.Page_1 .main-box {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  height: 360px;
+  height: 400px;
   border: 2px solid #3131317c;
   padding-left: 30px;
-  background-color: #ffffff;
+  background-color: rgb(255, 255, 255);
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
   gap: 20px;
   position: relative;
-  /* important */
   overflow: hidden;
-  /* hide panel overflow */
 }
 
 .info_container {

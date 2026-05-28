@@ -30,7 +30,7 @@ const Page2 = ({
     if (purchases_Excel) {
       setExcelButtonColor("#0066ff"); // blue
     }
-  }, [purchases_Excel]);
+  }, [purchases_Excel, setExcelButtonColor]);
 
   const runPage2Process = async () => {
     let excelOpen = false;

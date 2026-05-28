@@ -63,15 +63,14 @@ def phase3(drowings_folder, Excel_path):
     return text
 
 #Phase 4
-def copy_Excel_to_Purchases(Excel_path, Purchases_Excel_path):
-    global drowings_dir_global
-    
-    
+def copy_Excel_to_Purchases(Excel_path, Purchases_Excel_path, move_drawings=False, drawings_path=""):
+
     #przenoszenie rysunków do folderu "AA_Gotowe Rysunki"
-    ready_drowings_folder = Path(drowings_dir_global) / "AA_Gotowe_Rysunki"
-    ready_drowings_folder.mkdir(exist_ok=True)
-    Finder_main.move_drowings(drowings_dir_global, ready_drowings_folder, Excel_path)
-    
+    if move_drawings and drawings_path:  
+        ready_drowings_folder = Path(drawings_path) / "AA_Gotowe_Rysunki"
+        ready_drowings_folder.mkdir(exist_ok=True)
+        Finder_main.move_drowings(drawings_path, ready_drowings_folder, Excel_path)
+
     Excel_Purchases_main.main(Excel_path, Purchases_Excel_path)
     os.startfile(Purchases_Excel_path)
     

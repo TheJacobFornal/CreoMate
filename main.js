@@ -10,7 +10,7 @@ let pythonProcess = null;
 function createWindow() {
   const win = new BrowserWindow({
     width: 1000,
-    height: 600,
+    height: 650,
     icon: path.join(__dirname, "icon.ico"),
     autoHideMenuBar: true,
     webPreferences: {

@@ -34,11 +34,12 @@
     "nsis": {
   "oneClick": false,
   "allowToChangeInstallationDirectory": true,
-  "perMachine": false,          
-  "allowElevation": false,    
+  "perMachine": false,
+  "allowElevation": false,
   "createDesktopShortcut": true,
   "createStartMenuShortcut": true,
-  "shortcutName": "CreoMate"
+  "shortcutName": "CreoMate",
+  "include": "build/installer.nsh"
     }
   },
   "dependencies": {

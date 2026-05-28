@@ -36,6 +36,8 @@ function App() {
   const [correctFileName, setCorrectFileName] = useState(false); // corecction is needed
   const [correctFileNameChecked, setCorrectFileNameChecked] = useState(false); // checkbox state
 
+  const [moveDrawings, setMoveDrawings] = useState(false);
+
   const resetApp = () => {
     setBomPath("");
     setRemoveHItems(false);
@@ -44,6 +46,7 @@ function App() {
     setReady3(false);
     setReady30(false);
     setDrawingPath("");
+    setMoveDrawings(false);
     setCurrentPhase(1);
     setStatuses({ phase1: "idle", phase2: "idle", phase3: "idle" });
     setScore2(" ");
@@ -80,6 +83,12 @@ function App() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ correctFileNameChecked }),
+          });
+        } else if (phaseKey === "phase4") {
+          res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ moveDrawings }),
           });
         } else {
           res = await fetch(url);
@@ -164,7 +173,9 @@ function App() {
         else if (phaseKey === "phase4") {
           setComment(
             data.ready
-              ? "Wygenerowano gotowy Excel ;)"
+              ? moveDrawings
+                ? "Wygenerowano gotowy Excel i przeniesiono rysunki ;)"
+                : "Wygenerowano gotowy Excel ;)"
               : "Nie udało się wygenerować pliku."
           );
         }
@@ -232,7 +243,7 @@ function App() {
       30: "http://127.0.0.1:8000/run-namesCorrection",
     };
 
-    if ((currentPhase >= 1 && currentPhase <= 4) || currentPhase == 30) {
+    if ((currentPhase >= 1 && currentPhase <= 4) || currentPhase === 30) {
       await runPhase(`phase${currentPhase}`, phaseUrls[currentPhase]);
     } else if (currentPhase === 5) {
       resetApp();
@@ -311,6 +322,8 @@ function App() {
             setCorrectFileNameChecked={setCorrectFileNameChecked}
             setCorrectFileName={setCorrectFileName}
             setComment={setComment}
+            moveDrawings={moveDrawings}
+            setMoveDrawings={setMoveDrawings}
           />
         )}
 

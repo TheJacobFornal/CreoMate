@@ -39,6 +39,8 @@ const Page1 = ({
   filesUnchangedAble,
   setCorrectFileName,
   setComment,
+  moveDrawings,
+  setMoveDrawings,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
@@ -186,6 +188,8 @@ const Page1 = ({
               ready30={ready30}
               setReady30={setReady30}
               setComment={setComment}
+              moveDrawings={moveDrawings}
+              setMoveDrawings={setMoveDrawings}
             />
           </div>
         </div>

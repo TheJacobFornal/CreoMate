@@ -125,9 +125,11 @@ def create_app():
             "filesUnchangedAble": filesUnchangedAble,
         }
 
-    @app.get("/run-phase4")
-    def run_phase4():
-        Main1.copy_Excel_to_Purchases(Excel_path, Purchases_Excel_path)
+    @app.post("/run-phase4")
+    async def run_phase4(request: Request):
+        body = await request.json()
+        move_drawings = body.get("moveDrawings", False)
+        Main1.copy_Excel_to_Purchases(Excel_path, Purchases_Excel_path, move_drawings, Drowings_dir)
         return {
             "ready": True,
         }

@@ -43,6 +43,8 @@ function Step1({ bomPath, setBomPath, status, correctFileName }) {
           <div className="input_icon_div">
             <input
               value={bomPath}
+              onChange={() => {}}
+              readOnly
               style={{ width: "560px" }}
               id="custom-input"
             />

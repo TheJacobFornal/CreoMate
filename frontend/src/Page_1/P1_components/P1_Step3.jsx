@@ -16,6 +16,8 @@ function Step3({
   ready30,
   setReady30,
   setComment,
+  moveDrawings,
+  setMoveDrawings,
 }) {
   const handleChooseFolder = async () => {
     const res = await fetch("http://127.0.0.1:8000/chooseFolder");
@@ -27,7 +29,7 @@ function Step3({
 
   return (
     <div className="step3-container">
-      <div class="step1-header_container">
+      <div className="step1-header_container">
         <h2 style={{ color: "red" }}>
           Etap 3: <span style={{ color: "blue" }}>Sprawdzanie rysunków</span>
           <span
@@ -41,8 +43,8 @@ function Step3({
                 status === "done"
                   ? "green"
                   : status === "running"
-                  ? "orange"
-                  : "red",
+                    ? "orange"
+                    : "red",
               border: "1px solid #333",
             }}
           />
@@ -57,12 +59,24 @@ function Step3({
             id="custom-input"
             value={drawingPath}
             style={{ width: "535px" }}
+            onChange={() => {}}
             readOnly
           />
           <button id="button_folder" onClick={handleChooseFolder}>
             📁
           </button>
         </div>
+      </div>
+
+      <div style={{ marginLeft: "15px", marginTop: "8px" }}>
+        <label className="label_main" style={{ marginLeft: "0px" }}>
+          <input
+            type="checkbox"
+            checked={moveDrawings}
+            onChange={(e) => setMoveDrawings(e.target.checked)}
+          />{" "}
+          Przenieś rysunki do nowego folderu
+        </label>
       </div>
 
       {correctFileName && (

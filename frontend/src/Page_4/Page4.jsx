@@ -158,7 +158,7 @@ const Page4 = () => {
       20: "http://127.0.0.1:8000/copy_Excel_Tree",
     };
 
-    if ((currentPhase >= 1 && currentPhase <= 4) || currentPhase == 20) {
+    if ((currentPhase >= 1 && currentPhase <= 4) || currentPhase === 20) {
       console.log("currpahse: ", currentPhase);
       await runPhase(`phase${currentPhase}`, phaseUrls[currentPhase]);
     } else if (currentPhase === 5) {

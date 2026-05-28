@@ -8,12 +8,6 @@ function Step3({
   setCurrentPhase,
   score3,
 }) {
-  const handleChooseFolder = async () => {
-    const res = await fetch("http://127.0.0.1:8000/chooseFolder");
-    const data = await res.json();
-    if (data.path) setDrawingPath(data.path);
-  };
-
   return (
     <div className="step3-container">
       <div class="step1-header_container">
